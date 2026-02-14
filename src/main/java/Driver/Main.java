@@ -451,10 +451,10 @@ public class Main {
                 System.out.println(mostExpensive);
             }
             case 2 -> {
-
+                // TODO
             }
             case 3 -> {
-                Transportation[] newTransportations = new Transportation[transportations.length];
+                /*Transportation[] newTransportations = new Transportation[transportations.length];
 
                 // Creating Deep Copy of the Array
                 for (int i = 0; i < transportations.length; i++) {
@@ -467,7 +467,9 @@ public class Main {
                     else if (transportations[i] instanceof Train) {
                         newTransportations[i] = new Train((Train) transportations[i]);
                     }
-                }
+                }*/
+
+                Transportation[] newTransportations = transportationsDeepCopy(transportations);
 
                 // Printing Deep Copied Array
                 for (int i = 0; i < newTransportations.length; i++) {
@@ -475,7 +477,7 @@ public class Main {
                 }
             }
              case 4 -> {
-                Accommodation[] newAccommodations = new Accommodation[accommodations.length];
+                /*Accommodation[] newAccommodations = new Accommodation[accommodations.length];
 
                 // Creating Deep Copy of the Array
                  for (int i = 0; i < accommodations.length; i++) {
@@ -485,7 +487,9 @@ public class Main {
                      else if (accommodations[i] instanceof Hotel) {
                          newAccommodations[i] = new Hotel((Hotel) accommodations[i]);
                      }
-                 }
+                 }*/
+
+                 Accommodation[] newAccommodations = accommodationsDeepCopy(accommodations);
 
                  // Printing Deep Copied Array
                  for (int i = 0; i < newAccommodations.length; i++) {
@@ -527,7 +531,6 @@ public class Main {
         }
     }
 
-    // TODO Make it so it prints only the type of object we want
     // Shows all objects from an array of objects
     // Object[] objects takes in any object array
     // Object objects will be used to know which objects we want to print out
@@ -622,6 +625,41 @@ public class Main {
                 default -> System.out.println("Invalid Input. Try Again");
             }
         }
+    }
+
+    public static Transportation[] transportationsDeepCopy(Transportation[] original) {
+        Transportation[] newTransportations = new Transportation[original.length];
+
+        // Creating Deep Copy of the Array
+        for (int i = 0; i < original.length; i++) {
+            if (original[i] instanceof Bus) {
+                newTransportations[i] = new Bus((Bus) original[i]);
+            }
+            else if (original[i] instanceof Flight) {
+                newTransportations[i] = new Flight((Flight) original[i]);
+            }
+            else if (original[i] instanceof Train) {
+                newTransportations[i] = new Train((Train) original[i]);
+            }
+        }
+
+        return newTransportations;
+    }
+
+    public static Accommodation[] accommodationsDeepCopy(Accommodation[] accommodations) {
+        Accommodation[] newAccommodations = new Accommodation[accommodations.length];
+
+        // Creating Deep Copy of the Array
+        for (int i = 0; i < accommodations.length; i++) {
+            if (accommodations[i] instanceof Hostel) {
+                newAccommodations[i] = new Hostel((Hostel) accommodations[i]);
+            }
+            else if (accommodations[i] instanceof Hotel) {
+                newAccommodations[i] = new Hotel((Hotel) accommodations[i]);
+            }
+        }
+
+        return newAccommodations;
     }
 
     public static void testingScenario() {
