@@ -426,7 +426,7 @@ public class Main {
         }
     }
 
-    public static void additionalOperations(Scanner scanner, Trip[] trips, Transportation[] transportations, Accommodation accommodations) {
+    public static void additionalOperations(Scanner scanner, Trip[] trips, Transportation[] transportations, Accommodation[] accommodations) {
         System.out.println("""
                 1. Display the Most Expensive Trip
                 2. Display the Total Cost of a Trip
@@ -461,22 +461,36 @@ public class Main {
                     if (transportations[i] instanceof Bus) {
                         newTransportations[i] = new Bus((Bus) transportations[i]);
                     }
-
-                    if (transportations[i] instanceof Flight) {
+                    else if (transportations[i] instanceof Flight) {
                         newTransportations[i] = new Flight((Flight) transportations[i]);
                     }
-
-                    if (transportations[i] instanceof Train) {
+                    else if (transportations[i] instanceof Train) {
                         newTransportations[i] = new Train((Train) transportations[i]);
                     }
                 }
 
+                // Printing Deep Copied Array
                 for (int i = 0; i < newTransportations.length; i++) {
                     System.out.println(newTransportations[i]);
                 }
             }
              case 4 -> {
+                Accommodation[] newAccommodations = new Accommodation[accommodations.length];
 
+                // Creating Deep Copy of the Array
+                 for (int i = 0; i < accommodations.length; i++) {
+                     if (accommodations[i] instanceof Hostel) {
+                         newAccommodations[i] = new Hostel((Hostel) accommodations[i]);
+                     }
+                     else if (accommodations[i] instanceof Hotel) {
+                         newAccommodations[i] = new Hotel((Hotel) accommodations[i]);
+                     }
+                 }
+
+                 // Printing Deep Copied Array
+                 for (int i = 0; i < newAccommodations.length; i++) {
+                     System.out.println(newAccommodations[i]);
+                 }
              }
         }
     }
