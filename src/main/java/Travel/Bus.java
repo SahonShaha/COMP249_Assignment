@@ -9,15 +9,17 @@ package Travel;
 public class Bus extends Transportation {
     private String busCompany;
     private int stopsNum;
+    private int baseFare;
 
     // Default Constructor
     public Bus() {};
 
     // Parametrized Constructor
-    public Bus(String companyName, String departureCity, String arrivalCity, String busCompany, int stopsNum) {
+    public Bus(String companyName, String departureCity, String arrivalCity, String busCompany, int stopsNum, int baseFare) {
         super(companyName, departureCity, arrivalCity);
         this.busCompany = busCompany;
         this.stopsNum = stopsNum;
+        this.baseFare = baseFare;
     }
 
     // Copy Constructor
@@ -50,6 +52,11 @@ public class Bus extends Transportation {
         else {
             return false;
         }
+    }
+
+    public double calculateCost() {
+        // baseFare + a charge of 10cents per stop
+        return baseFare + (stopsNum * 0.10);
     }
 
     public String getBusCompany() {

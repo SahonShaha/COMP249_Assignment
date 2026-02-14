@@ -241,8 +241,10 @@ public class Main {
                         String busCompany = scanner.next();
                         System.out.println("Enter the amount of stops during the transit: ");
                         int stops = scanner.nextInt();
+                        System.out.println("Enter the base fare: ");
+                        int baseFare = scanner.nextInt();
 
-                        Bus newBus = new Bus(companyName, departureCity, arrivalCity, busCompany, stops);
+                        Bus newBus = new Bus(companyName, departureCity, arrivalCity, busCompany, stops, baseFare);
                         add(transportations, newBus);
                     }
 
@@ -251,18 +253,22 @@ public class Main {
                         String airlineName = scanner.next();
                         System.out.println("Enter the maximum weight of luggage: ");
                         int weight = scanner.nextInt();
+                        System.out.println("Enter the ticket price: ");
+                        int ticketPrice = scanner.nextInt();
 
-                        Flight newFlight = new Flight(companyName, departureCity, arrivalCity, airlineName, weight);
+                        Flight newFlight = new Flight(companyName, departureCity, arrivalCity, airlineName, weight, ticketPrice);
                         add(transportations, newFlight);
                     }
 
                      case 3 -> {
                          System.out.println("Enter the type of train: ");
                          String trainType = scanner.next();
-                         System.out.println("Enter class of seats: ");
+                         System.out.println("Enter class of seats (Basic, Cabin or Deluxe): ");
                          String seatClass = scanner.next();
+                         System.out.println("Enter the fare: ");
+                         int fare = scanner.nextInt();
 
-                         Train newTrain = new Train(companyName, departureCity, arrivalCity, trainType, seatClass);
+                         Train newTrain = new Train(companyName, departureCity, arrivalCity, trainType, seatClass, fare);
                          add(transportations, newTrain);
                      }
                 }
@@ -584,14 +590,14 @@ public class Main {
         Trip trip2 = new Trip("France", 14, 3500, client2);
         Trip trip3 = new Trip("France", 14, 3500, client3);
 
-        Bus bus1 = new Bus("CanadaTravels", "Montreal", "Quebec", "STM", 2);
-        Bus bus2 = new Bus("AmericaUnited", "Toronto", "New York City", "TTC", 3);
+        Bus bus1 = new Bus("CanadaTravels", "Montreal", "Quebec", "STM", 2, 61);
+        Bus bus2 = new Bus("AmericaUnited", "Toronto", "New York City", "TTC", 3, 65);
 
-        Train train1 = new Train("ViaRail Canada", "Montreal", "Vancouver City", "High Speed", "Business");
-        Train train2 = new Train("North America Transit", "Boston", "Montreal", "Bullet Train", "Economy");
+        Train train1 = new Train("ViaRail Canada", "Montreal", "Vancouver City", "High Speed", "Cabin", 100);
+        Train train2 = new Train("North America Transit", "Boston", "Montreal", "Bullet Train", "Deluxe", 75);
 
-        Flight flight1 = new Flight("Europe Travel Agency", "Montreal", "France", "Air France Canada", 27);
-        Flight flight2 = new Flight("Japan Airways", "Montreal", "Japan", "Air Canada", 31);
+        Flight flight1 = new Flight("Europe Travel Agency", "Montreal", "France", "Air France Canada", 27, 4000);
+        Flight flight2 = new Flight("Japan Airways", "Montreal", "Japan", "Air Canada", 31, 3200);
 
         Hotel hotel1 = new Hotel("Hilton Paris Opera", "France", 457, 5);
         Hotel hotel2 = new Hotel("Hotel Fine Sakai", "Japan", 37, 3);

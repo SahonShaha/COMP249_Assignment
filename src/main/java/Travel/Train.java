@@ -9,15 +9,17 @@ package Travel;
 public class Train extends Transportation{
     private String trainType;
     private String seatClass;
+    private int fare;
 
     // Default Constructor
     public Train() {super();}
 
     // Parametrized Constructor
-    public Train(String companyName, String departureCity, String arrivalCity, String trainType, String seatClass) {
+    public Train(String companyName, String departureCity, String arrivalCity, String trainType, String seatClass, int fare) {
         super(companyName, departureCity, arrivalCity);
         this.trainType = trainType;
         this.seatClass = seatClass;
+        this.fare = fare;
     }
 
     // Copy Constructor
@@ -52,9 +54,18 @@ public class Train extends Transportation{
         }
     }
 
-    // TODO
-    public void calculateCost(int numberOfDays) {
 
+    public double calculateCost() {
+        int seatPrice = 0;
+
+        if (this.seatClass.equals("Cabin")) {
+            seatPrice += 50;
+        }
+        else if (this.seatClass.equals("Deluxe")) {
+            seatPrice += 100;
+        }
+
+        return seatPrice + fare;
     }
 
     public String getTrainType() {
