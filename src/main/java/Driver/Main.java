@@ -46,6 +46,7 @@ public class Main {
                         3. Transportation Management
                         4. Accommodation Management
                         5. Additional Operations
+                        6 - Exit
                         """);
                     int choice = scanner.nextInt();
 
@@ -54,8 +55,10 @@ public class Main {
                         case 2 -> tripManagement(scanner, trips, clients);
                         case 3 -> transportationManagement(scanner, transportations);
                         case 4 -> accommodationManagement(scanner, accommodations);
-                        case 5 -> {
-
+                        case 5 -> additionalOperations(scanner, trips, transportations, accommodations);
+                        case 6 -> {
+                            System.out.println("Goodbye");
+                            isMenuRunning = false;
                         }
                         default -> System.out.println("Invalid Option.");
                     }
@@ -193,8 +196,8 @@ public class Main {
                     System.out.println("No Client of that number exists");
                 }
                 else {
-                    for (int i = 0; i < clients.length; i++) {
-                        if (clients[i] == null) {
+                    for (int i = 0; i < trips.length; i++) {
+                        if (trips[i] == null) {
                             break; // If we reach a null object, that means we've gone through every existing trip
                         }
 
@@ -519,16 +522,10 @@ public class Main {
         objects[clientIndex] = null;
 
         // Shifting all objects back to clear the gap in the array caused by the deleted object
-        for (int i = clientIndex; i < objects.length; i++) {
-            // If the next object is null, that means that it's the "end of the array" as everything after that index will be null.
-            if (objects[i+1] == null) {
-                objects[i] = null; // Since this object has already been shifted back in the last iteration, we just set it as null
-                break;
-            }
-            else {
-                objects[i] = objects[i + 1];   // Pushing back objects
-            }
+        for (int i = clientIndex; i < objects.length - 1; i++) { // We are going till the before last object in the array
+            objects[i] = objects[i + 1];
         }
+        objects[objects.length - 1] = null; // no matter what, if an object is deleted and everything is shifted, the last object MUST be null
     }
 
     // Shows all objects from an array of objects
@@ -596,7 +593,7 @@ public class Main {
                         4 - Client going on the trip
                         5 - Finished Editing
                         """);
-            int choice = scanner.nextInt();
+            int choice = scanner.nextInt() - 1;
 
             switch (choice) {
                 case 1 -> {
