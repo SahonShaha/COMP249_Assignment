@@ -27,6 +27,7 @@ public class Bus extends Transportation {
         super(bus);
         this.busCompany = bus.getBusCompany();
         this.stopsNum = bus.getStopsNum();
+        this.baseFare = bus.getBaseFare();
     }
 
     public String toString() {
@@ -73,5 +74,13 @@ public class Bus extends Transportation {
 
     public void setStopsNum(int stopsNum) {
         this.stopsNum = stopsNum;
+    }
+
+    public void setBaseFare(int baseFare) {
+        this.baseFare = baseFare;
+    }
+
+    public int getBaseFare() {
+        return baseFare;
     }
 }

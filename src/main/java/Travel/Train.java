@@ -27,6 +27,7 @@ public class Train extends Transportation{
         super(train);
         this.trainType = train.getTrainType();
         this.seatClass = train.getSeatClass();
+        this.fare = train.getFare();
     }
 
     public String toString() {
@@ -82,5 +83,13 @@ public class Train extends Transportation{
 
     public void setSeatClass(String seatClass) {
         this.seatClass = seatClass;
+    }
+
+    public int getFare() {
+        return fare;
+    }
+
+    public void setFare(int fare) {
+        this.fare = fare;
     }
 }

@@ -27,6 +27,7 @@ public class Flight extends Transportation {
         super(flight);
         this.airlineName = flight.getAirlineName();
         this.luggageAllowance = flight.getLuggageAllowance();
+        this.ticketPrice = flight.getTicketPrice();
     }
 
     public String toString() {
@@ -80,5 +81,13 @@ public class Flight extends Transportation {
 
     public void setLuggageAllowance(int luggageAllowance) {
         this.luggageAllowance = luggageAllowance;
+    }
+
+    public int getTicketPrice() {
+        return ticketPrice;
+    }
+
+    public void setTicketPrice(int ticketPrice) {
+        this.ticketPrice = ticketPrice;
     }
 }
