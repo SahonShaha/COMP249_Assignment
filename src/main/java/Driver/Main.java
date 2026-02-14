@@ -18,15 +18,15 @@ public class Main {
         boolean isMenuRunning = true;
 
         // Creating storage for the arrays
-        // TODO Transportation Array = Buses + Trains + Flights
-        // TODO Accommodation Array = Hotels + Hostels
         Client[] clients = new Client[99];
         Trip[] trips = new Trip[99];
-        Bus[] buses = new Bus[99];
+        Transportation[] transportations = new Transportation[99];
+        Accommodation[] accommodations = new Accommodation[99];
+        /*Bus[] buses = new Bus[99];
         Train[] trains = new Train[99];
         Flight[] flights = new Flight[99];
         Hotel[] hotels = new Hotel[99];
-        Hostel[] hostels = new Hostel[99];
+        Hostel[] hostels = new Hostel[99];*/
 
 
         System.out.println("Welcome to SmartTravel!");
@@ -52,8 +52,8 @@ public class Main {
                     switch (choice) {
                         case 1 -> clientManagement(scanner, clients);
                         case 2 -> tripManagement(scanner, trips, clients);
-                        case 3 -> transportationManagement(scanner, buses, trains, flights);
-                        case 4 -> accommodationManagement(scanner, hostels, hotels);
+                        case 3 -> transportationManagement(scanner, transportations);
+                        case 4 -> accommodationManagement(scanner, accommodations);
                         case 5 -> {
 
                         }
@@ -209,7 +209,7 @@ public class Main {
         }
     }
 
-    public static void transportationManagement(Scanner scanner, Bus[] buses, Train[] trains, Flight[] flights) {
+    public static void transportationManagement(Scanner scanner, Transportation[] transportations) {
         System.out.println("""
                 1. Add a transportation option
                 2. Remove a transportation option
@@ -243,7 +243,7 @@ public class Main {
                         int stops = scanner.nextInt();
 
                         Bus newBus = new Bus(companyName, departureCity, arrivalCity, busCompany, stops);
-                        add(buses, newBus);
+                        add(transportations, newBus);
                     }
 
                     case 2 -> {
@@ -253,7 +253,7 @@ public class Main {
                         int weight = scanner.nextInt();
 
                         Flight newFlight = new Flight(companyName, departureCity, arrivalCity, airlineName, weight);
-                        add(flights, newFlight);
+                        add(transportations, newFlight);
                     }
 
                      case 3 -> {
@@ -263,7 +263,7 @@ public class Main {
                          String seatClass = scanner.next();
 
                          Train newTrain = new Train(companyName, departureCity, arrivalCity, trainType, seatClass);
-                         add(trains, newTrain);
+                         add(transportations, newTrain);
                      }
                 }
             }
@@ -279,19 +279,23 @@ public class Main {
 
                 switch (transportationChoice) {
                     case 1 -> {
-                        showAll(buses, new Bus());
+                        showAll(transportations, new Bus());
 
                         System.out.println("Select the number of the transportation you want to delete: ");
-                        delete(buses, scanner.nextInt() - 1);
+                        delete(transportations, scanner.nextInt() - 1);
                     }
                     case 2 -> {
+                        showAll(transportations, new Flight());
+
                         System.out.println("Select the number of the transportation you want to delete: ");
-                        delete(flights, scanner.nextInt() - 1);
+                        delete(transportations, scanner.nextInt() - 1);
                     }
 
                     case 3 -> {
+                        showAll(transportations, new Train());
+
                         System.out.println("Select the number of the transportation you want to delete: ");
-                        delete(trains, scanner.nextInt() - 1);
+                        delete(transportations, scanner.nextInt() - 1);
                     }
                     default -> System.out.println("Invalid Input.");
                 }
@@ -308,16 +312,16 @@ public class Main {
                 int listViewChoice = scanner.nextInt();
 
                 switch (listViewChoice) {
-                    case 1 -> showAll(buses, new Bus());
-                    case 2 -> showAll(flights, new Flight());
-                    case 3 -> showAll(trains, new Train());
+                    case 1 -> showAll(transportations, new Bus());
+                    case 2 -> showAll(transportations, new Flight());
+                    case 3 -> showAll(transportations, new Train());
                     case 4 -> {
                         System.out.println("BUSES");
-                        showAll(buses, new Bus());
+                        showAll(transportations, new Bus());
                         System.out.println("FLIGHTS");
-                        showAll(flights, new Flight());
+                        showAll(transportations, new Flight());
                         System.out.println("TRAINS");
-                        showAll(trains, new Train());
+                        showAll(transportations, new Train());
                     }
                     default -> System.out.println("Invalid Input.");
                 }
@@ -326,7 +330,7 @@ public class Main {
         }
     }
 
-    public static void accommodationManagement(Scanner scanner, Hostel[] hostels, Hotel[] hotels) {
+    public static void accommodationManagement(Scanner scanner, Accommodation[] accommodations) {
         System.out.println("""
                 1. Add an accommodation
                 2. Remove an accommodation
@@ -356,14 +360,14 @@ public class Main {
                         int beds = scanner.nextInt();
 
                         Hostel newHostel = new Hostel(name, location, pricePerNight, beds);
-                        add(hostels, newHostel);
+                        add(accommodations, newHostel);
                     }
                     case 2 -> {
                         System.out.println("Enter the number of stars: ");
                         int stars = scanner.nextInt();
 
                         Hotel newHotel = new Hotel(name, location, pricePerNight, stars);
-                        add(hotels, newHotel);
+                        add(accommodations, newHotel);
                     }
                     default -> System.out.println("Invalid Input.");
                 }
@@ -378,15 +382,15 @@ public class Main {
 
                 switch (accommodationChoice) {
                     case 1 -> {
-                        showAll(hostels, new Hostel());
+                        showAll(accommodations, new Hostel());
 
                         System.out.println("Select the number of the hostel you want to delete: ");
-                        delete(hostels, scanner.nextInt() - 1);
+                        delete(accommodations, scanner.nextInt() - 1);
                     }
                     case 2 -> {
-                        showAll(hotels, new Hotel());
+                        showAll(accommodations, new Hotel());
                         System.out.println("Select the number of the hotel you want to delete: ");
-                        delete(hotels, scanner.nextInt() - 1);
+                        delete(accommodations, scanner.nextInt() - 1);
                     }
                     default -> System.out.println("Invalid Input.");
                 }
@@ -401,13 +405,13 @@ public class Main {
                 int listViewChoice = scanner.nextInt();
 
                 switch (listViewChoice) {
-                    case 1 -> showAll(hostels, new Hostel());
-                    case 2 -> showAll(hotels, new Hotel());
+                    case 1 -> showAll(accommodations, new Hostel());
+                    case 2 -> showAll(accommodations, new Hotel());
                     case 3 -> {
                         System.out.println("Hostels");
-                        showAll(hostels, new Hostel());
+                        showAll(accommodations, new Hostel());
                         System.out.println("Hotels");
-                        showAll(hotels, new Hotel());
+                        showAll(accommodations, new Hotel());
                     }
                     default -> System.out.println("Invalid Input.");
                 }
