@@ -30,41 +30,50 @@ public class Main {
 
 
         System.out.println("Welcome to SmartTravel!");
-        System.out.println("""
+
+        while (isMenuRunning) {
+            boolean userMenu = true;
+
+            System.out.println("""
                 Would you like to use the application or run the testing scenario?
                 1 - Run Application
                 2 - Execute Testing Scenario
+                3 - Exit
                 """);
-        int initialChoice = scanner.nextInt();
+            int initialChoice = scanner.nextInt();
 
-        while (isMenuRunning) {
             switch (initialChoice) {
                 case 1 -> {
-                    System.out.println("""
+                    while (userMenu) {
+                        System.out.println("""
                         1. Client Management
                         2. Trip Management
                         3. Transportation Management
                         4. Accommodation Management
                         5. Additional Operations
-                        6 - Exit
+                        6. Exit
                         """);
-                    int choice = scanner.nextInt();
+                        int choice = scanner.nextInt();
 
-                    switch (choice) {
-                        case 1 -> clientManagement(scanner, clients);
-                        case 2 -> tripManagement(scanner, trips, clients);
-                        case 3 -> transportationManagement(scanner, transportations);
-                        case 4 -> accommodationManagement(scanner, accommodations);
-                        case 5 -> additionalOperations(scanner, trips, transportations, accommodations);
-                        case 6 -> {
-                            System.out.println("Goodbye");
-                            isMenuRunning = false;
+                        switch (choice) {
+                            case 1 -> clientManagement(scanner, clients);
+                            case 2 -> tripManagement(scanner, trips, clients);
+                            case 3 -> transportationManagement(scanner, transportations);
+                            case 4 -> accommodationManagement(scanner, accommodations);
+                            case 5 -> additionalOperations(scanner, trips, transportations, accommodations);
+                            case 6 -> {
+                                userMenu = false;
+                            }
+                            default -> System.out.println("Invalid Option.");
                         }
-                        default -> System.out.println("Invalid Option.");
                     }
                 }
 
-                case 2 -> {testingScenario(); isMenuRunning = false;}
+                case 2 -> testingScenario();
+                case 3 -> {
+                    System.out.println("Closing Application...Goodbye!");
+                    isMenuRunning = false;
+                }
             }
         }
     }
@@ -274,6 +283,7 @@ public class Main {
                          Train newTrain = new Train(companyName, departureCity, arrivalCity, trainType, seatClass, fare);
                          add(transportations, newTrain);
                      }
+                    default -> System.out.println("Invalid Input");
                 }
             }
 
@@ -499,6 +509,7 @@ public class Main {
                      System.out.println(newAccommodations[i]);
                  }
              }
+            default -> System.out.println("Invalid Input");
         }
     }
 
