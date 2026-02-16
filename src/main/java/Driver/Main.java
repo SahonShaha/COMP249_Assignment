@@ -792,11 +792,13 @@ public class Main {
 
         Client[] clients = {client1, client2, client3, client4};
         Trip[] trips = {trip1, trip2, trip3};
-        Bus[] buses = {bus1, bus2};
+        Transportation[] transportations = {bus1, bus2, train1, train2, flight1, flight2};
+        Accommodation[] accommodations = {hotel1, hotel2, hostel1, hostel2};
+        /*Bus[] buses = {bus1, bus2};
         Train[] trains = {train1, train2};
         Flight[] flights = {flight1, flight2};
         Hotel[] hotels = {hotel1, hotel2};
-        Hostel[] hostels = {hostel1, hostel2};
+        Hostel[] hostels = {hostel1, hostel2};*/
 
         System.out.println("CLIENTS:");
         for (Client client : clients) System.out.println(client);
@@ -804,20 +806,11 @@ public class Main {
         System.out.println("TRIPS");
         for (Trip trip : trips) System.out.println(trip);
         System.out.println("-----------------------------------------------------------------------------------------");
-        System.out.println("BUSES");
-        for (Bus bus : buses) System.out.println(bus);
+        System.out.println("TRANSPORTATIONS");
+        for (Transportation transportation : transportations) System.out.println(transportation);
         System.out.println("-----------------------------------------------------------------------------------------");
-        System.out.println("TRAINS");
-        for (Train train : trains) System.out.println(train);
-        System.out.println("-----------------------------------------------------------------------------------------");
-        System.out.println("FLIGHTS");
-        for (Flight flight : flights) System.out.println(flight);
-        System.out.println("-----------------------------------------------------------------------------------------");
-        System.out.println("HOTELS");
-        for (Hotel hotel : hotels) System.out.println(hotel);
-        System.out.println("-----------------------------------------------------------------------------------------");
-        System.out.println("HOSTELS");
-        for (Hostel hostel : hostels) System.out.println(hostel);
+        System.out.println("ACCOMMODATIONS");
+        for (Accommodation accommodation : accommodations) System.out.println(accommodation);
         System.out.println("-----------------------------------------------------------------------------------------");
 
         System.out.println("TESTING EQUALS METHOD");
