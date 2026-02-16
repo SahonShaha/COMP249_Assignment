@@ -122,15 +122,12 @@ public class Main {
             case 3 -> {
                 showAll(clients, new Client());
 
-                System.out.println("Choose the number of a client you want to delete: ");
-                int clientDeleteIndex = scanner.nextInt() - 1;
+                System.out.println("Choose the ID of a client you want to delete: ");
+                String id = scanner.next();
+                deleteClient(clients, id);
+                System.out.println("Updated list of Clients post-deletion:");
+                showAll(clients, new Client());
 
-                if (clients[clientDeleteIndex] == null) {
-                    System.out.println("Invalid Client Chosen");
-                }
-                else {
-                    delete(clients, clientDeleteIndex);
-                }
             }
             case 4 -> showAll(clients, new Client());
             default -> System.out.println("Invalid Input.");
@@ -184,16 +181,12 @@ public class Main {
             }
             case 3 -> {
                 showAll(trips, new Trip());
+                System.out.println("Choose the ID of the trip you want to delete: ");
+                String id = scanner.next();
+                deleteTrip(trips, id);
+                System.out.println("Updated list of Trips post-deletion:");
+                showAll(clients, new Trip());
 
-                System.out.println("Choose the number of a trip you want to delete: ");
-                int tripDeleteIndex = scanner.nextInt() - 1;
-
-                if (trips[tripDeleteIndex] == null) {
-                    System.out.println("Invalid Trip Chosen");
-                }
-                else {
-                    delete(trips, tripDeleteIndex);
-                }
             }
             case 4 -> showAll(trips, new Trip());
             case 5 -> {
@@ -299,25 +292,20 @@ public class Main {
                 switch (transportationChoice) {
                     case 1 -> {
                         showAll(transportations, new Bus());
-
-                        System.out.println("Select the number of the transportation you want to delete: ");
-                        delete(transportations, scanner.nextInt() - 1);
                     }
                     case 2 -> {
                         showAll(transportations, new Flight());
-
-                        System.out.println("Select the number of the transportation you want to delete: ");
-                        delete(transportations, scanner.nextInt() - 1);
                     }
 
                     case 3 -> {
                         showAll(transportations, new Train());
-
-                        System.out.println("Select the number of the transportation you want to delete: ");
-                        delete(transportations, scanner.nextInt() - 1);
                     }
                     default -> System.out.println("Invalid Input.");
                 }
+
+                System.out.println("Choose the ID of a Transportation you want to delete: ");
+                String id = scanner.next();
+                deleteTransportation(transportations, id);
             }
 
             case 3 -> {
@@ -402,17 +390,16 @@ public class Main {
                 switch (accommodationChoice) {
                     case 1 -> {
                         showAll(accommodations, new Hostel());
-
-                        System.out.println("Select the number of the hostel you want to delete: ");
-                        delete(accommodations, scanner.nextInt() - 1);
                     }
                     case 2 -> {
                         showAll(accommodations, new Hotel());
-                        System.out.println("Select the number of the hotel you want to delete: ");
-                        delete(accommodations, scanner.nextInt() - 1);
                     }
                     default -> System.out.println("Invalid Input.");
                 }
+
+                System.out.println("Choose the ID of an Accommodation you want to delete: ");
+                String id = scanner.next();
+                deleteAccommodation(accommodations, id);
             }
             case 3 -> {
                 System.out.println("Which type of transportation do you want to list?");
@@ -539,6 +526,114 @@ public class Main {
         objects[objects.length - 1] = null; // no matter what, if an object is deleted and everything is shifted, the last object MUST be null
     }
 
+    public static void deleteClient(Client[] clients, String id) {
+        boolean deleted = false; // This is used to see if something got deleted or not
+
+        for (int i = 0; i < clients.length; i++) {
+            if (clients[i] == null) {
+                break; // We kill the loop once we reach a null object because it means that we reached the end of the partiall filled array
+            }
+
+            if (clients[i].getClientID().equals(id)) {
+                clients[i] = null; // Deleting the client if it matches the id
+                deleted = true;
+
+                // Shifting the array back so that the array does not have a "hole" in the middle
+                for (int j = i; j < clients.length - 1; j++) { // We are going till the before last object in the array
+                    clients[j] = clients[j + 1];
+                }
+                clients[clients.length - 1] = null; // no matter what, if an object is deleted and everything is shifted, the last object MUST be null
+
+                break; // Kill the loop because there is no reason to keep searching
+            }
+        }
+
+        if (!deleted) {
+            System.out.println("No Clients under that ID exists.");
+        }
+    }
+
+    public static void deleteTrip(Trip[] trips, String id) {
+        boolean deleted = false; // This is used to see if something got deleted or not
+
+        for (int i = 0; i < trips.length; i++) {
+            if (trips[i] == null) {
+                break; // We kill the loop once we reach a null object because it means that we reached the end of the partiall filled array
+            }
+
+            if (trips[i].getTripID().equals(id)) {
+                trips[i] = null; // Deleting the trip if it matches the id
+                deleted = true;
+
+                // Shifting the array back so that the array does not have a "hole" in the middle
+                for (int j = i; j < trips.length - 1; j++) { // We are going till the before last object in the array
+                    trips[j] = trips[j + 1];
+                }
+                trips[trips.length - 1] = null; // no matter what, if an object is deleted and everything is shifted, the last object MUST be null
+
+                break; // Kill the loop because there is no reason to keep searching
+            }
+        }
+
+        if (!deleted) {
+            System.out.println("No Trips under that ID exists.");
+        }
+    }
+
+    public static void deleteTransportation(Transportation[] transportations, String id) {
+        boolean deleted = false; // This is used to see if something got deleted or not
+
+        for (int i = 0; i < transportations.length; i++) {
+            if (transportations[i] == null) {
+                break; // We kill the loop once we reach a null object because it means that we reached the end of the partially filled array
+            }
+
+            if (transportations[i].getTransportationID().equals(id)) {
+                transportations[i] = null; // Deleting the transportations if it matches the id
+                deleted = true;
+
+                // Shifting the array back so that the array does not have a "hole" in the middle
+                for (int j = i; j < transportations.length - 1; j++) { // We are going till the before last object in the array
+                    transportations[j] = transportations[j + 1];
+                }
+                transportations[transportations.length - 1] = null; // no matter what, if an object is deleted and everything is shifted, the last object MUST be null
+
+                break; // Kill the loop because there is no reason to keep searching
+            }
+        }
+
+        if (!deleted) {
+            System.out.println("No Transportations under that ID exists.");
+        }
+    }
+
+    public static void deleteAccommodation(Accommodation[] accommodations, String id) {
+        boolean deleted = false; // This is used to see if something got deleted or not
+
+        for (int i = 0; i < accommodations.length; i++) {
+            if (accommodations[i] == null) {
+                break; // We kill the loop once we reach a null object because it means that we reached the end of the partiall filled array
+            }
+
+            if (accommodations[i].getAccommodationID().equals(id)) {
+                accommodations[i] = null; // Deleting the accommodation if it matches the id
+                deleted = true;
+
+                // Shifting the array back so that the array does not have a "hole" in the middle
+                for (int j = i; j < accommodations.length - 1; j++) { // We are going till the before last object in the array
+                    accommodations[j] = accommodations[j + 1];
+                }
+                accommodations[accommodations.length - 1] = null; // no matter what, if an object is deleted and everything is shifted, the last object MUST be null
+
+                break; // Kill the loop because there is no reason to keep searching
+            }
+        }
+
+        if (!deleted) {
+            System.out.println("No Accommodations under that ID exists.");
+        }
+    }
+
     // Shows all objects from an array of objects
     // Object[] objects takes in any object array
     // Object objects will be used to know which objects we want to print out
@@ -552,7 +647,7 @@ public class Main {
             }
             else {
                 if (objects[i].getClass() == object.getClass()) {
-                    System.out.println("\nEntry " + (i+1));
+                    //System.out.println("\nEntry " + (i+1));
                     System.out.println(objects[i]);
                 }
             }
