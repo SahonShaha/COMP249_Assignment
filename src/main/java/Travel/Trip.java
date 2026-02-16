@@ -34,7 +34,7 @@ public class Trip {
         this.destination = trip.getDestination();
         this.durationInDays = trip.getDurationInDays();
         this.basePrice = trip.getBasePrice();
-        this.clientOnTrip = trip.getClientOnTrip();
+        this.clientOnTrip = new Client(trip.getClientOnTrip()); // Creates a Deep Copy of Client
     }
 
     public String toString() {
