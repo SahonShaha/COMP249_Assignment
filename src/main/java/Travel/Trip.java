@@ -15,17 +15,45 @@ public class Trip {
     private int durationInDays;
     private int basePrice;
     private Client clientOnTrip;
+    private Transportation transportation;
+    private Accommodation accommodation;
 
     // Default Constructor
     public Trip() {}
 
     // Parametrized Constructor
-    public Trip(String destination, int durationInDays, int basePrice, Client client) {
+    public Trip(String destination, int durationInDays, int basePrice, Client client, Transportation transportation, Accommodation accommodation) {
         this.tripID = "T" + count++;
         this.destination = destination;
         this.durationInDays = durationInDays;
         this.basePrice = basePrice;
-        this.clientOnTrip = client;
+        this.clientOnTrip = new Client(client);
+
+        // Creating Deep Copy of Transportation
+        // Typecasting to the object here will not cause a problem because we are verifying the type during runtime
+        if (transportation instanceof Bus) {
+            this.transportation = new Bus((Bus) transportation);
+        }
+        else if (transportation instanceof Flight) {
+            this.transportation = new Flight((Flight) transportation);
+        }
+        else if (transportation instanceof Train) {
+            this.transportation = new Train((Train) transportation);
+        }
+        else {
+            this.transportation = null;
+        }
+
+        // Creating Deep Copy of Accommodation
+        if (accommodation instanceof Hotel) {
+            this.accommodation = new Hotel((Hotel) accommodation);
+        }
+        else if (accommodation instanceof Hostel) {
+            this.accommodation = new Hostel((Hostel) accommodation);
+        }
+        else {
+            this.accommodation = null;
+        }
     }
 
     // Copy Constructor
@@ -101,5 +129,21 @@ public class Trip {
 
     public void setClientOnTrip(Client clientOnTrip) {
         this.clientOnTrip = clientOnTrip;
+    }
+
+    public Transportation getTransportation() {
+        return transportation;
+    }
+
+    public void setTransportation(Transportation transportation) {
+        this.transportation = transportation;
+    }
+
+    public Accommodation getAccommodation() {
+        return accommodation;
+    }
+
+    public void setAccommodation(Accommodation accommodation) {
+        this.accommodation = accommodation;
     }
 }

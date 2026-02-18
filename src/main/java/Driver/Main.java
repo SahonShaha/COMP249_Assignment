@@ -4,7 +4,6 @@
 // Written by: Sahon Shaha 40339419
 // ---------------------------------------------------------
 
-// TODO ADD DEFAULT CASES TO ALL SWITCHCASE
 package Driver;
 
 import Client.Client;
@@ -57,7 +56,7 @@ public class Main {
 
                         switch (choice) {
                             case 1 -> clientManagement(scanner, clients);
-                            case 2 -> tripManagement(scanner, trips, clients);
+                            case 2 -> tripManagement(scanner, trips, clients, transportations, accommodations);
                             case 3 -> transportationManagement(scanner, transportations);
                             case 4 -> accommodationManagement(scanner, accommodations);
                             case 5 -> additionalOperations(scanner, trips, transportations, accommodations);
@@ -134,7 +133,7 @@ public class Main {
         }
     }
 
-    public static void tripManagement(Scanner scanner, Trip[] trips, Client[] clients) {
+    public static void tripManagement(Scanner scanner, Trip[] trips, Client[] clients, Transportation[] transportations, Accommodation[] accommodations) {
         System.out.println("""
                 1. Create a trip
                 2. Edit trip information
@@ -152,11 +151,71 @@ public class Main {
                 int duration = scanner.nextInt();
                 System.out.println("Enter the base price of the trip: ");
                 int basePrice = scanner.nextInt();
-                System.out.println("Choose one of the following clients that will be going on this trip: ");
-                showAll(clients, new Client());
-                int clientIndex = scanner.nextInt();
 
-                Trip trip = new Trip(destination, duration, basePrice, clients[clientIndex - 1]);
+                System.out.println("Enter the ID one of the following clients that will be going on this trip: ");
+                showAll(clients, new Client());
+                String clientId = scanner.next();
+
+                System.out.println("Enter the ID of one of the following transportations the client will take or enter '0' if they do not have an transportation: ");
+                for (int i = 0; i < transportations.length; i++) {
+                    if (transportations[i] == null) {
+                        break;
+                    }
+
+                    System.out.println(transportations[i]);
+                }
+                String transportationId = scanner.next();
+
+                System.out.println("Enter the ID of one of the following accommodations the client will take or enter '0' if they do not have an accommodation: ");
+                for (int i = 0; i < accommodations.length; i++) {
+                    if (accommodations[i] == null) {
+                        break;
+                    }
+
+                    System.out.println(accommodations[i]);
+                }
+                String accommodationId = scanner.next();
+
+                int clientIndex = -1;
+                int transportIndex = -1;
+                int accommodationIndex = -1;
+
+                // LOCATING INDEX OF SELECTED CLIENT, TRANSPORTATION AND ACCOMMODATION
+                for (int i = 0; i < clients.length; i++) {
+                    if (clients[i] == null) {
+                        System.out.println("Invalid Client ID");
+                        break;
+                    }
+                    if (clients[i].getClientID().equals(clientId)) {
+                        clientIndex = i;
+                        break;
+                    }
+                }
+
+                for (int i = 0; i < transportations.length; i++) {
+                    if (transportations[i] == null) {
+                        System.out.println("Invalid Transportation ID");
+                        break;
+                    }
+                    if (transportations[i].getTransportationID().equals(transportationId)) {
+                        transportIndex = i;
+                        break;
+                    }
+                }
+
+                for (int i = 0; i < clients.length; i++) {
+                    if (accommodations[i] == null) {
+                        System.out.println("Invalid Accommodation ID");
+                        break;
+                    }
+                    if (accommodations[i].getAccommodationID().equals(accommodationId)) {
+                        accommodationIndex = i;
+                        break;
+                    }
+                }
+
+
+                Trip trip = new Trip(destination, duration, basePrice, clients[clientIndex], transportations[transportIndex], accommodations[accommodationIndex]);
                 add(trips, trip);
             }
             case 2 -> {
@@ -167,16 +226,9 @@ public class Main {
                 else {
                     showAll(trips, new Trip());
 
-                    System.out.println("Choose the number of a trip you want to edit: ");
-                    int tripEditIndex = scanner.nextInt() - 1;
-
-                    // Validating the user choice
-                    if (trips[tripEditIndex] == null) {
-                        System.out.println("Invalid Trip Chosen");
-                    }
-                    else {
-                        editTrip(scanner, trips, tripEditIndex, clients);
-                    }
+                    System.out.println("Enter the ID of the trip you want to edit: ");
+                    String id = scanner.next();
+                    editTrip(scanner, trips, id, clients);
                 }
             }
             case 3 -> {
@@ -688,10 +740,20 @@ public class Main {
         }
     }
 
-    public static void editTrip(Scanner scanner, Trip[] trips, int tripIndex, Client[] clients) {
-        boolean running = true;
-        while (running) {
-            System.out.println("""
+    public static void editTrip(Scanner scanner, Trip[] trips, String id, Client[] clients) {
+        // Find Index of selected trip
+        int tripIndex = -1;
+        for (int i = 0; i < trips.length; i++) {
+            if (trips[i].getTripID().equals(id)) {
+                tripIndex = i;
+                break;
+            }
+        }
+
+        if (tripIndex > -1) { // TODO EDIT TRANSPORTATION AND ACCOMMODATION
+            boolean running = true;
+            while (running) {
+                System.out.println("""
                         Which section do you want to edit?
                         1 - Destination
                         2 - Duration (in days)
@@ -699,34 +761,38 @@ public class Main {
                         4 - Client going on the trip
                         5 - Finished Editing
                         """);
-            int choice = scanner.nextInt() - 1;
+                int choice = scanner.nextInt() - 1;
 
-            switch (choice) {
-                case 1 -> {
-                    System.out.println("Enter a destination: ");
-                    trips[tripIndex].setDestination(scanner.next());
-                    System.out.println("Destination Updated to: " + trips[tripIndex].getDestination());
+                switch (choice) {
+                    case 1 -> {
+                        System.out.println("Enter a destination: ");
+                        trips[tripIndex].setDestination(scanner.next());
+                        System.out.println("Destination Updated to: " + trips[tripIndex].getDestination());
+                    }
+                    case 2 -> {
+                        System.out.println("Enter the new duration of the trip: ");
+                        trips[tripIndex].setDurationInDays(scanner.nextInt());
+                        System.out.println("Updated Duration to: " + trips[tripIndex].getDurationInDays() + " days.");
+                    }
+                    case 3 -> {
+                        System.out.println("Enter a new base price: ");
+                        trips[tripIndex].setBasePrice(scanner.nextInt());
+                        System.out.println("Base Price Updated to: " + trips[tripIndex].getBasePrice());
+                    }
+                    case 4 -> {
+                        showAll(clients, new Client());
+                        System.out.println("Select the number of the new client going on the trip: ");
+                        trips[tripIndex].setClientOnTrip(clients[scanner.nextInt()]);
+                        System.out.println("Profile of the new client going on this trip: ");
+                        System.out.println(trips[tripIndex].getClientOnTrip());
+                    }
+                    case 5 -> running = false;
+                    default -> System.out.println("Invalid Input. Try Again");
                 }
-                case 2 -> {
-                    System.out.println("Enter the new duration of the trip: ");
-                    trips[tripIndex].setDurationInDays(scanner.nextInt());
-                    System.out.println("Updated Duration to: " + trips[tripIndex].getDurationInDays() + " days.");
-                }
-                case 3 -> {
-                    System.out.println("Enter a new base price: ");
-                    trips[tripIndex].setBasePrice(scanner.nextInt());
-                    System.out.println("Base Price Updated to: " + trips[tripIndex].getBasePrice());
-                }
-                case 4 -> {
-                    showAll(clients, new Client());
-                    System.out.println("Select the number of the new client going on the trip: ");
-                    trips[tripIndex].setClientOnTrip(clients[scanner.nextInt()]);
-                    System.out.println("Profile of the new client going on this trip: ");
-                    System.out.println(trips[tripIndex].getClientOnTrip());
-                }
-                case 5 -> running = false;
-                default -> System.out.println("Invalid Input. Try Again");
             }
+        }
+        else {
+            System.out.println("No Trip with that ID exist.");
         }
     }
 
@@ -771,10 +837,6 @@ public class Main {
         Client client3 = new Client("Jane", "Doe", "janedoe@gmail.com");
         Client client4 = new Client(client3);
 
-        Trip trip1 = new Trip("Japan", 7, 2000, client1);
-        Trip trip2 = new Trip("France", 14, 3500, client2);
-        Trip trip3 = new Trip("France", 14, 3500, client3);
-
         Bus bus1 = new Bus("CanadaTravels", "Montreal", "Quebec", "STM", 2, 61);
         Bus bus2 = new Bus("AmericaUnited", "Toronto", "New York City", "TTC", 3, 65);
 
@@ -789,6 +851,10 @@ public class Main {
 
         Hostel hostel1 = new Hostel("Marseille Deluxe", "France", 114, 4);
         Hostel hostel2 = new Hostel("Tokyo Yasashi", "Japan", 100, 2);
+
+        Trip trip1 = new Trip("Japan", 7, 2000, client1, flight2, hostel2);
+        Trip trip2 = new Trip("France", 14, 3500, client2, null, hotel1);
+        Trip trip3 = new Trip("France", 14, 3500, client3, flight1, null);
 
         Client[] clients = {client1, client2, client3, client4};
         Trip[] trips = {trip1, trip2, trip3};
