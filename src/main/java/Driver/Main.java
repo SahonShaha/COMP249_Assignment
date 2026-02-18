@@ -60,9 +60,7 @@ public class Main {
                             case 3 -> transportationManagement(scanner, transportations);
                             case 4 -> accommodationManagement(scanner, accommodations);
                             case 5 -> additionalOperations(scanner, trips, transportations, accommodations);
-                            case 6 -> {
-                                userMenu = false;
-                            }
+                            case 6 -> userMenu = false;
                             default -> System.out.println("Invalid Option.");
                         }
                     }
@@ -243,13 +241,21 @@ public class Main {
             case 4 -> showAll(trips, new Trip());
             case 5 -> {
                 showAll(clients, new Client());
-                System.out.println("Choose number of the client you want to see the trips of: ");
-                int clientIndex = scanner.nextInt() - 1;
+                System.out.println("Enter the ID of the client you want to see the trips of: ");
+                String clientID = scanner.next();
+                int clientIndex = -1;
 
-                if (clients[clientIndex] == null) { // Ensuring the user doesn't enter the number of a non-existing client
-                    System.out.println("No Client of that number exists");
+                for (int i = 0; i < clients.length; i++) {
+                    if (clients[i] == null) {
+                        System.out.println("No Client with that ID exists.");
+                    }
+
+                    if (clients[i] != null && clients[i].getClientID().equals(clientID)) {
+                        clientIndex = i;
+                    }
                 }
-                else {
+
+                if (clientIndex > -1) {
                     for (int i = 0; i < trips.length; i++) {
                         if (trips[i] == null) {
                             break; // If we reach a null object, that means we've gone through every existing trip
@@ -503,7 +509,49 @@ public class Main {
                 System.out.println(mostExpensive);
             }
             case 2 -> {
-                // TODO
+                showAll(trips, new Trip());
+                System.out.println("Enter the ID of the trip you want to see the total cost of: ");
+                String tripID = scanner.next();
+                int tripIndex = -1;
+
+                for (int i = 0; i < trips.length; i++) {
+                    if (trips[i] == null) {
+                        System.out.println("No Trip with that ID exist.");
+                        break;
+                    }
+
+                    if (trips[i].getTripID().equals(tripID)) {
+                        tripIndex = i;
+                        break;
+                    }
+                }
+
+                double basePrice = trips[tripIndex].getBasePrice();
+                double transportationPrice = 0;
+                double accommodationPrice = 0;
+
+                // Checking which type of transportation is in trip and getting its price
+                if (trips[tripIndex].getTransportation() instanceof Bus) {
+                    transportationPrice = ((Bus) trips[tripIndex].getTransportation()).calculateCost();
+                }
+                else if (trips[tripIndex].getTransportation() instanceof Flight) {
+                    transportationPrice = ((Flight) trips[tripIndex].getTransportation()).calculateCost();
+                }
+                else if (trips[tripIndex].getTransportation() instanceof Train) {
+                    transportationPrice = ((Train) trips[tripIndex].getTransportation()).calculateCost();
+                }
+
+                // Checking which type of accommodation is in trip and getting its price
+                if (trips[tripIndex].getAccommodation() instanceof Hotel) {
+                    accommodationPrice = ((Hotel) trips[tripIndex].getAccommodation()).calculateCost();
+                }
+                else if (trips[tripIndex].getAccommodation() instanceof  Hostel) {
+                    accommodationPrice = ((Hostel) trips[tripIndex].getAccommodation()).calculateCost();
+                }
+
+                System.out.println("The total cost for this trip is " + basePrice + transportationPrice + "$ with a fee of "
+                + accommodationPrice + "$ per night.");
+
             }
             case 3 -> {
                 /*Transportation[] newTransportations = new Transportation[transportations.length];
@@ -565,17 +613,6 @@ public class Main {
                 }
             }
         }
-    }
-
-    // Deletes an object at a certain index
-    public static void delete(Object[] objects, int clientIndex) {
-        objects[clientIndex] = null;
-
-        // Shifting all objects back to clear the gap in the array caused by the deleted object
-        for (int i = clientIndex; i < objects.length - 1; i++) { // We are going till the before last object in the array
-            objects[i] = objects[i + 1];
-        }
-        objects[objects.length - 1] = null; // no matter what, if an object is deleted and everything is shifted, the last object MUST be null
     }
 
     public static void deleteClient(Client[] clients, String id) {
