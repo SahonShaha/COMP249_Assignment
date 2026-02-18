@@ -878,6 +878,10 @@ public class Main {
 
         // Creating Deep Copy of the Array
         for (int i = 0; i < original.length; i++) {
+            if (original[i] == null) {
+                break;
+            }
+
             if (original[i] instanceof Bus) {
                 newTransportations[i] = new Bus((Bus) original[i]);
             }
@@ -949,8 +953,8 @@ public class Main {
         Hostel hostel2 = new Hostel("Tokyo Yasashi", "Japan", 100, 2);
 
         Trip trip1 = new Trip("Japan", 7, 2000, client1, flight2, hostel2);
-        Trip trip2 = new Trip("France", 14, 3500, client2, null, hotel1);
-        Trip trip3 = new Trip("France", 14, 3500, client3, flight1, null);
+        Trip trip2 = new Trip("France", 14, 3500, client2, bus2, hotel1);
+        Trip trip3 = new Trip("France", 14, 3500, client3, flight1, hostel1);
 
         Client[] clients = {client1, client2, client3, client4};
         Trip[] trips = {trip1, trip2, trip3};
@@ -983,7 +987,7 @@ public class Main {
                 double transportationPrice = trips[i].getTransportation().calculateCost();
                 double accommodationPrice = trips[i].getAccommodation().calculateCost();
 
-                System.out.println("The total cost for this trip is " + basePrice + transportationPrice + "$ with a fee of "
+                System.out.println("The total cost for this trip is " + (basePrice + transportationPrice) + "$ with a fee of "
                         + accommodationPrice + "$ per night.");
             }
         }
@@ -993,6 +997,18 @@ public class Main {
         System.out.println(mostExpensiveTrip(trips));
         System.out.println("-----------------------------------------------------------------------------------------");
 
-        System.out.println("DEEP COPY OF TRANSPORTATION ARRAY");
+        System.out.println("DEEP COPY OF TRANSPORTATION ARRAY"); // TODO DEBUG WHY 4 OBJECTS NOT SHOWN
+        Transportation[] deepCopied = transportationsDeepCopy(transportations);
+
+        deepCopied[1] = new Flight("VIP Vacations", "Wuyang", "Beijing", "Delta Airlines", 20, 20000);
+
+        System.out.println("ORIGINAL ARRAY");
+        for (int i = 0; i < transportations.length; i++) {
+            System.out.println(transportations[i]);
+        }
+        System.out.println("COPIED ARRAY");
+        for (int i = 0; i < deepCopied.length; i++) {
+            System.out.println(deepCopied[i]);
+        }
     }
 }
