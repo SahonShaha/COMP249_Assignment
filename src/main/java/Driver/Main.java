@@ -228,7 +228,7 @@ public class Main {
 
                     System.out.println("Enter the ID of the trip you want to edit: ");
                     String id = scanner.next();
-                    editTrip(scanner, trips, id, clients);
+                    editTrip(scanner, trips, id, clients, transportations, accommodations);
                 }
             }
             case 3 -> {
@@ -740,7 +740,7 @@ public class Main {
         }
     }
 
-    public static void editTrip(Scanner scanner, Trip[] trips, String id, Client[] clients) {
+    public static void editTrip(Scanner scanner, Trip[] trips, String id, Client[] clients, Transportation[] transportations, Accommodation[] accommodations) {
         // Find Index of selected trip
         int tripIndex = -1;
         for (int i = 0; i < trips.length; i++) {
@@ -750,7 +750,7 @@ public class Main {
             }
         }
 
-        if (tripIndex > -1) { // TODO EDIT TRANSPORTATION AND ACCOMMODATION
+        if (tripIndex > -1) {
             boolean running = true;
             while (running) {
                 System.out.println("""
@@ -759,7 +759,9 @@ public class Main {
                         2 - Duration (in days)
                         3 - Base Price
                         4 - Client going on the trip
-                        5 - Finished Editing
+                        5 - Transportation
+                        6 - Accommodation
+                        7 - Finished Editing
                         """);
                 int choice = scanner.nextInt() - 1;
 
@@ -781,12 +783,75 @@ public class Main {
                     }
                     case 4 -> {
                         showAll(clients, new Client());
-                        System.out.println("Select the number of the new client going on the trip: ");
-                        trips[tripIndex].setClientOnTrip(clients[scanner.nextInt()]);
+                        System.out.println("Enter the ID of the new client going on the trip: ");
+                        String newClientId = scanner.next();
+                        int clientIndex = -1;
+
+                        for (int i = 0; i < clients.length; i++) {
+                            if (clients[i] == null) {
+                                System.out.println("Invalid Client ID");
+                                break;
+                            }
+                            if (clients[i].getClientID().equals(newClientId)) {
+                                clientIndex = i;
+                                break;
+                            }
+                        }
+                        trips[tripIndex].setClientOnTrip(clients[clientIndex]);
                         System.out.println("Profile of the new client going on this trip: ");
                         System.out.println(trips[tripIndex].getClientOnTrip());
                     }
-                    case 5 -> running = false;
+                    case 5 -> {
+                        for (int i = 0; i < transportations.length; i++) {
+                            if (transportations[i] != null) {
+                                System.out.println(transportations[i]);
+                            }
+                        }
+                        System.out.println("Enter the ID of the new transportation: ");
+                        String newTransportationId = scanner.next();
+                        int transportationIndex = -1;
+
+                        for (int i = 0; i < transportations.length; i++) {
+                            if (transportations[i] == null) {
+                                System.out.println("Invalid Transportation ID");
+                                break;
+                            }
+                            if (transportations[i].getTransportationID().equals(newTransportationId)) {
+                                transportationIndex = i;
+                                break;
+                            }
+                        }
+
+                        trips[tripIndex].setTransportation(transportations[transportationIndex]);
+                        System.out.println("Information about the new transportation method: ");
+                        System.out.println(trips[tripIndex].getTransportation());
+                    }
+                    case 6 -> {
+                        for (int i = 0; i < accommodations.length; i++) {
+                            if (accommodations[i] != null) {
+                                System.out.println(accommodations[i]);
+                            }
+                        }
+                        System.out.println("Enter the ID of the new accommodation: ");
+                        String newAccommodationId = scanner.next();
+                        int accommodationIndex = -1;
+
+                        for (int i = 0; i < accommodations.length; i++) {
+                            if (accommodations[i] == null) {
+                                System.out.println("Invalid Accommodation ID");
+                                break;
+                            }
+                            if (accommodations[i].getAccommodationID().equals(newAccommodationId)) {
+                                accommodationIndex = i;
+                                break;
+                            }
+                        }
+
+                        trips[tripIndex].setAccommodation(accommodations[accommodationIndex]);
+                        System.out.println("Information about the new accommodation: ");
+                        System.out.println(trips[tripIndex].getAccommodation());
+                    }
+                    case 7 -> running = false;
                     default -> System.out.println("Invalid Input. Try Again");
                 }
             }
