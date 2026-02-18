@@ -21,11 +21,6 @@ public class Main {
         Trip[] trips = new Trip[99];
         Transportation[] transportations = new Transportation[99];
         Accommodation[] accommodations = new Accommodation[99];
-        /*Bus[] buses = new Bus[99];
-        Train[] trains = new Train[99];
-        Flight[] flights = new Flight[99];
-        Hotel[] hotels = new Hotel[99];
-        Hostel[] hostels = new Hostel[99];*/
 
 
         System.out.println("Welcome to SmartTravel!");
@@ -527,28 +522,8 @@ public class Main {
                 }
 
                 double basePrice = trips[tripIndex].getBasePrice();
-                double transportationPrice = 0;
-                double accommodationPrice = 0;
-
-                // Checking which type of transportation is in trip and getting its price
-                if (trips[tripIndex].getTransportation() instanceof Bus) {
-                    transportationPrice = ((Bus) trips[tripIndex].getTransportation()).calculateCost();
-                }
-                else if (trips[tripIndex].getTransportation() instanceof Flight) {
-                    transportationPrice = ((Flight) trips[tripIndex].getTransportation()).calculateCost();
-                }
-                else if (trips[tripIndex].getTransportation() instanceof Train) {
-                    transportationPrice = ((Train) trips[tripIndex].getTransportation()).calculateCost();
-                }
-
-                // Checking which type of accommodation is in trip and getting its price
-                if (trips[tripIndex].getAccommodation() instanceof Hotel) {
-                    accommodationPrice = ((Hotel) trips[tripIndex].getAccommodation()).calculateCost();
-                }
-                else if (trips[tripIndex].getAccommodation() instanceof  Hostel) {
-                    accommodationPrice = ((Hostel) trips[tripIndex].getAccommodation()).calculateCost();
-                }
-
+                double transportationPrice = trips[tripIndex].getTransportation().calculateCost();
+                double accommodationPrice = trips[tripIndex].getAccommodation().calculateCost();
                 System.out.println("The total cost for this trip is " + basePrice + transportationPrice + "$ with a fee of "
                 + accommodationPrice + "$ per night.");
 
@@ -933,6 +908,25 @@ public class Main {
         return newAccommodations;
     }
 
+    public static Trip mostExpensiveTrip(Trip[] trips) {
+        Trip mostExpensive = null;
+
+        for (int i = 0; i < trips.length; i++) {
+            if (mostExpensive == null) {
+                mostExpensive = trips[i];
+            }
+            if (trips[i] != null) {
+                double previousTotal = mostExpensive.getBasePrice() + mostExpensive.getTransportation().calculateCost() + mostExpensive.getAccommodation().calculateCost();
+                double ithTotal = trips[i].getBasePrice() + trips[i].getTransportation().calculateCost() + trips[i].getAccommodation().calculateCost();
+                if (ithTotal > previousTotal) {
+                    mostExpensive = trips[i];
+                }
+            }
+        }
+
+        return mostExpensive;
+    }
+
     public static void testingScenario() {
         Client client1 = new Client("Sahon", "Shaha", "shahsahon@gmail.com");
         Client client2 = new Client("John", "Doe", "johndoe@gmail.com");
@@ -962,11 +956,6 @@ public class Main {
         Trip[] trips = {trip1, trip2, trip3};
         Transportation[] transportations = {bus1, bus2, train1, train2, flight1, flight2};
         Accommodation[] accommodations = {hotel1, hotel2, hostel1, hostel2};
-        /*Bus[] buses = {bus1, bus2};
-        Train[] trains = {train1, train2};
-        Flight[] flights = {flight1, flight2};
-        Hotel[] hotels = {hotel1, hotel2};
-        Hostel[] hostels = {hostel1, hostel2};*/
 
         System.out.println("CLIENTS:");
         for (Client client : clients) System.out.println(client);
@@ -987,6 +976,23 @@ public class Main {
         System.out.println(client4.equals(client3));
         System.out.println("-----------------------------------------------------------------------------------------");
 
-        // TODO 5,6,7
+        System.out.println("DEMONSTRATING POLYMORPHISM");
+        for (int i = 0; i < trips.length; i++) {
+            if (trips[i] != null) {
+                double basePrice = trips[i].getBasePrice();
+                double transportationPrice = trips[i].getTransportation().calculateCost();
+                double accommodationPrice = trips[i].getAccommodation().calculateCost();
+
+                System.out.println("The total cost for this trip is " + basePrice + transportationPrice + "$ with a fee of "
+                        + accommodationPrice + "$ per night.");
+            }
+        }
+        System.out.println("-----------------------------------------------------------------------------------------");
+
+        System.out.println("MOST EXPENSIVE TRIP");
+        System.out.println(mostExpensiveTrip(trips));
+        System.out.println("-----------------------------------------------------------------------------------------");
+
+        System.out.println("DEEP COPY OF TRANSPORTATION ARRAY");
     }
 }

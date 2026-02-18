@@ -57,7 +57,7 @@ public abstract class Accommodation {
         }
     }
 
-    abstract double calculateCost();
+    public abstract double calculateCost();
 
     public String getAccommodationID() {
         return accommodationID;
