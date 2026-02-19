@@ -59,6 +59,7 @@ public class Trip {
     // Copy Constructor
     public Trip(Trip trip) {
         this.tripID = "T" + count++;
+        System.out.println("New object created!");
         this.destination = trip.getDestination();
         this.durationInDays = trip.getDurationInDays();
         this.basePrice = trip.getBasePrice();

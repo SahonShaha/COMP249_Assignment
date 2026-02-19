@@ -8,7 +8,9 @@ package Driver;
 
 import Client.Client;
 import Travel.*;
+import Visualization.TripChartGenerator;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
@@ -22,6 +24,51 @@ public class Main {
         Transportation[] transportations = new Transportation[99];
         Accommodation[] accommodations = new Accommodation[99];
 
+        // TESTING VISUALIZATION
+        /*Client client1 = new Client("Sahon", "Shaha", "shahsahon@gmail.com");
+        Client client2 = new Client("John", "Doe", "johndoe@gmail.com");
+        Client client3 = new Client("Jane", "Doe", "janedoe@gmail.com");
+        Client client4 = new Client(client3);
+
+        Bus bus1 = new Bus("CanadaTravels", "Montreal", "Quebec", "STM", 2, 61);
+        Bus bus2 = new Bus("AmericaUnited", "Toronto", "New York City", "TTC", 3, 65);
+
+        Train train1 = new Train("ViaRail Canada", "Montreal", "Vancouver City", "High Speed", "Cabin", 100);
+        Train train2 = new Train("North America Transit", "Boston", "Montreal", "Bullet Train", "Deluxe", 75);
+
+        Flight flight1 = new Flight("Europe Travel Agency", "Montreal", "France", "Air France Canada", 27, 4000);
+        Flight flight2 = new Flight("Japan Airways", "Montreal", "Japan", "Air Canada", 31, 3200);
+
+        Hotel hotel1 = new Hotel("Hilton Paris Opera", "France", 457, 5);
+        Hotel hotel2 = new Hotel("Hotel Fine Sakai", "Japan", 37, 3);
+
+        Hostel hostel1 = new Hostel("Marseille Deluxe", "France", 114, 4);
+        Hostel hostel2 = new Hostel("Tokyo Yasashi", "Japan", 100, 2);
+
+        Trip trip1 = new Trip("Japan", 7, 2000, client1, flight2, hostel2);
+        Trip trip2 = new Trip("France", 14, 3500, client2, bus2, hotel1);
+        Trip trip3 = new Trip("France", 14, 3500, client3, flight1, hostel1);
+
+        add(clients, client1);
+        add(clients, client2);
+        add(clients, client3);
+        add(clients, client4);
+
+        add(transportations, bus1);
+        add(transportations, bus2);
+        add(transportations, train1);
+        add(transportations, train2);
+        add(transportations, flight1);
+        add(transportations, flight2);
+
+        add(accommodations, hotel1);
+        add(accommodations, hotel2);
+        add(accommodations, hostel1);
+        add(accommodations, hostel2);
+
+        add(trips, trip1);
+        add(trips, trip2);
+        add(trips, trip3);*/
 
         System.out.println("Welcome to SmartTravel!");
 
@@ -32,7 +79,8 @@ public class Main {
                 Would you like to use the application or run the testing scenario?
                 1 - Run Application
                 2 - Execute Testing Scenario
-                3 - Exit
+                3 - Generate Diagrams
+                4 - Exit
                 """);
             int initialChoice = scanner.nextInt();
 
@@ -63,6 +111,16 @@ public class Main {
 
                 case 2 -> testingScenario();
                 case 3 -> {
+                    try {
+                        TripChartGenerator.generateCostBarChart(trips, countValidObjects(trips));
+                        TripChartGenerator.generateDurationLineChart(trips, countValidObjects(trips));
+                        TripChartGenerator.generateDestinationPieChart(trips, countValidObjects(trips));
+                    }
+                    catch (IOException e) {
+                        System.out.println("Error: " + e);
+                    }
+                }
+                case 4 -> {
                     System.out.println("Closing Application...Goodbye!");
                     isMenuRunning = false;
                 }
@@ -696,6 +754,20 @@ public class Main {
         if (!deleted) {
             System.out.println("No Accommodations under that ID exists.");
         }
+    }
+
+    public static int countValidObjects(Object[] objects) {
+        int count = 0;
+        for (int i = 0; i < objects.length; i++) {
+            if (objects[i] == null) {
+                break;
+            }
+            if (objects[i] != null) {
+                count++;
+            }
+        }
+
+        return count;
     }
 
     // Shows all objects from an array of objects
