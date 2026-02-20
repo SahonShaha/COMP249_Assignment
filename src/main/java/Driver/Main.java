@@ -254,7 +254,7 @@ public class Main {
                     }
                 }
 
-                for (int i = 0; i < clients.length; i++) {
+                for (int i = 0; i < accommodations.length; i++) {
                     if (accommodations[i] == null) {
                         System.out.println("Invalid Accommodation ID");
                         break;
@@ -288,7 +288,7 @@ public class Main {
                 String id = scanner.next();
                 deleteTrip(trips, id);
                 System.out.println("Updated list of Trips post-deletion:");
-                showAll(clients, new Trip());
+                showAll(trips, new Trip());
 
             }
             case 4 -> showAll(trips, new Trip());
@@ -548,18 +548,7 @@ public class Main {
 
         switch (choice) {
             case 1 -> {
-                Trip mostExpensive = new Trip();
-
-                for (int i = 0; i < trips.length; i++) {
-                    if (trips[i] == null) { // Once we reach a null object, then there is no other valid object after it and there is no point checking them
-                        break;
-                    }
-                    if (trips[i].getBasePrice() > mostExpensive.getBasePrice()) {
-                        mostExpensive = trips[i];
-                    }
-                }
-
-                System.out.println(mostExpensive);
+                System.out.println(mostExpensiveTrip(trips));
             }
             case 2 -> {
                 showAll(trips, new Trip());
@@ -579,10 +568,14 @@ public class Main {
                     }
                 }
 
+                if (tripIndex == -1) { // So we break out completely out of the switch case in case trip is not found
+                    break;
+                }
+
                 double basePrice = trips[tripIndex].getBasePrice();
                 double transportationPrice = trips[tripIndex].getTransportation().calculateCost();
                 double accommodationPrice = trips[tripIndex].getAccommodation().calculateCost();
-                System.out.println("The total cost for this trip is " + basePrice + transportationPrice + "$ with a fee of "
+                System.out.println("The total cost for this trip is " + (basePrice + transportationPrice) + "$ with a fee of "
                 + accommodationPrice + "$ per night.");
 
             }
@@ -762,9 +755,7 @@ public class Main {
             if (objects[i] == null) {
                 break;
             }
-            if (objects[i] != null) {
-                count++;
-            }
+            count++;
         }
 
         return count;
@@ -828,6 +819,10 @@ public class Main {
         // Find Index of selected trip
         int tripIndex = -1;
         for (int i = 0; i < trips.length; i++) {
+            if (trips[i] == null) {
+                System.out.println("No Trips available in the Array.");
+                break;
+            }
             if (trips[i].getTripID().equals(id)) {
                 tripIndex = i;
                 break;
@@ -847,7 +842,7 @@ public class Main {
                         6 - Accommodation
                         7 - Finished Editing
                         """);
-                int choice = scanner.nextInt() - 1;
+                int choice = scanner.nextInt();
 
                 switch (choice) {
                     case 1 -> {
@@ -951,6 +946,7 @@ public class Main {
         // Creating Deep Copy of the Array
         for (int i = 0; i < original.length; i++) {
             if (original[i] == null) {
+                System.out.println("Empty Array.");
                 break;
             }
 
@@ -964,7 +960,6 @@ public class Main {
                 newTransportations[i] = new Train((Train) original[i]);
             }
         }
-
         return newTransportations;
     }
 
@@ -973,6 +968,11 @@ public class Main {
 
         // Creating Deep Copy of the Array
         for (int i = 0; i < accommodations.length; i++) {
+            if (accommodations[i] == null) { // If the first entry of the array is null, then that means the entire array is null
+                System.out.println("Empty Array.");
+                break;
+            }
+
             if (accommodations[i] instanceof Hostel) {
                 newAccommodations[i] = new Hostel((Hostel) accommodations[i]);
             }
@@ -988,7 +988,7 @@ public class Main {
         Trip mostExpensive = null;
 
         for (int i = 0; i < trips.length; i++) {
-            if (mostExpensive == null) {
+            if (mostExpensive == null) { // First iteration is obviously gonna be more expensive than a null object
                 mostExpensive = trips[i];
             }
             if (trips[i] != null) {
@@ -1069,7 +1069,9 @@ public class Main {
         System.out.println(mostExpensiveTrip(trips));
         System.out.println("-----------------------------------------------------------------------------------------");
 
-        System.out.println("DEEP COPY OF TRANSPORTATION ARRAY"); // TODO DEBUG WHY 4 OBJECTS NOT SHOWN
+        System.out.println("DEEP COPY OF TRANSPORTATION ARRAY");
+        // There are IDs skipped because
+        // they are implicitly being generated when a Trip Object is made due to the Transportation and Accommodation fields having deep copies
         Transportation[] deepCopied = transportationsDeepCopy(transportations);
 
         deepCopied[1] = new Flight("VIP Vacations", "Wuyang", "Beijing", "Delta Airlines", 20, 20000);
