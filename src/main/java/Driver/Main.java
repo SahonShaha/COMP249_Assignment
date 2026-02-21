@@ -19,10 +19,10 @@ public class Main {
         boolean isMenuRunning = true;
 
         // Creating storage for the arrays
-        Client[] clients = new Client[99];
-        Trip[] trips = new Trip[99];
-        Transportation[] transportations = new Transportation[99];
-        Accommodation[] accommodations = new Accommodation[99];
+        Client[] clients = new Client[20];
+        Trip[] trips = new Trip[20];
+        Transportation[] transportations = new Transportation[20];
+        Accommodation[] accommodations = new Accommodation[20];
 
         // TESTING VISUALIZATION
         /*Client client1 = new Client("Sahon", "Shaha", "shahsahon@gmail.com");
@@ -109,7 +109,7 @@ public class Main {
                     }
                 }
 
-                case 2 -> testingScenario();
+                case 2 -> testingScenario(clients, transportations, accommodations, trips);
                 case 3 -> {
                     try {
                         TripChartGenerator.generateCostBarChart(trips, countValidObjects(trips));
@@ -157,8 +157,19 @@ public class Main {
                 else {
                     showAll(clients, new Client());
 
-                    System.out.println("Choose the number of a client you want to edit: ");
-                    int clientEditIndex = scanner.nextInt() - 1;
+                    System.out.println("Choose the ID of a client you want to edit: ");
+                    String clientID = scanner.next();
+                    int clientEditIndex = - 1;
+
+                    for (int i = 0; i < clients.length; i++) {
+                        if (clients[i] == null) {
+                            break;
+                        }
+
+                        if (clients[i].getClientID().equals(clientID)) {
+                            clientEditIndex = i;
+                        }
+                    }
 
                     // Validating the user choice
                     if (clients[clientEditIndex] == null) {
@@ -207,7 +218,7 @@ public class Main {
                 showAll(clients, new Client());
                 String clientId = scanner.next();
 
-                System.out.println("Enter the ID of one of the following transportations the client will take or enter '0' if they do not have an transportation: ");
+                System.out.println("Enter the ID of one of the following transportations the client will take: ");
                 for (int i = 0; i < transportations.length; i++) {
                     if (transportations[i] == null) {
                         break;
@@ -217,7 +228,8 @@ public class Main {
                 }
                 String transportationId = scanner.next();
 
-                System.out.println("Enter the ID of one of the following accommodations the client will take or enter '0' if they do not have an accommodation: ");
+
+                System.out.println("Enter the ID of one of the following accommodations the client will take: ");
                 for (int i = 0; i < accommodations.length; i++) {
                     if (accommodations[i] == null) {
                         break;
@@ -300,7 +312,7 @@ public class Main {
 
                 for (int i = 0; i < clients.length; i++) {
                     if (clients[i] == null) {
-                        System.out.println("No Client with that ID exists.");
+                        break;
                     }
 
                     if (clients[i] != null && clients[i].getClientID().equals(clientID)) {
@@ -628,7 +640,7 @@ public class Main {
 
     // Adds an object to an array
     public static void add(Object[] objects, Object object) {
-        if (objects[98] != null) {
+        if (objects[19] != null) {
             System.out.println("Storage Full.");
         }
         else {
@@ -1003,7 +1015,7 @@ public class Main {
         return mostExpensive;
     }
 
-    public static void testingScenario() {
+    public static void testingScenario(Client[] clients, Transportation[] transportations, Accommodation[] accommodations, Trip[] trips) {
         Client client1 = new Client("Sahon", "Shaha", "shahsahon@gmail.com");
         Client client2 = new Client("John", "Doe", "johndoe@gmail.com");
         Client client3 = new Client("Jane", "Doe", "janedoe@gmail.com");
@@ -1028,22 +1040,53 @@ public class Main {
         Trip trip2 = new Trip("France", 14, 3500, client2, bus2, hotel1);
         Trip trip3 = new Trip("France", 14, 3500, client3, flight1, hostel1);
 
-        Client[] clients = {client1, client2, client3, client4};
+        /*Client[] clients = {client1, client2, client3, client4};
         Trip[] trips = {trip1, trip2, trip3};
         Transportation[] transportations = {bus1, bus2, train1, train2, flight1, flight2};
-        Accommodation[] accommodations = {hotel1, hotel2, hostel1, hostel2};
+        Accommodation[] accommodations = {hotel1, hotel2, hostel1, hostel2};*/
+
+        add(clients, client1);
+        add(clients, client2);
+        add(clients, client3);
+        add(clients, client4);
+
+        add(transportations, bus1);
+        add(transportations, bus2);
+        add(transportations, train1);
+        add(transportations, train2);
+        add(transportations, flight1);
+        add(transportations, flight2);
+
+        add(accommodations, hotel1);
+        add(accommodations, hotel2);
+        add(accommodations, hostel1);
+        add(accommodations, hostel2);
+
+        add(trips, trip1);
+        add(trips, trip2);
+        add(trips, trip3);
 
         System.out.println("CLIENTS:");
-        for (Client client : clients) System.out.println(client);
+        showAll(clients, new Client());
         System.out.println("-----------------------------------------------------------------------------------------");
         System.out.println("TRIPS");
-        for (Trip trip : trips) System.out.println(trip);
+        showAll(trips, new Trip());
         System.out.println("-----------------------------------------------------------------------------------------");
         System.out.println("TRANSPORTATIONS");
-        for (Transportation transportation : transportations) System.out.println(transportation);
+        for (int i = 0; i < transportations.length; i++) {
+            if (transportations[i] == null) {
+                break;
+            }
+            System.out.println(transportations[i]);
+        }
         System.out.println("-----------------------------------------------------------------------------------------");
         System.out.println("ACCOMMODATIONS");
-        for (Accommodation accommodation : accommodations) System.out.println(accommodation);
+        for (int i = 0; i < accommodations.length; i++) {
+            if (accommodations[i] == null) {
+                break;
+            }
+            System.out.println(accommodations[i]);
+        }
         System.out.println("-----------------------------------------------------------------------------------------");
 
         System.out.println("TESTING EQUALS METHOD");
@@ -1078,10 +1121,16 @@ public class Main {
 
         System.out.println("ORIGINAL ARRAY");
         for (int i = 0; i < transportations.length; i++) {
+            if (transportations[i] == null) {
+                break;
+            }
             System.out.println(transportations[i]);
         }
         System.out.println("COPIED ARRAY");
         for (int i = 0; i < deepCopied.length; i++) {
+            if (transportations[i] == null) {
+                break;
+            }
             System.out.println(deepCopied[i]);
         }
     }
