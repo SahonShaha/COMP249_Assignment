@@ -24,52 +24,6 @@ public class Main {
         Transportation[] transportations = new Transportation[20];
         Accommodation[] accommodations = new Accommodation[20];
 
-        // TESTING VISUALIZATION
-        /*Client client1 = new Client("Sahon", "Shaha", "shahsahon@gmail.com");
-        Client client2 = new Client("John", "Doe", "johndoe@gmail.com");
-        Client client3 = new Client("Jane", "Doe", "janedoe@gmail.com");
-        Client client4 = new Client(client3);
-
-        Bus bus1 = new Bus("CanadaTravels", "Montreal", "Quebec", "STM", 2, 61);
-        Bus bus2 = new Bus("AmericaUnited", "Toronto", "New York City", "TTC", 3, 65);
-
-        Train train1 = new Train("ViaRail Canada", "Montreal", "Vancouver City", "High Speed", "Cabin", 100);
-        Train train2 = new Train("North America Transit", "Boston", "Montreal", "Bullet Train", "Deluxe", 75);
-
-        Flight flight1 = new Flight("Europe Travel Agency", "Montreal", "France", "Air France Canada", 27, 4000);
-        Flight flight2 = new Flight("Japan Airways", "Montreal", "Japan", "Air Canada", 31, 3200);
-
-        Hotel hotel1 = new Hotel("Hilton Paris Opera", "France", 457, 5);
-        Hotel hotel2 = new Hotel("Hotel Fine Sakai", "Japan", 37, 3);
-
-        Hostel hostel1 = new Hostel("Marseille Deluxe", "France", 114, 4);
-        Hostel hostel2 = new Hostel("Tokyo Yasashi", "Japan", 100, 2);
-
-        Trip trip1 = new Trip("Japan", 7, 2000, client1, flight2, hostel2);
-        Trip trip2 = new Trip("France", 14, 3500, client2, bus2, hotel1);
-        Trip trip3 = new Trip("France", 14, 3500, client3, flight1, hostel1);
-
-        add(clients, client1);
-        add(clients, client2);
-        add(clients, client3);
-        add(clients, client4);
-
-        add(transportations, bus1);
-        add(transportations, bus2);
-        add(transportations, train1);
-        add(transportations, train2);
-        add(transportations, flight1);
-        add(transportations, flight2);
-
-        add(accommodations, hotel1);
-        add(accommodations, hotel2);
-        add(accommodations, hostel1);
-        add(accommodations, hostel2);
-
-        add(trips, trip1);
-        add(trips, trip2);
-        add(trips, trip3);*/
-
         System.out.println("Welcome to SmartTravel!");
 
         while (isMenuRunning) {
@@ -138,7 +92,7 @@ public class Main {
         int choice = scanner.nextInt();
 
         switch (choice) {
-            case 1 -> {
+            case 1 -> { // ADDING CLIENT
                 System.out.println("Enter you First Name: ");
                 String firstName = scanner.next();
                 System.out.println("Enter your Last Name: ");
@@ -149,8 +103,7 @@ public class Main {
                 Client newClient = new Client(firstName, lastName, email);
                 add(clients, newClient);
             }
-            case 2 -> {
-
+            case 2 -> { // Editing Clients
                 if (clients[0] == null) {
                     System.out.println("No Clients created. Please create some first.");
                 }
@@ -159,10 +112,10 @@ public class Main {
 
                     System.out.println("Choose the ID of a client you want to edit: ");
                     String clientID = scanner.next();
-                    int clientEditIndex = - 1;
+                    int clientEditIndex = - 1; // If this stays -1, that means a client of that ID doesn't exist
 
                     for (int i = 0; i < clients.length; i++) {
-                        if (clients[i] == null) {
+                        if (clients[i] == null) { // Once it hits null, that means all available elements have been printed
                             break;
                         }
 
@@ -180,7 +133,7 @@ public class Main {
                     }
                 }
             }
-            case 3 -> {
+            case 3 -> { // Deleting Clients
                 showAll(clients, new Client());
 
                 System.out.println("Choose the ID of a client you want to delete: ");
@@ -206,7 +159,7 @@ public class Main {
         int choice = scanner.nextInt();
 
         switch (choice) {
-            case 1 -> {
+            case 1 -> { // Creating a Trip
                 System.out.println("Enter the destination: ");
                 String destination = scanner.next();
                 System.out.println("Enter the duration of the trip (in days): ");
@@ -277,12 +230,10 @@ public class Main {
                     }
                 }
 
-
                 Trip trip = new Trip(destination, duration, basePrice, clients[clientIndex], transportations[transportIndex], accommodations[accommodationIndex]);
                 add(trips, trip);
             }
-            case 2 -> {
-
+            case 2 -> { // Editing Trip
                 if (trips[0] == null) {
                     System.out.println("No Trips created. Please create some first.");
                 }
@@ -294,7 +245,7 @@ public class Main {
                     editTrip(scanner, trips, id, clients, transportations, accommodations);
                 }
             }
-            case 3 -> {
+            case 3 -> { // Deleting Trip
                 showAll(trips, new Trip());
                 System.out.println("Choose the ID of the trip you want to delete: ");
                 String id = scanner.next();
@@ -304,7 +255,7 @@ public class Main {
 
             }
             case 4 -> showAll(trips, new Trip());
-            case 5 -> {
+            case 5 -> { // Showing Trips based on a client ID
                 showAll(clients, new Client());
                 System.out.println("Enter the ID of the client you want to see the trips of: ");
                 String clientID = scanner.next();
@@ -346,7 +297,7 @@ public class Main {
         int choice = scanner.nextInt();
 
         switch (choice) {
-            case 1 -> {
+            case 1 -> { // Adding transportation
                 System.out.println("What type of transportation?");
                 System.out.println("""
                         1. Bus
@@ -364,7 +315,7 @@ public class Main {
 
 
                 switch (transportationChoice) {
-                    case 1 -> {
+                    case 1 -> { // Adding a bus
                         System.out.println("Enter the name of the Bus Company: ");
                         String busCompany = scanner.next();
                         System.out.println("Enter the amount of stops during the transit: ");
@@ -376,7 +327,7 @@ public class Main {
                         add(transportations, newBus);
                     }
 
-                    case 2 -> {
+                    case 2 -> { // Adding a flight
                         System.out.println("Enter the Airline Name: ");
                         String airlineName = scanner.next();
                         System.out.println("Enter the maximum weight of luggage: ");
@@ -388,7 +339,7 @@ public class Main {
                         add(transportations, newFlight);
                     }
 
-                     case 3 -> {
+                     case 3 -> { // Adding a train
                          System.out.println("Enter the type of train: ");
                          String trainType = scanner.next();
                          System.out.println("Enter class of seats (Basic, Cabin or Deluxe): ");
@@ -403,7 +354,7 @@ public class Main {
                 }
             }
 
-            case 2 -> {
+            case 2 -> { // Deleting a transportation
                 System.out.println("What type of transportation?");
                 System.out.println("""
                         1. Bus
@@ -431,7 +382,7 @@ public class Main {
                 deleteTransportation(transportations, id);
             }
 
-            case 3 -> {
+            case 3 -> { // Showing Transportations
                 System.out.println("Which type of transportation do you want to list?");
                 System.out.println("""
                         1. Buses
@@ -469,7 +420,7 @@ public class Main {
         int choice = scanner.nextInt();
 
         switch (choice) {
-            case 1 -> {
+            case 1 -> { // Adding an accommodation
                 System.out.println("What type of accommodation?");
                 System.out.println("""
                         1. Hostels
@@ -485,14 +436,14 @@ public class Main {
                 int pricePerNight = scanner.nextInt();
 
                 switch (accommodationChoice) {
-                    case 1 -> {
+                    case 1 -> { // Adding a hostel
                         System.out.println("Enter the number of beds per room: ");
                         int beds = scanner.nextInt();
 
                         Hostel newHostel = new Hostel(name, location, pricePerNight, beds);
                         add(accommodations, newHostel);
                     }
-                    case 2 -> {
+                    case 2 -> { // Adding a hotel
                         System.out.println("Enter the number of stars: ");
                         int stars = scanner.nextInt();
 
@@ -502,7 +453,7 @@ public class Main {
                     default -> System.out.println("Invalid Input.");
                 }
             }
-            case 2 -> {
+            case 2 -> { // Deleting an accommodation
                 System.out.println("What type of accommodation?");
                 System.out.println("""
                         1. Hostels
@@ -524,7 +475,7 @@ public class Main {
                 String id = scanner.next();
                 deleteAccommodation(accommodations, id);
             }
-            case 3 -> {
+            case 3 -> { // Showing accommodations
                 System.out.println("Which type of transportation do you want to list?");
                 System.out.println("""
                         1. Hostels
@@ -562,15 +513,14 @@ public class Main {
             case 1 -> {
                 System.out.println(mostExpensiveTrip(trips));
             }
-            case 2 -> {
+            case 2 -> { // Total cost of a trip
                 showAll(trips, new Trip());
                 System.out.println("Enter the ID of the trip you want to see the total cost of: ");
                 String tripID = scanner.next();
                 int tripIndex = -1;
 
                 for (int i = 0; i < trips.length; i++) {
-                    if (trips[i] == null) {
-                        System.out.println("No Trip with that ID exist.");
+                    if (trips[i] == null) { // Once trips become null, that means we have iterated through all valid elements
                         break;
                     }
 
@@ -592,21 +542,6 @@ public class Main {
 
             }
             case 3 -> {
-                /*Transportation[] newTransportations = new Transportation[transportations.length];
-
-                // Creating Deep Copy of the Array
-                for (int i = 0; i < transportations.length; i++) {
-                    if (transportations[i] instanceof Bus) {
-                        newTransportations[i] = new Bus((Bus) transportations[i]);
-                    }
-                    else if (transportations[i] instanceof Flight) {
-                        newTransportations[i] = new Flight((Flight) transportations[i]);
-                    }
-                    else if (transportations[i] instanceof Train) {
-                        newTransportations[i] = new Train((Train) transportations[i]);
-                    }
-                }*/
-
                 Transportation[] newTransportations = transportationsDeepCopy(transportations);
 
                 // Printing Deep Copied Array
@@ -615,18 +550,6 @@ public class Main {
                 }
             }
              case 4 -> {
-                /*Accommodation[] newAccommodations = new Accommodation[accommodations.length];
-
-                // Creating Deep Copy of the Array
-                 for (int i = 0; i < accommodations.length; i++) {
-                     if (accommodations[i] instanceof Hostel) {
-                         newAccommodations[i] = new Hostel((Hostel) accommodations[i]);
-                     }
-                     else if (accommodations[i] instanceof Hotel) {
-                         newAccommodations[i] = new Hotel((Hotel) accommodations[i]);
-                     }
-                 }*/
-
                  Accommodation[] newAccommodations = accommodationsDeepCopy(accommodations);
 
                  // Printing Deep Copied Array
@@ -640,11 +563,11 @@ public class Main {
 
     // Adds an object to an array
     public static void add(Object[] objects, Object object) {
-        if (objects[19] != null) {
+        if (objects[19] != null) { // The 19 is hard coded due to the size of the class arrays
             System.out.println("Storage Full.");
         }
         else {
-            for (int i = 0; i < objects.length; i++) {
+            for (int i = 0; i < objects.length; i++) { // We iterate until we reach a null element
                 if (objects[i] == null) {
                     objects[i] = object;
                     break;
@@ -1039,11 +962,6 @@ public class Main {
         Trip trip1 = new Trip("Japan", 7, 2000, client1, flight2, hostel2);
         Trip trip2 = new Trip("France", 14, 3500, client2, bus2, hotel1);
         Trip trip3 = new Trip("France", 14, 3500, client3, flight1, hostel1);
-
-        /*Client[] clients = {client1, client2, client3, client4};
-        Trip[] trips = {trip1, trip2, trip3};
-        Transportation[] transportations = {bus1, bus2, train1, train2, flight1, flight2};
-        Accommodation[] accommodations = {hotel1, hotel2, hostel1, hostel2};*/
 
         add(clients, client1);
         add(clients, client2);
