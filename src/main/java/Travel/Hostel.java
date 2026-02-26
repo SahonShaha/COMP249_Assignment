@@ -6,6 +6,8 @@
 
 package Travel;
 
+import Exceptions.InvalidAccommodationDataException;
+
 public class Hostel extends Accommodation {
     private int sharedBeds;
 
@@ -13,8 +15,11 @@ public class Hostel extends Accommodation {
     public Hostel(){}
 
     // Parametrized Constructor
-    public Hostel (String name, String location, int pricePerNight, int sharedBeds) {
+    public Hostel (String name, String location, int pricePerNight, int sharedBeds) throws InvalidAccommodationDataException {
         super(name, location, pricePerNight);
+        if (pricePerNight > 150) {
+            throw new InvalidAccommodationDataException("A hostel's price must be lower than 150$");
+        }
         this.sharedBeds = sharedBeds;
     }
 

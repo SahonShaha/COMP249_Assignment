@@ -6,6 +6,8 @@
 
 package Travel;
 
+import Exceptions.InvalidAccommodationDataException;
+
 public abstract class Accommodation {
     private static int count = 4001; // Represents the amount of objects created. Will be used to create the ID
     private String accommodationID;
@@ -17,8 +19,12 @@ public abstract class Accommodation {
     public Accommodation() {}
 
     // Parametrized Constructor
-    public Accommodation(String name, String location, int pricePerNight) {
+    public Accommodation(String name, String location, int pricePerNight) throws InvalidAccommodationDataException {
         this.accommodationID = "A" + count++;
+
+        if (pricePerNight < 1) { // TODO Amount of nights?
+            throw new InvalidAccommodationDataException("The price per night needs to be greater than 0.");
+        }
         this.name = name;
         this.location = location;
         this.pricePerNight = pricePerNight;

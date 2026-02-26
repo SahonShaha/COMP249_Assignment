@@ -7,6 +7,7 @@
 package Driver;
 
 import Exceptions.DuplicateEmailException;
+import Exceptions.InvalidAccommodationDataException;
 import Exceptions.InvalidClientDataException;
 import Exceptions.InvalidTransportDataException;
 import Travel.*;
@@ -469,15 +470,25 @@ public class Main {
                         System.out.println("Enter the number of beds per room: ");
                         int beds = scanner.nextInt();
 
-                        Hostel newHostel = new Hostel(name, location, pricePerNight, beds);
-                        add(accommodations, newHostel);
+                        try {
+                            Hostel newHostel = new Hostel(name, location, pricePerNight, beds);
+                            add(accommodations, newHostel);
+                        }
+                        catch (InvalidAccommodationDataException invalidAccommodationDataException) {
+                            System.out.println(invalidAccommodationDataException);
+                        }
                     }
                     case 2 -> { // Adding a hotel
                         System.out.println("Enter the number of stars: ");
                         int stars = scanner.nextInt();
 
-                        Hotel newHotel = new Hotel(name, location, pricePerNight, stars);
-                        add(accommodations, newHotel);
+                        try {
+                            Hotel newHotel = new Hotel(name, location, pricePerNight, stars);
+                            add(accommodations, newHotel);
+                        }
+                        catch (InvalidAccommodationDataException invalidAccommodationDataException) {
+                            System.out.println(invalidAccommodationDataException);
+                        }
                     }
                     default -> System.out.println("Invalid Input.");
                 }

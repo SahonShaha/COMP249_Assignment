@@ -6,6 +6,8 @@
 
 package Travel;
 
+import Exceptions.InvalidAccommodationDataException;
+
 public class Hotel extends Accommodation {
     private int stars;
 
@@ -13,8 +15,12 @@ public class Hotel extends Accommodation {
     public Hotel(){}
 
     // Parametrized Constructor
-    public Hotel(String name, String location, int pricePerNight, int stars) {
+    public Hotel(String name, String location, int pricePerNight, int stars) throws InvalidAccommodationDataException {
         super(name, location, pricePerNight);
+
+        if (stars < 0 || stars > 5) {
+            throw new InvalidAccommodationDataException("Stars must be between 1 and 5.");
+        }
         this.stars = stars;
     }
 
@@ -57,7 +63,10 @@ public class Hotel extends Accommodation {
         return stars;
     }
 
-    public void setStars(int stars) {
+    public void setStars(int stars) throws InvalidAccommodationDataException{
+        if (stars < 0 || stars > 5) {
+            throw new InvalidAccommodationDataException("Stars must be between 1 and 5.");
+        }
         this.stars = stars;
     }
 }
