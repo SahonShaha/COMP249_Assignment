@@ -48,8 +48,9 @@ public class Hotel extends Accommodation {
         }
     }
 
-    public double calculateCost(int numberOfDays) {
-        return this.getPricePerNight() * numberOfDays;
+    public double calculateCost() {
+        // Service Fee of 5$ per night
+        return this.getPricePerNight() + 5;
     }
 
     public int getStars() {

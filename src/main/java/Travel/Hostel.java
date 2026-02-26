@@ -48,8 +48,9 @@ public class Hostel extends Accommodation {
         }
     }
 
-    public double calculateCost(int numberOfDays) {
-        return this.getPricePerNight() * numberOfDays;
+    public double calculateCost() {
+        // Discount of 10%
+        return this.getPricePerNight() - (this.getPricePerNight() * 0.1);
     }
 
     public int getSharedBeds() {

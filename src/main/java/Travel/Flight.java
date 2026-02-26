@@ -9,15 +9,17 @@ package Travel;
 public class Flight extends Transportation {
     private String airlineName;
     private int luggageAllowance;
+    private int ticketPrice;
 
     // Default Constructor
     public Flight(){}
 
     // Parameterized Constructor
-    public Flight(String companyName, String departureCity, String arrivalCity, String airlineName, int luggageAllowance) {
+    public Flight(String companyName, String departureCity, String arrivalCity, String airlineName, int luggageAllowance, int ticketPrice) {
         super(companyName, departureCity, arrivalCity);
         this.airlineName = airlineName;
         this.luggageAllowance = luggageAllowance;
+        this.ticketPrice = ticketPrice;
     }
 
     // Copy Constructor
@@ -25,6 +27,7 @@ public class Flight extends Transportation {
         super(flight);
         this.airlineName = flight.getAirlineName();
         this.luggageAllowance = flight.getLuggageAllowance();
+        this.ticketPrice = flight.getTicketPrice();
     }
 
     public String toString() {
@@ -52,6 +55,18 @@ public class Flight extends Transportation {
         }
     }
 
+    public double calculateCost() {
+        int luggageFee = 0;
+        if (luggageAllowance > 50) {
+            luggageFee = 50;
+        }
+        else if (luggageAllowance > 30) {
+            luggageFee = 25;
+        }
+
+        return ticketPrice + luggageFee;
+    }
+
     public String getAirlineName() {
         return airlineName;
     }
@@ -66,5 +81,13 @@ public class Flight extends Transportation {
 
     public void setLuggageAllowance(int luggageAllowance) {
         this.luggageAllowance = luggageAllowance;
+    }
+
+    public int getTicketPrice() {
+        return ticketPrice;
+    }
+
+    public void setTicketPrice(int ticketPrice) {
+        this.ticketPrice = ticketPrice;
     }
 }

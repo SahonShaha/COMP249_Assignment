@@ -58,6 +58,8 @@ public abstract class Transportation {
         }
     }
 
+    public abstract double calculateCost();
+
     public String getTransportationID() {
         return transportationID;
     }

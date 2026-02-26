@@ -4,12 +4,15 @@
 // Written by: Sahon Shaha 40339419
 // ---------------------------------------------------------
 
-// TODO ADD DEFAULT CASES TO ALL SWITCHCASE
 package Driver;
 
-import Client.Client;
+import Exceptions.DuplicateEmailException;
+import Exceptions.InvalidClientDataException;
 import Travel.*;
+import Client.*;
+import Visualization.TripChartGenerator;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 //testing Git
@@ -20,50 +23,65 @@ public class Main {
         boolean isMenuRunning = true;
 
         // Creating storage for the arrays
-        // TODO Transportation Array = Buses + Trains + Flights
-        // TODO Accommodation Array = Hotels + Hostels
-        Client[] clients = new Client[99];
-        Trip[] trips = new Trip[99];
-        Bus[] buses = new Bus[99];
-        Train[] trains = new Train[99];
-        Flight[] flights = new Flight[99];
-        Hotel[] hotels = new Hotel[99];
-        Hostel[] hostels = new Hostel[99];
-
+        Client[] clients = new Client[20]; // 100 MAX
+        Trip[] trips = new Trip[20]; // 200 MAX
+        Transportation[] transportations = new Transportation[20]; // 50 MAX
+        Accommodation[] accommodations = new Accommodation[20]; // 50 MAX
 
         System.out.println("Welcome to SmartTravel!");
-        System.out.println("""
+
+        while (isMenuRunning) {
+            boolean userMenu = true;
+
+            System.out.println("""
                 Would you like to use the application or run the testing scenario?
                 1 - Run Application
                 2 - Execute Testing Scenario
+                3 - Generate Diagrams
+                4 - Exit
                 """);
-        int initialChoice = scanner.nextInt();
+            int initialChoice = scanner.nextInt();
 
-        while (isMenuRunning) {
             switch (initialChoice) {
                 case 1 -> {
-                    System.out.println("""
+                    while (userMenu) {
+                        System.out.println("""
                         1. Client Management
                         2. Trip Management
                         3. Transportation Management
                         4. Accommodation Management
                         5. Additional Operations
+                        6. Exit
                         """);
-                    int choice = scanner.nextInt();
+                        int choice = scanner.nextInt();
 
-                    switch (choice) {
-                        case 1 -> clientManagement(scanner, clients);
-                        case 2 -> tripManagement(scanner, trips, clients);
-                        case 3 -> transportationManagement(scanner, buses, trains, flights);
-                        case 4 -> accommodationManagement(scanner, hostels, hotels);
-                        case 5 -> {
-
+                        switch (choice) {
+                            case 1 -> clientManagement(scanner, clients);
+                            case 2 -> tripManagement(scanner, trips, clients, transportations, accommodations);
+                            case 3 -> transportationManagement(scanner, transportations);
+                            case 4 -> accommodationManagement(scanner, accommodations);
+                            case 5 -> additionalOperations(scanner, trips, transportations, accommodations);
+                            case 6 -> userMenu = false;
+                            default -> System.out.println("Invalid Option.");
                         }
-                        default -> System.out.println("Invalid Option.");
                     }
                 }
 
-                case 2 -> {testingScenario(); isMenuRunning = false;}
+                case 2 -> testingScenario(clients, transportations, accommodations, trips);
+                case 3 -> {
+                    try {
+                        TripChartGenerator.generateCostBarChart(trips, countValidObjects(trips));
+                        TripChartGenerator.generateDurationLineChart(trips, countValidObjects(trips));
+                        TripChartGenerator.generateDestinationPieChart(trips, countValidObjects(trips));
+                    }
+                    catch (IOException e) {
+                        System.out.println("Error: " + e);
+                    }
+                }
+                case 4 -> {
+                    System.out.println("Closing Application...Goodbye!");
+                    isMenuRunning = false;
+                }
             }
         }
     }
@@ -78,30 +96,57 @@ public class Main {
         int choice = scanner.nextInt();
 
         switch (choice) {
-            case 1 -> {
-                System.out.println("Enter you First Name: ");
-                String firstName = scanner.next();
-                System.out.println("Enter your Last Name: ");
-                String lastName = scanner.next();
-                System.out.println("Enter your Email: ");
-                String email = scanner.next();
+            case 1 -> { // ADDING CLIENT
+                    System.out.println("Enter you First Name: ");
+                    String firstName = scanner.next();
+                    System.out.println("Enter your Last Name: ");
+                    String lastName = scanner.next();
+                    System.out.println("Enter your Email: ");
+                    String email = scanner.next();
 
-                Client newClient = new Client(firstName, lastName, email);
-                add(clients, newClient);
+                try {
+                    // First we check if there is no duplicate emails.
+                    for (int i = 0; i < clients.length; i++) {
+                        if (clients[i] == null) {
+                            break;
+                        }
+                        if (clients[i].getEmail().equals(email)) {
+                            throw new DuplicateEmailException();
+                        }
+                    }
+                    Client newClient = new Client(firstName, lastName, email);
+                    add(clients, newClient);
+                }
+                catch (InvalidClientDataException invalidClientDataException) {
+                    System.out.println("Error: " + invalidClientDataException);
+                }
+                catch (DuplicateEmailException duplicateEmailException) {
+                    System.out.println(duplicateEmailException);
+                }
             }
-            case 2 -> {
-
+            case 2 -> { // Editing Clients
                 if (clients[0] == null) {
                     System.out.println("No Clients created. Please create some first.");
                 }
                 else {
                     showAll(clients, new Client());
 
-                    System.out.println("Choose the number of a client you want to edit: ");
-                    int clientEditIndex = scanner.nextInt() - 1;
+                    System.out.println("Choose the ID of a client you want to edit: ");
+                    String clientID = scanner.next();
+                    int clientEditIndex = - 1; // If this stays -1, that means a client of that ID doesn't exist
+
+                    for (int i = 0; i < clients.length; i++) {
+                        if (clients[i] == null) { // Once it hits null, that means all available elements have been printed
+                            break;
+                        }
+
+                        if (clients[i].getClientID().equals(clientID)) {
+                            clientEditIndex = i;
+                        }
+                    }
 
                     // Validating the user choice
-                    if (clients[clientEditIndex] == null) {
+                    if (clientEditIndex == -1) {
                         System.out.println("Invalid Client Chosen");
                     }
                     else {
@@ -109,25 +154,22 @@ public class Main {
                     }
                 }
             }
-            case 3 -> {
+            case 3 -> { // Deleting Clients
                 showAll(clients, new Client());
 
-                System.out.println("Choose the number of a client you want to delete: ");
-                int clientDeleteIndex = scanner.nextInt() - 1;
+                System.out.println("Choose the ID of a client you want to delete: ");
+                String id = scanner.next();
+                deleteClient(clients, id);
+                System.out.println("Updated list of Clients post-deletion:");
+                showAll(clients, new Client());
 
-                if (clients[clientDeleteIndex] == null) {
-                    System.out.println("Invalid Client Chosen");
-                }
-                else {
-                    delete(clients, clientDeleteIndex);
-                }
             }
             case 4 -> showAll(clients, new Client());
             default -> System.out.println("Invalid Input.");
         }
     }
 
-    public static void tripManagement(Scanner scanner, Trip[] trips, Client[] clients) {
+    public static void tripManagement(Scanner scanner, Trip[] trips, Client[] clients, Transportation[] transportations, Accommodation[] accommodations) {
         System.out.println("""
                 1. Create a trip
                 2. Edit trip information
@@ -138,65 +180,121 @@ public class Main {
         int choice = scanner.nextInt();
 
         switch (choice) {
-            case 1 -> {
+            case 1 -> { // Creating a Trip
                 System.out.println("Enter the destination: ");
                 String destination = scanner.next();
                 System.out.println("Enter the duration of the trip (in days): ");
                 int duration = scanner.nextInt();
                 System.out.println("Enter the base price of the trip: ");
                 int basePrice = scanner.nextInt();
-                System.out.println("Choose one of the following clients that will be going on this trip: ");
-                showAll(clients, new Client());
-                int clientIndex = scanner.nextInt();
 
-                Trip trip = new Trip(destination, duration, basePrice, clients[clientIndex - 1]);
+                System.out.println("Enter the ID one of the following clients that will be going on this trip: ");
+                showAll(clients, new Client());
+                String clientId = scanner.next();
+
+                System.out.println("Enter the ID of one of the following transportations the client will take: ");
+                for (int i = 0; i < transportations.length; i++) {
+                    if (transportations[i] == null) {
+                        break;
+                    }
+
+                    System.out.println(transportations[i]);
+                }
+                String transportationId = scanner.next();
+
+
+                System.out.println("Enter the ID of one of the following accommodations the client will take: ");
+                for (int i = 0; i < accommodations.length; i++) {
+                    if (accommodations[i] == null) {
+                        break;
+                    }
+
+                    System.out.println(accommodations[i]);
+                }
+                String accommodationId = scanner.next();
+
+                int clientIndex = -1;
+                int transportIndex = -1;
+                int accommodationIndex = -1;
+
+                // LOCATING INDEX OF SELECTED CLIENT, TRANSPORTATION AND ACCOMMODATION
+                for (int i = 0; i < clients.length; i++) {
+                    if (clients[i] == null) {
+                        System.out.println("Invalid Client ID");
+                        break;
+                    }
+                    if (clients[i].getClientID().equals(clientId)) {
+                        clientIndex = i;
+                        break;
+                    }
+                }
+
+                for (int i = 0; i < transportations.length; i++) {
+                    if (transportations[i] == null) {
+                        System.out.println("Invalid Transportation ID");
+                        break;
+                    }
+                    if (transportations[i].getTransportationID().equals(transportationId)) {
+                        transportIndex = i;
+                        break;
+                    }
+                }
+
+                for (int i = 0; i < accommodations.length; i++) {
+                    if (accommodations[i] == null) {
+                        System.out.println("Invalid Accommodation ID");
+                        break;
+                    }
+                    if (accommodations[i].getAccommodationID().equals(accommodationId)) {
+                        accommodationIndex = i;
+                        break;
+                    }
+                }
+
+                Trip trip = new Trip(destination, duration, basePrice, clients[clientIndex], transportations[transportIndex], accommodations[accommodationIndex]);
                 add(trips, trip);
             }
-            case 2 -> {
-
+            case 2 -> { // Editing Trip
                 if (trips[0] == null) {
                     System.out.println("No Trips created. Please create some first.");
                 }
                 else {
                     showAll(trips, new Trip());
 
-                    System.out.println("Choose the number of a trip you want to edit: ");
-                    int tripEditIndex = scanner.nextInt() - 1;
-
-                    // Validating the user choice
-                    if (trips[tripEditIndex] == null) {
-                        System.out.println("Invalid Trip Chosen");
-                    }
-                    else {
-                        editTrip(scanner, trips, tripEditIndex, clients);
-                    }
+                    System.out.println("Enter the ID of the trip you want to edit: ");
+                    String id = scanner.next();
+                    editTrip(scanner, trips, id, clients, transportations, accommodations);
                 }
             }
-            case 3 -> {
+            case 3 -> { // Deleting Trip
+                showAll(trips, new Trip());
+                System.out.println("Choose the ID of the trip you want to delete: ");
+                String id = scanner.next();
+                deleteTrip(trips, id);
+                System.out.println("Updated list of Trips post-deletion:");
                 showAll(trips, new Trip());
 
-                System.out.println("Choose the number of a trip you want to delete: ");
-                int tripDeleteIndex = scanner.nextInt() - 1;
-
-                if (trips[tripDeleteIndex] == null) {
-                    System.out.println("Invalid Trip Chosen");
-                }
-                else {
-                    delete(trips, tripDeleteIndex);
-                }
             }
             case 4 -> showAll(trips, new Trip());
-            case 5 -> {
+            case 5 -> { // Showing Trips based on a client ID
                 showAll(clients, new Client());
-                System.out.println("Choose number of the client you want to see the trips of: ");
-                int clientIndex = scanner.nextInt() - 1;
+                System.out.println("Enter the ID of the client you want to see the trips of: ");
+                String clientID = scanner.next();
+                int clientIndex = -1;
 
-                if (clients[clientIndex] == null) { // Ensuring the user doesn't enter the number of a non-existing client
-                    System.out.println("No Client of that number exists");
+                for (int i = 0; i < clients.length; i++) {
+                    if (clients[i] == null) {
+                        break;
+                    }
+
+                    if (clients[i] != null && clients[i].getClientID().equals(clientID)) {
+                        clientIndex = i;
+                    }
                 }
-                else {
-                    for (int i = 0; i < clients.length; i++) {
-                        if (clients[i] == null) {
+
+                if (clientIndex > -1) {
+                    for (int i = 0; i < trips.length; i++) {
+                        if (trips[i] == null) {
                             break; // If we reach a null object, that means we've gone through every existing trip
                         }
 
@@ -211,7 +309,7 @@ public class Main {
         }
     }
 
-    public static void transportationManagement(Scanner scanner, Bus[] buses, Train[] trains, Flight[] flights) {
+    public static void transportationManagement(Scanner scanner, Transportation[] transportations) {
         System.out.println("""
                 1. Add a transportation option
                 2. Remove a transportation option
@@ -220,7 +318,7 @@ public class Main {
         int choice = scanner.nextInt();
 
         switch (choice) {
-            case 1 -> {
+            case 1 -> { // Adding transportation
                 System.out.println("What type of transportation?");
                 System.out.println("""
                         1. Bus
@@ -238,39 +336,46 @@ public class Main {
 
 
                 switch (transportationChoice) {
-                    case 1 -> {
+                    case 1 -> { // Adding a bus
                         System.out.println("Enter the name of the Bus Company: ");
                         String busCompany = scanner.next();
                         System.out.println("Enter the amount of stops during the transit: ");
                         int stops = scanner.nextInt();
+                        System.out.println("Enter the base fare: ");
+                        int baseFare = scanner.nextInt();
 
-                        Bus newBus = new Bus(companyName, departureCity, arrivalCity, busCompany, stops);
-                        add(buses, newBus);
+                        Bus newBus = new Bus(companyName, departureCity, arrivalCity, busCompany, stops, baseFare);
+                        add(transportations, newBus);
                     }
 
-                    case 2 -> {
+                    case 2 -> { // Adding a flight
                         System.out.println("Enter the Airline Name: ");
                         String airlineName = scanner.next();
                         System.out.println("Enter the maximum weight of luggage: ");
                         int weight = scanner.nextInt();
+                        System.out.println("Enter the ticket price: ");
+                        int ticketPrice = scanner.nextInt();
 
-                        Flight newFlight = new Flight(companyName, departureCity, arrivalCity, airlineName, weight);
-                        add(flights, newFlight);
+                        Flight newFlight = new Flight(companyName, departureCity, arrivalCity, airlineName, weight, ticketPrice);
+                        add(transportations, newFlight);
                     }
 
-                     case 3 -> {
+                     case 3 -> { // Adding a train
                          System.out.println("Enter the type of train: ");
                          String trainType = scanner.next();
-                         System.out.println("Enter class of seats: ");
+                         System.out.println("Enter class of seats (Basic, Cabin or Deluxe): ");
                          String seatClass = scanner.next();
+                         System.out.println("Enter the fare: ");
+                         int fare = scanner.nextInt();
 
-                         Train newTrain = new Train(companyName, departureCity, arrivalCity, trainType, seatClass);
-                         add(trains, newTrain);
+                         Train newTrain = new Train(companyName, departureCity, arrivalCity, trainType, seatClass, fare);
+                         add(transportations, newTrain);
                      }
+                    default -> System.out.println("Invalid Input");
                 }
             }
 
-            case 2 -> {
+            case 2 -> { // Deleting a transportation
                 System.out.println("What type of transportation?");
                 System.out.println("""
                         1. Bus
@@ -281,25 +386,24 @@ public class Main {
 
                 switch (transportationChoice) {
                     case 1 -> {
-                        showAll(buses, new Bus());
-
-                        System.out.println("Select the number of the transportation you want to delete: ");
-                        delete(buses, scanner.nextInt() - 1);
+                        showAll(transportations, new Bus());
                     }
                     case 2 -> {
-                        System.out.println("Select the number of the transportation you want to delete: ");
-                        delete(flights, scanner.nextInt() - 1);
+                        showAll(transportations, new Flight());
                     }
 
                     case 3 -> {
-                        System.out.println("Select the number of the transportation you want to delete: ");
-                        delete(trains, scanner.nextInt() - 1);
+                        showAll(transportations, new Train());
                     }
                     default -> System.out.println("Invalid Input.");
                 }
+
+                System.out.println("Choose the ID of a Transportation you want to delete: ");
+                String id = scanner.next();
+                deleteTransportation(transportations, id);
             }
 
-            case 3 -> {
+            case 3 -> { // Showing Transportations
                 System.out.println("Which type of transportation do you want to list?");
                 System.out.println("""
                         1. Buses
@@ -310,16 +414,16 @@ public class Main {
                 int listViewChoice = scanner.nextInt();
 
                 switch (listViewChoice) {
-                    case 1 -> showAll(buses, new Bus());
-                    case 2 -> showAll(flights, new Flight());
-                    case 3 -> showAll(trains, new Train());
+                    case 1 -> showAll(transportations, new Bus());
+                    case 2 -> showAll(transportations, new Flight());
+                    case 3 -> showAll(transportations, new Train());
                     case 4 -> {
                         System.out.println("BUSES");
-                        showAll(buses, new Bus());
+                        showAll(transportations, new Bus());
                         System.out.println("FLIGHTS");
-                        showAll(flights, new Flight());
+                        showAll(transportations, new Flight());
                         System.out.println("TRAINS");
-                        showAll(trains, new Train());
+                        showAll(transportations, new Train());
                     }
                     default -> System.out.println("Invalid Input.");
                 }
@@ -328,7 +432,7 @@ public class Main {
         }
     }
 
-    public static void accommodationManagement(Scanner scanner, Hostel[] hostels, Hotel[] hotels) {
+    public static void accommodationManagement(Scanner scanner, Accommodation[] accommodations) {
         System.out.println("""
                 1. Add an accommodation
                 2. Remove an accommodation
@@ -337,7 +441,7 @@ public class Main {
         int choice = scanner.nextInt();
 
         switch (choice) {
-            case 1 -> {
+            case 1 -> { // Adding an accommodation
                 System.out.println("What type of accommodation?");
                 System.out.println("""
                         1. Hostels
@@ -353,24 +457,24 @@ public class Main {
                 int pricePerNight = scanner.nextInt();
 
                 switch (accommodationChoice) {
-                    case 1 -> {
+                    case 1 -> { // Adding a hostel
                         System.out.println("Enter the number of beds per room: ");
                         int beds = scanner.nextInt();
 
                         Hostel newHostel = new Hostel(name, location, pricePerNight, beds);
-                        add(hostels, newHostel);
+                        add(accommodations, newHostel);
                     }
-                    case 2 -> {
+                    case 2 -> { // Adding a hotel
                         System.out.println("Enter the number of stars: ");
                         int stars = scanner.nextInt();
 
                         Hotel newHotel = new Hotel(name, location, pricePerNight, stars);
-                        add(hotels, newHotel);
+                        add(accommodations, newHotel);
                     }
                     default -> System.out.println("Invalid Input.");
                 }
             }
-            case 2 -> {
+            case 2 -> { // Deleting an accommodation
                 System.out.println("What type of accommodation?");
                 System.out.println("""
                         1. Hostels
@@ -380,20 +484,19 @@ public class Main {
 
                 switch (accommodationChoice) {
                     case 1 -> {
-                        showAll(hostels, new Hostel());
-
-                        System.out.println("Select the number of the hostel you want to delete: ");
-                        delete(hostels, scanner.nextInt() - 1);
+                        showAll(accommodations, new Hostel());
                     }
                     case 2 -> {
-                        showAll(hotels, new Hotel());
-                        System.out.println("Select the number of the hotel you want to delete: ");
-                        delete(hotels, scanner.nextInt() - 1);
+                        showAll(accommodations, new Hotel());
                     }
                     default -> System.out.println("Invalid Input.");
                 }
+
+                System.out.println("Choose the ID of an Accommodation you want to delete: ");
+                String id = scanner.next();
+                deleteAccommodation(accommodations, id);
             }
-            case 3 -> {
+            case 3 -> { // Showing accommodations
                 System.out.println("Which type of transportation do you want to list?");
                 System.out.println("""
                         1. Hostels
@@ -403,13 +506,13 @@ public class Main {
                 int listViewChoice = scanner.nextInt();
 
                 switch (listViewChoice) {
-                    case 1 -> showAll(hostels, new Hostel());
-                    case 2 -> showAll(hotels, new Hotel());
+                    case 1 -> showAll(accommodations, new Hostel());
+                    case 2 -> showAll(accommodations, new Hotel());
                     case 3 -> {
                         System.out.println("Hostels");
-                        showAll(hostels, new Hostel());
+                        showAll(accommodations, new Hostel());
                         System.out.println("Hotels");
-                        showAll(hotels, new Hotel());
+                        showAll(accommodations, new Hotel());
                     }
                     default -> System.out.println("Invalid Input.");
                 }
@@ -418,7 +521,7 @@ public class Main {
         }
     }
 
-    public static void additionalOperations(Scanner scanner) {
+    public static void additionalOperations(Scanner scanner, Trip[] trips, Transportation[] transportations, Accommodation[] accommodations) {
         System.out.println("""
                 1. Display the Most Expensive Trip
                 2. Display the Total Cost of a Trip
@@ -429,27 +532,63 @@ public class Main {
 
         switch (choice) {
             case 1 -> {
-
+                System.out.println(mostExpensiveTrip(trips));
             }
-            case 2 -> {
+            case 2 -> { // Total cost of a trip
+                showAll(trips, new Trip());
+                System.out.println("Enter the ID of the trip you want to see the total cost of: ");
+                String tripID = scanner.next();
+                int tripIndex = -1;
+
+                for (int i = 0; i < trips.length; i++) {
+                    if (trips[i] == null) { // Once trips become null, that means we have iterated through all valid elements
+                        break;
+                    }
+
+                    if (trips[i].getTripID().equals(tripID)) {
+                        tripIndex = i;
+                        break;
+                    }
+                }
+
+                if (tripIndex == -1) { // So we break out completely out of the switch case in case trip is not found
+                    break;
+                }
+
+                double basePrice = trips[tripIndex].getBasePrice();
+                double transportationPrice = trips[tripIndex].getTransportation().calculateCost();
+                double accommodationPrice = trips[tripIndex].getAccommodation().calculateCost();
+                System.out.println("The total cost for this trip is " + (basePrice + transportationPrice) + "$ with a fee of "
+                + accommodationPrice + "$ per night.");
 
             }
             case 3 -> {
+                Transportation[] newTransportations = transportationsDeepCopy(transportations);
 
+                // Printing Deep Copied Array
+                for (int i = 0; i < newTransportations.length; i++) {
+                    System.out.println(newTransportations[i]);
+                }
             }
              case 4 -> {
+                 Accommodation[] newAccommodations = accommodationsDeepCopy(accommodations);
 
+                 // Printing Deep Copied Array
+                 for (int i = 0; i < newAccommodations.length; i++) {
+                     System.out.println(newAccommodations[i]);
+                 }
              }
+            default -> System.out.println("Invalid Input");
         }
     }
 
     // Adds an object to an array
     public static void add(Object[] objects, Object object) {
-        if (objects[98] != null) {
+        if (objects[objects.length - 1] != null) { // The 19 is hard coded due to the size of the class arrays
             System.out.println("Storage Full.");
         }
         else {
-            for (int i = 0; i < objects.length; i++) {
+            for (int i = 0; i < objects.length; i++) { // We iterate until we reach a null element
                 if (objects[i] == null) {
                     objects[i] = object;
                     break;
@@ -458,24 +597,140 @@ public class Main {
         }
     }
 
-    // Deletes an object at a certain index
-    public static void delete(Object[] objects, int clientIndex) {
-        objects[clientIndex] = null;
+    /*public static void addClient(Client[] clients, Client client) throws DuplicateEmailException {
+        if (clients[clients.length - 1] != null) {
+            System.out.println("Storage Full.");
+        }
+        else {
+            for (int i = 0; i < clients.length; i++) { // We iterate until we reach a null element
+                if (clients[i] == null) {
+                    clients[i] = client;
+                    break;
+                }
+            }
+        }
+    }*/
 
-        // Shifting all objects back to clear the gap in the array caused by the deleted object
-        for (int i = clientIndex; i < objects.length; i++) {
-            // If the next object is null, that means that it's the "end of the array" as everything after that index will be null.
-            if (objects[i+1] == null) {
-                objects[i] = null; // Since this object has already been shifted back in the last iteration, we just set it as null
-                break;
+    public static void deleteClient(Client[] clients, String id) {
+        boolean deleted = false; // This is used to see if something got deleted or not
+
+        for (int i = 0; i < clients.length; i++) {
+            if (clients[i] == null) {
+                break; // We kill the loop once we reach a null object because it means that we reached the end of the partiall filled array
             }
-            else {
-                objects[i] = objects[i + 1];   // Pushing back objects
+
+            if (clients[i].getClientID().equals(id)) {
+                clients[i] = null; // Deleting the client if it matches the id
+                deleted = true;
+
+                // Shifting the array back so that the array does not have a "hole" in the middle
+                for (int j = i; j < clients.length - 1; j++) { // We are going till the before last object in the array
+                    clients[j] = clients[j + 1];
+                }
+                clients[clients.length - 1] = null; // no matter what, if an object is deleted and everything is shifted, the last object MUST be null
+
+                break; // Kill the loop because there is no reason to keep searching
             }
+        }
+
+        if (!deleted) {
+            System.out.println("No Clients under that ID exists.");
         }
     }
 
-    // TODO Make it so it prints only the type of object we want
+    public static void deleteTrip(Trip[] trips, String id) {
+        boolean deleted = false; // This is used to see if something got deleted or not
+
+        for (int i = 0; i < trips.length; i++) {
+            if (trips[i] == null) {
+                break; // We kill the loop once we reach a null object because it means that we reached the end of the partiall filled array
+            }
+
+            if (trips[i].getTripID().equals(id)) {
+                trips[i] = null; // Deleting the trip if it matches the id
+                deleted = true;
+
+                // Shifting the array back so that the array does not have a "hole" in the middle
+                for (int j = i; j < trips.length - 1; j++) { // We are going till the before last object in the array
+                    trips[j] = trips[j + 1];
+                }
+                trips[trips.length - 1] = null; // no matter what, if an object is deleted and everything is shifted, the last object MUST be null
+
+                break; // Kill the loop because there is no reason to keep searching
+            }
+        }
+
+        if (!deleted) {
+            System.out.println("No Trips under that ID exists.");
+        }
+    }
+
+    public static void deleteTransportation(Transportation[] transportations, String id) {
+        boolean deleted = false; // This is used to see if something got deleted or not
+
+        for (int i = 0; i < transportations.length; i++) {
+            if (transportations[i] == null) {
+                break; // We kill the loop once we reach a null object because it means that we reached the end of the partially filled array
+            }
+
+            if (transportations[i].getTransportationID().equals(id)) {
+                transportations[i] = null; // Deleting the transportations if it matches the id
+                deleted = true;
+
+                // Shifting the array back so that the array does not have a "hole" in the middle
+                for (int j = i; j < transportations.length - 1; j++) { // We are going till the before last object in the array
+                    transportations[j] = transportations[j + 1];
+                }
+                transportations[transportations.length - 1] = null; // no matter what, if an object is deleted and everything is shifted, the last object MUST be null
+
+                break; // Kill the loop because there is no reason to keep searching
+            }
+        }
+
+        if (!deleted) {
+            System.out.println("No Transportations under that ID exists.");
+        }
+    }
+
+    public static void deleteAccommodation(Accommodation[] accommodations, String id) {
+        boolean deleted = false; // This is used to see if something got deleted or not
+
+        for (int i = 0; i < accommodations.length; i++) {
+            if (accommodations[i] == null) {
+                break; // We kill the loop once we reach a null object because it means that we reached the end of the partiall filled array
+            }
+
+            if (accommodations[i].getAccommodationID().equals(id)) {
+                accommodations[i] = null; // Deleting the accommodation if it matches the id
+                deleted = true;
+
+                // Shifting the array back so that the array does not have a "hole" in the middle
+                for (int j = i; j < accommodations.length - 1; j++) { // We are going till the before last object in the array
+                    accommodations[j] = accommodations[j + 1];
+                }
+                accommodations[accommodations.length - 1] = null; // no matter what, if an object is deleted and everything is shifted, the last object MUST be null
+
+                break; // Kill the loop because there is no reason to keep searching
+            }
+        }
+
+        if (!deleted) {
+            System.out.println("No Accommodations under that ID exists.");
+        }
+    }
+
+    public static int countValidObjects(Object[] objects) {
+        int count = 0;
+        for (int i = 0; i < objects.length; i++) {
+            if (objects[i] == null) {
+                break;
+            }
+            count++;
+        }
+
+        return count;
+    }
+
     // Shows all objects from an array of objects
     // Object[] objects takes in any object array
     // Object objects will be used to know which objects we want to print out
@@ -489,7 +744,7 @@ public class Main {
             }
             else {
                 if (objects[i].getClass() == object.getClass()) {
-                    System.out.println("\nEntry " + (i+1));
+                    //System.out.println("\nEntry " + (i+1));
                     System.out.println(objects[i]);
                 }
             }
@@ -511,18 +766,33 @@ public class Main {
             switch (choice) {
                 case 1 -> {
                     System.out.println("Enter a new first name: ");
-                    clients[clientIndex].setFirstName(scanner.next());
-                    System.out.println("First Name Updated to: " + clients[clientIndex].getFirstName());
+                    try {
+                        clients[clientIndex].setFirstName(scanner.next());
+                        System.out.println("First Name Updated to: " + clients[clientIndex].getFirstName());
+                    }
+                    catch (InvalidClientDataException invalidClientDataException) {
+                        System.out.println(invalidClientDataException);
+                    }
                 }
                 case 2 -> {
                     System.out.println("Enter a new last name: ");
-                    clients[clientIndex].setLastName(scanner.next());
-                    System.out.println("Last Name Updated to: " + clients[clientIndex].getLastName());
+                    try {
+                        clients[clientIndex].setLastName(scanner.next());
+                        System.out.println("Last Name Updated to: " + clients[clientIndex].getLastName());
+                    }
+                    catch (InvalidClientDataException invalidClientDataException) {
+                        System.out.println(invalidClientDataException);
+                    }
                 }
                 case 3 -> {
                     System.out.println("Enter a new email: ");
-                    clients[clientIndex].setEmail(scanner.next());
-                    System.out.println("Email Updated to: " + clients[clientIndex].getEmail());
+                    try {
+                        clients[clientIndex].setEmail(scanner.next());
+                        System.out.println("Email Updated to: " + clients[clientIndex].getEmail());
+                    }
+                    catch (InvalidClientDataException invalidClientDataException) {
+                        System.out.println(invalidClientDataException);
+                    }
                 }
                 case 4 -> running = false;
                 default -> System.out.println("Invalid Input. Try Again");
@@ -530,66 +800,208 @@ public class Main {
         }
     }
 
-    public static void editTrip(Scanner scanner, Trip[] trips, int tripIndex, Client[] clients) {
-        boolean running = true;
-        while (running) {
-            System.out.println("""
+    public static void editTrip(Scanner scanner, Trip[] trips, String id, Client[] clients, Transportation[] transportations, Accommodation[] accommodations) {
+        // Find Index of selected trip
+        int tripIndex = -1;
+        for (int i = 0; i < trips.length; i++) {
+            if (trips[i] == null) {
+                System.out.println("No Trips available in the Array.");
+                break;
+            }
+            if (trips[i].getTripID().equals(id)) {
+                tripIndex = i;
+                break;
+            }
+        }
+
+        if (tripIndex > -1) {
+            boolean running = true;
+            while (running) {
+                System.out.println("""
                         Which section do you want to edit?
                         1 - Destination
                         2 - Duration (in days)
                         3 - Base Price
                         4 - Client going on the trip
-                        5 - Finished Editing
+                        5 - Transportation
+                        6 - Accommodation
+                        7 - Finished Editing
                         """);
-            int choice = scanner.nextInt();
+                int choice = scanner.nextInt();
 
-            switch (choice) {
-                case 1 -> {
-                    System.out.println("Enter a destination: ");
-                    trips[tripIndex].setDestination(scanner.next());
-                    System.out.println("Destination Updated to: " + trips[tripIndex].getDestination());
+                switch (choice) {
+                    case 1 -> {
+                        System.out.println("Enter a destination: ");
+                        trips[tripIndex].setDestination(scanner.next());
+                        System.out.println("Destination Updated to: " + trips[tripIndex].getDestination());
+                    }
+                    case 2 -> {
+                        System.out.println("Enter the new duration of the trip: ");
+                        trips[tripIndex].setDurationInDays(scanner.nextInt());
+                        System.out.println("Updated Duration to: " + trips[tripIndex].getDurationInDays() + " days.");
+                    }
+                    case 3 -> {
+                        System.out.println("Enter a new base price: ");
+                        trips[tripIndex].setBasePrice(scanner.nextInt());
+                        System.out.println("Base Price Updated to: " + trips[tripIndex].getBasePrice());
+                    }
+                    case 4 -> {
+                        showAll(clients, new Client());
+                        System.out.println("Enter the ID of the new client going on the trip: ");
+                        String newClientId = scanner.next();
+                        int clientIndex = -1;
+
+                        for (int i = 0; i < clients.length; i++) {
+                            if (clients[i] == null) {
+                                System.out.println("Invalid Client ID");
+                                break;
+                            }
+                            if (clients[i].getClientID().equals(newClientId)) {
+                                clientIndex = i;
+                                break;
+                            }
+                        }
+                        trips[tripIndex].setClientOnTrip(clients[clientIndex]);
+                        System.out.println("Profile of the new client going on this trip: ");
+                        System.out.println(trips[tripIndex].getClientOnTrip());
+                    }
+                    case 5 -> {
+                        for (int i = 0; i < transportations.length; i++) {
+                            if (transportations[i] != null) {
+                                System.out.println(transportations[i]);
+                            }
+                        }
+                        System.out.println("Enter the ID of the new transportation: ");
+                        String newTransportationId = scanner.next();
+                        int transportationIndex = -1;
+
+                        for (int i = 0; i < transportations.length; i++) {
+                            if (transportations[i] == null) {
+                                System.out.println("Invalid Transportation ID");
+                                break;
+                            }
+                            if (transportations[i].getTransportationID().equals(newTransportationId)) {
+                                transportationIndex = i;
+                                break;
+                            }
+                        }
+
+                        trips[tripIndex].setTransportation(transportations[transportationIndex]);
+                        System.out.println("Information about the new transportation method: ");
+                        System.out.println(trips[tripIndex].getTransportation());
+                    }
+                    case 6 -> {
+                        for (int i = 0; i < accommodations.length; i++) {
+                            if (accommodations[i] != null) {
+                                System.out.println(accommodations[i]);
+                            }
+                        }
+                        System.out.println("Enter the ID of the new accommodation: ");
+                        String newAccommodationId = scanner.next();
+                        int accommodationIndex = -1;
+
+                        for (int i = 0; i < accommodations.length; i++) {
+                            if (accommodations[i] == null) {
+                                System.out.println("Invalid Accommodation ID");
+                                break;
+                            }
+                            if (accommodations[i].getAccommodationID().equals(newAccommodationId)) {
+                                accommodationIndex = i;
+                                break;
+                            }
+                        }
+
+                        trips[tripIndex].setAccommodation(accommodations[accommodationIndex]);
+                        System.out.println("Information about the new accommodation: ");
+                        System.out.println(trips[tripIndex].getAccommodation());
+                    }
+                    case 7 -> running = false;
+                    default -> System.out.println("Invalid Input. Try Again");
                 }
-                case 2 -> {
-                    System.out.println("Enter the new duration of the trip: ");
-                    trips[tripIndex].setDurationInDays(scanner.nextInt());
-                    System.out.println("Updated Duration to: " + trips[tripIndex].getDurationInDays() + " days.");
-                }
-                case 3 -> {
-                    System.out.println("Enter a new base price: ");
-                    trips[tripIndex].setBasePrice(scanner.nextInt());
-                    System.out.println("Base Price Updated to: " + trips[tripIndex].getBasePrice());
-                }
-                case 4 -> {
-                    showAll(clients, new Client());
-                    System.out.println("Select the number of the new client going on the trip: ");
-                    trips[tripIndex].setClientOnTrip(clients[scanner.nextInt()]);
-                    System.out.println("Profile of the new client going on this trip: ");
-                    System.out.println(trips[tripIndex].getClientOnTrip());
-                }
-                case 5 -> running = false;
-                default -> System.out.println("Invalid Input. Try Again");
             }
+        }
+        else {
+            System.out.println("No Trip with that ID exist.");
         }
     }
 
-    public static void testingScenario() {
-        Client client1 = new Client("Sahon", "Shaha", "shahsahon@gmail.com");
+    public static Transportation[] transportationsDeepCopy(Transportation[] original) {
+        Transportation[] newTransportations = new Transportation[original.length];
+
+        // Creating Deep Copy of the Array
+        for (int i = 0; i < original.length; i++) {
+            if (original[i] == null) {
+                System.out.println("Empty Array.");
+                break;
+            }
+
+            if (original[i] instanceof Bus) {
+                newTransportations[i] = new Bus((Bus) original[i]);
+            }
+            else if (original[i] instanceof Flight) {
+                newTransportations[i] = new Flight((Flight) original[i]);
+            }
+            else if (original[i] instanceof Train) {
+                newTransportations[i] = new Train((Train) original[i]);
+            }
+        }
+        return newTransportations;
+    }
+
+    public static Accommodation[] accommodationsDeepCopy(Accommodation[] accommodations) {
+        Accommodation[] newAccommodations = new Accommodation[accommodations.length];
+
+        // Creating Deep Copy of the Array
+        for (int i = 0; i < accommodations.length; i++) {
+            if (accommodations[i] == null) { // If the first entry of the array is null, then that means the entire array is null
+                System.out.println("Empty Array.");
+                break;
+            }
+
+            if (accommodations[i] instanceof Hostel) {
+                newAccommodations[i] = new Hostel((Hostel) accommodations[i]);
+            }
+            else if (accommodations[i] instanceof Hotel) {
+                newAccommodations[i] = new Hotel((Hotel) accommodations[i]);
+            }
+        }
+
+        return newAccommodations;
+    }
+
+    public static Trip mostExpensiveTrip(Trip[] trips) {
+        Trip mostExpensive = null;
+
+        for (int i = 0; i < trips.length; i++) {
+            if (mostExpensive == null) { // First iteration is obviously gonna be more expensive than a null object
+                mostExpensive = trips[i];
+            }
+            if (trips[i] != null) {
+                double previousTotal = mostExpensive.getBasePrice() + mostExpensive.getTransportation().calculateCost() + mostExpensive.getAccommodation().calculateCost();
+                double ithTotal = trips[i].getBasePrice() + trips[i].getTransportation().calculateCost() + trips[i].getAccommodation().calculateCost();
+                if (ithTotal > previousTotal) {
+                    mostExpensive = trips[i];
+                }
+            }
+        }
+
+        return mostExpensive;
+    }
+
+    public static void testingScenario(Client[] clients, Transportation[] transportations, Accommodation[] accommodations, Trip[] trips) {
+        /*Client client1 = new Client("Sahon", "Shaha", "shahsahon@gmail.com");
         Client client2 = new Client("John", "Doe", "johndoe@gmail.com");
         Client client3 = new Client("Jane", "Doe", "janedoe@gmail.com");
         Client client4 = new Client(client3);
 
-        Trip trip1 = new Trip("Japan", 7, 2000, client1);
-        Trip trip2 = new Trip("France", 14, 3500, client2);
-        Trip trip3 = new Trip("France", 14, 3500, client3);
+        Bus bus1 = new Bus("CanadaTravels", "Montreal", "Quebec", "STM", 2, 61);
+        Bus bus2 = new Bus("AmericaUnited", "Toronto", "New York City", "TTC", 3, 65);
 
-        Bus bus1 = new Bus("CanadaTravels", "Montreal", "Quebec", "STM", 2);
-        Bus bus2 = new Bus("AmericaUnited", "Toronto", "New York City", "TTC", 3);
+        Train train1 = new Train("ViaRail Canada", "Montreal", "Vancouver City", "High Speed", "Cabin", 100);
+        Train train2 = new Train("North America Transit", "Boston", "Montreal", "Bullet Train", "Deluxe", 75);
 
-        Train train1 = new Train("ViaRail Canada", "Montreal", "Vancouver City", "High Speed", "Business");
-        Train train2 = new Train("North America Transit", "Boston", "Montreal", "Bullet Train", "Economy");
-
-        Flight flight1 = new Flight("Europe Travel Agency", "Montreal", "France", "Air France Canada", 27);
-        Flight flight2 = new Flight("Japan Airways", "Montreal", "Japan", "Air Canada", 31);
+        Flight flight1 = new Flight("Europe Travel Agency", "Montreal", "France", "Air France Canada", 27, 4000);
+        Flight flight2 = new Flight("Japan Airways", "Montreal", "Japan", "Air Canada", 31, 3200);
 
         Hotel hotel1 = new Hotel("Hilton Paris Opera", "France", 457, 5);
         Hotel hotel2 = new Hotel("Hotel Fine Sakai", "Japan", 37, 3);
@@ -597,34 +1009,52 @@ public class Main {
         Hostel hostel1 = new Hostel("Marseille Deluxe", "France", 114, 4);
         Hostel hostel2 = new Hostel("Tokyo Yasashi", "Japan", 100, 2);
 
-        Client[] clients = {client1, client2, client3, client4};
-        Trip[] trips = {trip1, trip2, trip3};
-        Bus[] buses = {bus1, bus2};
-        Train[] trains = {train1, train2};
-        Flight[] flights = {flight1, flight2};
-        Hotel[] hotels = {hotel1, hotel2};
-        Hostel[] hostels = {hostel1, hostel2};
+        Trip trip1 = new Trip("Japan", 7, 2000, client1, flight2, hostel2);
+        Trip trip2 = new Trip("France", 14, 3500, client2, bus2, hotel1);
+        Trip trip3 = new Trip("France", 14, 3500, client3, flight1, hostel1);
+
+        add(clients, client1);
+        add(clients, client2);
+        add(clients, client3);
+        add(clients, client4);
+
+        add(transportations, bus1);
+        add(transportations, bus2);
+        add(transportations, train1);
+        add(transportations, train2);
+        add(transportations, flight1);
+        add(transportations, flight2);
+
+        add(accommodations, hotel1);
+        add(accommodations, hotel2);
+        add(accommodations, hostel1);
+        add(accommodations, hostel2);
+
+        add(trips, trip1);
+        add(trips, trip2);
+        add(trips, trip3);
 
         System.out.println("CLIENTS:");
-        for (Client client : clients) System.out.println(client);
+        showAll(clients, new Client());
         System.out.println("-----------------------------------------------------------------------------------------");
         System.out.println("TRIPS");
-        for (Trip trip : trips) System.out.println(trip);
+        showAll(trips, new Trip());
         System.out.println("-----------------------------------------------------------------------------------------");
-        System.out.println("BUSES");
-        for (Bus bus : buses) System.out.println(bus);
+        System.out.println("TRANSPORTATIONS");
+        for (int i = 0; i < transportations.length; i++) {
+            if (transportations[i] == null) {
+                break;
+            }
+            System.out.println(transportations[i]);
+        }
         System.out.println("-----------------------------------------------------------------------------------------");
-        System.out.println("TRAINS");
-        for (Train train : trains) System.out.println(train);
-        System.out.println("-----------------------------------------------------------------------------------------");
-        System.out.println("FLIGHTS");
-        for (Flight flight : flights) System.out.println(flight);
-        System.out.println("-----------------------------------------------------------------------------------------");
-        System.out.println("HOTELS");
-        for (Hotel hotel : hotels) System.out.println(hotel);
-        System.out.println("-----------------------------------------------------------------------------------------");
-        System.out.println("HOSTELS");
-        for (Hostel hostel : hostels) System.out.println(hostel);
+        System.out.println("ACCOMMODATIONS");
+        for (int i = 0; i < accommodations.length; i++) {
+            if (accommodations[i] == null) {
+                break;
+            }
+            System.out.println(accommodations[i]);
+        }
         System.out.println("-----------------------------------------------------------------------------------------");
 
         System.out.println("TESTING EQUALS METHOD");
@@ -633,6 +1063,43 @@ public class Main {
         System.out.println(client4.equals(client3));
         System.out.println("-----------------------------------------------------------------------------------------");
 
-        // TODO 5,6,7
+        System.out.println("DEMONSTRATING POLYMORPHISM");
+        for (int i = 0; i < trips.length; i++) {
+            if (trips[i] != null) {
+                double basePrice = trips[i].getBasePrice();
+                double transportationPrice = trips[i].getTransportation().calculateCost();
+                double accommodationPrice = trips[i].getAccommodation().calculateCost();
+
+                System.out.println("The total cost for this trip is " + (basePrice + transportationPrice) + "$ with a fee of "
+                        + accommodationPrice + "$ per night.");
+            }
+        }
+        System.out.println("-----------------------------------------------------------------------------------------");
+
+        System.out.println("MOST EXPENSIVE TRIP");
+        System.out.println(mostExpensiveTrip(trips));
+        System.out.println("-----------------------------------------------------------------------------------------");
+
+        System.out.println("DEEP COPY OF TRANSPORTATION ARRAY");
+        // There are IDs skipped because
+        // they are implicitly being generated when a Trip Object is made due to the Transportation and Accommodation fields having deep copies
+        Transportation[] deepCopied = transportationsDeepCopy(transportations);
+
+        deepCopied[1] = new Flight("VIP Vacations", "Wuyang", "Beijing", "Delta Airlines", 20, 20000);
+
+        System.out.println("ORIGINAL ARRAY");
+        for (int i = 0; i < transportations.length; i++) {
+            if (transportations[i] == null) {
+                break;
+            }
+            System.out.println(transportations[i]);
+        }
+        System.out.println("COPIED ARRAY");
+        for (int i = 0; i < deepCopied.length; i++) {
+            if (transportations[i] == null) {
+                break;
+            }
+            System.out.println(deepCopied[i]);
+        }*/
     }
 }
