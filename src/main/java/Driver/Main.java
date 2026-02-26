@@ -6,8 +6,10 @@
 
 package Driver;
 
-import Client.Client;
+import Exceptions.DuplicateEmailException;
+import Exceptions.InvalidClientDataException;
 import Travel.*;
+import Client.*;
 import Visualization.TripChartGenerator;
 
 import java.io.IOException;
@@ -19,10 +21,10 @@ public class Main {
         boolean isMenuRunning = true;
 
         // Creating storage for the arrays
-        Client[] clients = new Client[20];
-        Trip[] trips = new Trip[20];
-        Transportation[] transportations = new Transportation[20];
-        Accommodation[] accommodations = new Accommodation[20];
+        Client[] clients = new Client[20]; // 100 MAX
+        Trip[] trips = new Trip[20]; // 200 MAX
+        Transportation[] transportations = new Transportation[20]; // 50 MAX
+        Accommodation[] accommodations = new Accommodation[20]; // 50 MAX
 
         System.out.println("Welcome to SmartTravel!");
 
@@ -93,15 +95,32 @@ public class Main {
 
         switch (choice) {
             case 1 -> { // ADDING CLIENT
-                System.out.println("Enter you First Name: ");
-                String firstName = scanner.next();
-                System.out.println("Enter your Last Name: ");
-                String lastName = scanner.next();
-                System.out.println("Enter your Email: ");
-                String email = scanner.next();
+                    System.out.println("Enter you First Name: ");
+                    String firstName = scanner.next();
+                    System.out.println("Enter your Last Name: ");
+                    String lastName = scanner.next();
+                    System.out.println("Enter your Email: ");
+                    String email = scanner.next();
 
-                Client newClient = new Client(firstName, lastName, email);
-                add(clients, newClient);
+                try {
+                    // First we check if there is no duplicate emails.
+                    for (int i = 0; i < clients.length; i++) {
+                        if (clients[i] == null) {
+                            break;
+                        }
+                        if (clients[i].getEmail().equals(email)) {
+                            throw new DuplicateEmailException();
+                        }
+                    }
+                    Client newClient = new Client(firstName, lastName, email);
+                    add(clients, newClient);
+                }
+                catch (InvalidClientDataException invalidClientDataException) {
+                    System.out.println("Error: " + invalidClientDataException);
+                }
+                catch (DuplicateEmailException duplicateEmailException) {
+                    System.out.println(duplicateEmailException);
+                }
             }
             case 2 -> { // Editing Clients
                 if (clients[0] == null) {
@@ -125,7 +144,7 @@ public class Main {
                     }
 
                     // Validating the user choice
-                    if (clients[clientEditIndex] == null) {
+                    if (clientEditIndex == -1) {
                         System.out.println("Invalid Client Chosen");
                     }
                     else {
@@ -563,7 +582,7 @@ public class Main {
 
     // Adds an object to an array
     public static void add(Object[] objects, Object object) {
-        if (objects[19] != null) { // The 19 is hard coded due to the size of the class arrays
+        if (objects[objects.length - 1] != null) { // The 19 is hard coded due to the size of the class arrays
             System.out.println("Storage Full.");
         }
         else {
@@ -575,6 +594,20 @@ public class Main {
             }
         }
     }
+
+    /*public static void addClient(Client[] clients, Client client) throws DuplicateEmailException {
+        if (clients[clients.length - 1] != null) {
+            System.out.println("Storage Full.");
+        }
+        else {
+            for (int i = 0; i < clients.length; i++) { // We iterate until we reach a null element
+                if (clients[i] == null) {
+                    clients[i] = client;
+                    break;
+                }
+            }
+        }
+    }*/
 
     public static void deleteClient(Client[] clients, String id) {
         boolean deleted = false; // This is used to see if something got deleted or not
@@ -731,18 +764,33 @@ public class Main {
             switch (choice) {
                 case 1 -> {
                     System.out.println("Enter a new first name: ");
-                    clients[clientIndex].setFirstName(scanner.next());
-                    System.out.println("First Name Updated to: " + clients[clientIndex].getFirstName());
+                    try {
+                        clients[clientIndex].setFirstName(scanner.next());
+                        System.out.println("First Name Updated to: " + clients[clientIndex].getFirstName());
+                    }
+                    catch (InvalidClientDataException invalidClientDataException) {
+                        System.out.println(invalidClientDataException);
+                    }
                 }
                 case 2 -> {
                     System.out.println("Enter a new last name: ");
-                    clients[clientIndex].setLastName(scanner.next());
-                    System.out.println("Last Name Updated to: " + clients[clientIndex].getLastName());
+                    try {
+                        clients[clientIndex].setLastName(scanner.next());
+                        System.out.println("Last Name Updated to: " + clients[clientIndex].getLastName());
+                    }
+                    catch (InvalidClientDataException invalidClientDataException) {
+                        System.out.println(invalidClientDataException);
+                    }
                 }
                 case 3 -> {
                     System.out.println("Enter a new email: ");
-                    clients[clientIndex].setEmail(scanner.next());
-                    System.out.println("Email Updated to: " + clients[clientIndex].getEmail());
+                    try {
+                        clients[clientIndex].setEmail(scanner.next());
+                        System.out.println("Email Updated to: " + clients[clientIndex].getEmail());
+                    }
+                    catch (InvalidClientDataException invalidClientDataException) {
+                        System.out.println(invalidClientDataException);
+                    }
                 }
                 case 4 -> running = false;
                 default -> System.out.println("Invalid Input. Try Again");
@@ -939,7 +987,7 @@ public class Main {
     }
 
     public static void testingScenario(Client[] clients, Transportation[] transportations, Accommodation[] accommodations, Trip[] trips) {
-        Client client1 = new Client("Sahon", "Shaha", "shahsahon@gmail.com");
+        /*Client client1 = new Client("Sahon", "Shaha", "shahsahon@gmail.com");
         Client client2 = new Client("John", "Doe", "johndoe@gmail.com");
         Client client3 = new Client("Jane", "Doe", "janedoe@gmail.com");
         Client client4 = new Client(client3);
@@ -1050,6 +1098,6 @@ public class Main {
                 break;
             }
             System.out.println(deepCopied[i]);
-        }
+        }*/
     }
 }
