@@ -28,8 +28,11 @@ public class Bus extends Transportation {
     }
 
     // Copy Constructor
-    public Bus(Bus bus) {
+    public Bus(Bus bus) throws InvalidTransportDataException {
         super(bus);
+        if (stopsNum < 1) {
+            throw new InvalidTransportDataException("A Bus must have at least 1 stop.");
+        }
         this.busCompany = bus.getBusCompany();
         this.stopsNum = bus.getStopsNum();
         this.baseFare = bus.getBaseFare();
@@ -77,7 +80,10 @@ public class Bus extends Transportation {
         return stopsNum;
     }
 
-    public void setStopsNum(int stopsNum) {
+    public void setStopsNum(int stopsNum) throws InvalidTransportDataException {
+        if (stopsNum < 1) {
+            throw new InvalidTransportDataException("A Bus must have at least 1 stop.");
+        }
         this.stopsNum = stopsNum;
     }
 

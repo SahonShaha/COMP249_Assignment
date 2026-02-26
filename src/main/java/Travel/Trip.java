@@ -7,6 +7,8 @@
 package Travel;
 
 import Client.Client;
+import Exceptions.InvalidClientDataException;
+import Exceptions.InvalidTransportDataException;
 
 public class Trip {
     private static int count = 2001; // Represents the amount of objects created. Will be used to create the ID
@@ -27,12 +29,22 @@ public class Trip {
         this.destination = destination;
         this.durationInDays = durationInDays;
         this.basePrice = basePrice;
-        this.clientOnTrip = new Client(client);
+        try {
+            this.clientOnTrip = new Client(client);
+        }
+        catch (InvalidClientDataException invalidClientDataException) {
+            System.out.println(invalidClientDataException);
+        }
 
         // Creating Deep Copy of Transportation
         // Typecasting to the object here will not cause a problem because we are verifying the type during runtime
         if (transportation instanceof Bus) {
-            this.transportation = new Bus((Bus) transportation);
+            try {
+                this.transportation = new Bus((Bus) transportation);
+            }
+            catch (InvalidTransportDataException invalidTransportDataException) {
+                System.out.println(invalidTransportDataException);
+            }
         }
         else if (transportation instanceof Flight) {
             this.transportation = new Flight((Flight) transportation);
@@ -63,7 +75,13 @@ public class Trip {
         this.destination = trip.getDestination();
         this.durationInDays = trip.getDurationInDays();
         this.basePrice = trip.getBasePrice();
-        this.clientOnTrip = new Client(trip.getClientOnTrip()); // Creates a Deep Copy of Client
+        try {
+            // Creates a Deep Copy of Client
+            this.clientOnTrip = new Client(trip.getClientOnTrip());
+        }
+        catch (InvalidClientDataException invalidClientDataException) {
+            System.out.println(invalidClientDataException);
+        }
     }
 
     public String toString() {

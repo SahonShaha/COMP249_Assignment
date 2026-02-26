@@ -85,7 +85,10 @@ public class Flight extends Transportation {
         return luggageAllowance;
     }
 
-    public void setLuggageAllowance(int luggageAllowance) {
+    public void setLuggageAllowance(int luggageAllowance) throws InvalidTransportDataException {
+        if (luggageAllowance < 0) {
+            throw new InvalidTransportDataException("Luggage Allowance must be greater than 0.");
+        }
         this.luggageAllowance = luggageAllowance;
     }
 

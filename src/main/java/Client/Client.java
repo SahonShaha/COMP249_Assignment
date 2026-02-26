@@ -38,8 +38,14 @@ public class Client {
     }
 
     // Copy Constructor
-    public Client(Client client) {
+    public Client(Client client) throws InvalidClientDataException {
         this.clientID = "C" + count++;
+        if (firstName.length() > 50 || lastName.length() > 50 || email.length() > 100) {
+            throw new InvalidClientDataException("Entries too long. Keep First and Last Names under 50 characters and Emails under 100 characters.");
+        }
+        else if (!email.contains("@") || !email.contains(".")) {
+            throw new InvalidClientDataException("Email is missing the '@' or '.' characters.");
+        }
         this.firstName = client.getFirstName();
         this.lastName = client.getLastName();
         this.email = client.getEmail(); // TODO how to manage Duplicate Email Exception

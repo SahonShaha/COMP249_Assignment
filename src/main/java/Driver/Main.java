@@ -944,7 +944,12 @@ public class Main {
             }
 
             if (original[i] instanceof Bus) {
-                newTransportations[i] = new Bus((Bus) original[i]);
+                try {
+                    newTransportations[i] = new Bus((Bus) original[i]);
+                }
+                catch (InvalidTransportDataException invalidTransportDataException) {
+                    System.out.println(invalidTransportDataException);
+                }
             }
             else if (original[i] instanceof Flight) {
                 newTransportations[i] = new Flight((Flight) original[i]);
