@@ -6,6 +6,8 @@
 
 package Travel;
 
+import Exceptions.InvalidTransportDataException;
+
 public class Flight extends Transportation {
     private String airlineName;
     private int luggageAllowance;
@@ -15,8 +17,12 @@ public class Flight extends Transportation {
     public Flight(){}
 
     // Parameterized Constructor
-    public Flight(String companyName, String departureCity, String arrivalCity, String airlineName, int luggageAllowance, int ticketPrice) {
+    public Flight(String companyName, String departureCity, String arrivalCity, String airlineName, int luggageAllowance, int ticketPrice) throws InvalidTransportDataException {
         super(companyName, departureCity, arrivalCity);
+
+        if (luggageAllowance < 0) {
+            throw new InvalidTransportDataException("Luggage Allowance must be greater than 0.");
+        }
         this.airlineName = airlineName;
         this.luggageAllowance = luggageAllowance;
         this.ticketPrice = ticketPrice;

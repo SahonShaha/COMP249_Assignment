@@ -8,14 +8,13 @@ package Driver;
 
 import Exceptions.DuplicateEmailException;
 import Exceptions.InvalidClientDataException;
+import Exceptions.InvalidTransportDataException;
 import Travel.*;
 import Client.*;
 import Visualization.TripChartGenerator;
 
 import java.io.IOException;
 import java.util.Scanner;
-
-//testing Git
 
 public class Main {
     public static void main(String[] args) {
@@ -343,9 +342,13 @@ public class Main {
                         int stops = scanner.nextInt();
                         System.out.println("Enter the base fare: ");
                         int baseFare = scanner.nextInt();
-
-                        Bus newBus = new Bus(companyName, departureCity, arrivalCity, busCompany, stops, baseFare);
-                        add(transportations, newBus);
+                        try {
+                            Bus newBus = new Bus(companyName, departureCity, arrivalCity, busCompany, stops, baseFare);
+                            add(transportations, newBus);
+                        }
+                        catch (InvalidTransportDataException invalidTransportDataException) {
+                            System.out.println(invalidTransportDataException);
+                        }
                     }
 
                     case 2 -> { // Adding a flight
@@ -356,8 +359,13 @@ public class Main {
                         System.out.println("Enter the ticket price: ");
                         int ticketPrice = scanner.nextInt();
 
-                        Flight newFlight = new Flight(companyName, departureCity, arrivalCity, airlineName, weight, ticketPrice);
-                        add(transportations, newFlight);
+                        try {
+                            Flight newFlight = new Flight(companyName, departureCity, arrivalCity, airlineName, weight, ticketPrice);
+                            add(transportations, newFlight);
+                        }
+                        catch (InvalidTransportDataException invalidTransportDataException) {
+                            System.out.println(invalidTransportDataException);
+                        }
                     }
 
                      case 3 -> { // Adding a train

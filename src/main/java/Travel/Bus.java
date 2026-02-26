@@ -6,6 +6,8 @@
 
 package Travel;
 
+import Exceptions.InvalidTransportDataException;
+
 public class Bus extends Transportation {
     private String busCompany;
     private int stopsNum;
@@ -15,8 +17,11 @@ public class Bus extends Transportation {
     public Bus() {};
 
     // Parametrized Constructor
-    public Bus(String companyName, String departureCity, String arrivalCity, String busCompany, int stopsNum, int baseFare) {
+    public Bus(String companyName, String departureCity, String arrivalCity, String busCompany, int stopsNum, int baseFare) throws InvalidTransportDataException{
         super(companyName, departureCity, arrivalCity);
+        if (stopsNum < 1) {
+            throw new InvalidTransportDataException("A Bus must have at least 1 stop.");
+        }
         this.busCompany = busCompany;
         this.stopsNum = stopsNum;
         this.baseFare = baseFare;
