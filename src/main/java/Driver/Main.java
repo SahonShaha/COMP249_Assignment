@@ -1025,50 +1025,77 @@ public class Main {
     }
 
     public static void testingScenario(Client[] clients, Transportation[] transportations, Accommodation[] accommodations, Trip[] trips) {
-        /*Client client1 = new Client("Sahon", "Shaha", "shahsahon@gmail.com");
-        Client client2 = new Client("John", "Doe", "johndoe@gmail.com");
-        Client client3 = new Client("Jane", "Doe", "janedoe@gmail.com");
-        Client client4 = new Client(client3);
+        // We initially set everything as null so that trip can have access to these variables even if an exception gets caught
+        Client client1 = null, client2 = null, client3 = null, client4 = null;
+        Bus bus1 = null, bus2 = null;
+        Train train1 = null, train2 = null;
+        Flight flight1 = null, flight2 = null;
+        Hotel hotel1 = null, hotel2 = null;
+        Hostel hostel1 = null, hostel2 = null;
+        try {
+            client1 = new Client("Sahon", "Shaha", "shahsahon@gmail.com");
+            client2 = new Client("John", "Doe", "johndoe@gmail.com");
+            client3 = new Client("Jane", "Doe", "janedoe@gmail.com");
+            client4 = new Client(client3);
 
-        Bus bus1 = new Bus("CanadaTravels", "Montreal", "Quebec", "STM", 2, 61);
-        Bus bus2 = new Bus("AmericaUnited", "Toronto", "New York City", "TTC", 3, 65);
+            add(clients, client1);
+            add(clients, client2);
+            add(clients, client3);
+            add(clients, client4);
+        }
+        catch (InvalidClientDataException invalidClientDataException) {
+            System.out.println(invalidClientDataException);
+        }
 
-        Train train1 = new Train("ViaRail Canada", "Montreal", "Vancouver City", "High Speed", "Cabin", 100);
-        Train train2 = new Train("North America Transit", "Boston", "Montreal", "Bullet Train", "Deluxe", 75);
+        try {
+            bus1 = new Bus("CanadaTravels", "Montreal", "Quebec", "STM", 2, 61);
+            bus2 = new Bus("AmericaUnited", "Toronto", "New York City", "TTC", 3, 65);
 
-        Flight flight1 = new Flight("Europe Travel Agency", "Montreal", "France", "Air France Canada", 27, 4000);
-        Flight flight2 = new Flight("Japan Airways", "Montreal", "Japan", "Air Canada", 31, 3200);
+            train1 = new Train("ViaRail Canada", "Montreal", "Vancouver City", "High Speed", "Cabin", 100);
+            train2 = new Train("North America Transit", "Boston", "Montreal", "Bullet Train", "Deluxe", 75);
 
-        Hotel hotel1 = new Hotel("Hilton Paris Opera", "France", 457, 5);
-        Hotel hotel2 = new Hotel("Hotel Fine Sakai", "Japan", 37, 3);
+            flight1 = new Flight("Europe Travel Agency", "Montreal", "France", "Air France Canada", 27, 4000);
+            flight2 = new Flight("Japan Airways", "Montreal", "Japan", "Air Canada", 31, 3200);
 
-        Hostel hostel1 = new Hostel("Marseille Deluxe", "France", 114, 4);
-        Hostel hostel2 = new Hostel("Tokyo Yasashi", "Japan", 100, 2);
+            add(transportations, bus1);
+            add(transportations, bus2);
+            add(transportations, train1);
+            add(transportations, train2);
+            add(transportations, flight1);
+            add(transportations, flight2);
+        }
+        catch (InvalidTransportDataException invalidTransportDataException) {
+            System.out.println(invalidTransportDataException);
+        }
 
-        Trip trip1 = new Trip("Japan", 7, 2000, client1, flight2, hostel2);
-        Trip trip2 = new Trip("France", 14, 3500, client2, bus2, hotel1);
-        Trip trip3 = new Trip("France", 14, 3500, client3, flight1, hostel1);
+        try {
+            hotel1 = new Hotel("Hilton Paris Opera", "France", 457, 5);
+            hotel2 = new Hotel("Hotel Fine Sakai", "Japan", 37, 3);
 
-        add(clients, client1);
-        add(clients, client2);
-        add(clients, client3);
-        add(clients, client4);
+            hostel1 = new Hostel("Marseille Deluxe", "France", 114, 4);
+            hostel2 = new Hostel("Tokyo Yasashi", "Japan", 100, 2);
 
-        add(transportations, bus1);
-        add(transportations, bus2);
-        add(transportations, train1);
-        add(transportations, train2);
-        add(transportations, flight1);
-        add(transportations, flight2);
+            add(accommodations, hotel1);
+            add(accommodations, hotel2);
+            add(accommodations, hostel1);
+            add(accommodations, hostel2);
+        }
+        catch (InvalidAccommodationDataException invalidAccommodationDataException) {
+            System.out.println(invalidAccommodationDataException);
+        }
 
-        add(accommodations, hotel1);
-        add(accommodations, hotel2);
-        add(accommodations, hostel1);
-        add(accommodations, hostel2);
+        try {
+            Trip trip1 = new Trip("Japan", 7, 2000, client1, flight2, hostel2);
+            Trip trip2 = new Trip("France", 14, 3500, client2, bus2, hotel1);
+            Trip trip3 = new Trip("France", 14, 3500, client3, flight1, hostel1);
 
-        add(trips, trip1);
-        add(trips, trip2);
-        add(trips, trip3);
+            add(trips, trip1);
+            add(trips, trip2);
+            add(trips, trip3);
+        }
+        catch (InvalidTripDataException invalidTripDataException) {
+            System.out.println(invalidTripDataException);
+        }
 
         System.out.println("CLIENTS:");
         showAll(clients, new Client());
@@ -1121,7 +1148,12 @@ public class Main {
         // they are implicitly being generated when a Trip Object is made due to the Transportation and Accommodation fields having deep copies
         Transportation[] deepCopied = transportationsDeepCopy(transportations);
 
-        deepCopied[1] = new Flight("VIP Vacations", "Wuyang", "Beijing", "Delta Airlines", 20, 20000);
+        try {
+            deepCopied[1] = new Flight("VIP Vacations", "Wuyang", "Beijing", "Delta Airlines", 20, 20000);
+        }
+        catch (InvalidTransportDataException invalidTransportDataException) {
+            System.out.println(invalidTransportDataException);
+        }
 
         System.out.println("ORIGINAL ARRAY");
         for (int i = 0; i < transportations.length; i++) {
@@ -1136,6 +1168,6 @@ public class Main {
                 break;
             }
             System.out.println(deepCopied[i]);
-        }*/
+        }
     }
 }

@@ -32,6 +32,9 @@ public class Trip {
         else if (durationInDays < 1 || durationInDays > 20) {
             throw new InvalidTripDataException("Trip duration must be within 1 and 20 days");
         }
+        else if (client.equals(null) || transportation.equals(null) || accommodation.equals(null)) {
+            throw new InvalidTripDataException("Client, Transportation or Accommodation Object is null");
+        }
 
         // TODO Client ID must exist within the Client Array??
         this.tripID = "T" + count++;
@@ -85,6 +88,10 @@ public class Trip {
         else if (trip.getDurationInDays() < 1 || trip.getDurationInDays() > 20) {
             throw new InvalidTripDataException("Trip duration must be within 1 and 20 days");
         }
+        else if (trip.getClientOnTrip().equals(null) || trip.getTransportation().equals(null) || trip.getAccommodation().equals(null)) {
+            throw new InvalidTripDataException("Client, Transportation or Accommodation Object is null");
+        }
+
 
         // TODO Client ID must exist within the Client Array??
         this.tripID = "T" + count++;
