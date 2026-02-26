@@ -6,10 +6,7 @@
 
 package Driver;
 
-import Exceptions.DuplicateEmailException;
-import Exceptions.InvalidAccommodationDataException;
-import Exceptions.InvalidClientDataException;
-import Exceptions.InvalidTransportDataException;
+import Exceptions.*;
 import Travel.*;
 import Client.*;
 import Visualization.TripChartGenerator;
@@ -251,8 +248,13 @@ public class Main {
                     }
                 }
 
-                Trip trip = new Trip(destination, duration, basePrice, clients[clientIndex], transportations[transportIndex], accommodations[accommodationIndex]);
-                add(trips, trip);
+                try {
+                    Trip trip = new Trip(destination, duration, basePrice, clients[clientIndex], transportations[transportIndex], accommodations[accommodationIndex]);
+                    add(trips, trip);
+                }
+                catch (InvalidTripDataException invalidTripDataException) {
+                    System.out.println(invalidTripDataException);
+                }
             }
             case 2 -> { // Editing Trip
                 if (trips[0] == null) {
@@ -856,13 +858,23 @@ public class Main {
                     }
                     case 2 -> {
                         System.out.println("Enter the new duration of the trip: ");
-                        trips[tripIndex].setDurationInDays(scanner.nextInt());
-                        System.out.println("Updated Duration to: " + trips[tripIndex].getDurationInDays() + " days.");
+                        try {
+                            trips[tripIndex].setDurationInDays(scanner.nextInt());
+                            System.out.println("Updated Duration to: " + trips[tripIndex].getDurationInDays() + " days.");
+                        }
+                        catch (InvalidTripDataException invalidTripDataException) {
+                            System.out.println(invalidTripDataException);
+                        }
                     }
                     case 3 -> {
                         System.out.println("Enter a new base price: ");
-                        trips[tripIndex].setBasePrice(scanner.nextInt());
-                        System.out.println("Base Price Updated to: " + trips[tripIndex].getBasePrice());
+                        try {
+                            trips[tripIndex].setBasePrice(scanner.nextInt());
+                            System.out.println("Base Price Updated to: " + trips[tripIndex].getBasePrice());
+                        }
+                        catch (InvalidTripDataException invalidTripDataException) {
+                            System.out.println(invalidTripDataException);
+                        }
                     }
                     case 4 -> {
                         showAll(clients, new Client());
