@@ -466,7 +466,12 @@ public class Main {
 
                 System.out.println("Choose the ID of a Transportation you want to delete: ");
                 String id = scanner.next();
-                deleteTransportation(transportations, id);
+                try {
+                    deleteTransportation(transportations, id);
+                }
+                catch (EntityNotFoundException entityNotFoundException) {
+                    System.out.println(entityNotFoundException);
+                }
             }
 
             case 3 -> { // Showing Transportations
@@ -741,7 +746,7 @@ public class Main {
         }
     }
 
-    public static void deleteTransportation(Transportation[] transportations, String id) {
+    public static void deleteTransportation(Transportation[] transportations, String id) throws EntityNotFoundException {
         boolean deleted = false; // This is used to see if something got deleted or not
 
         for (int i = 0; i < transportations.length; i++) {
@@ -764,7 +769,7 @@ public class Main {
         }
 
         if (!deleted) {
-            System.out.println("No Transportations under that ID exists.");
+            throw new EntityNotFoundException("Transportation does not exist.");
         }
     }
 
