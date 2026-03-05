@@ -502,7 +502,6 @@ public class Main {
         }
     }
 
-    // TODO EntityNotFound Propagation
     public static void accommodationManagement(Scanner scanner, Accommodation[] accommodations) {
         System.out.println("""
                 1. Add an accommodation
@@ -607,6 +606,7 @@ public class Main {
         }
     }
 
+    // TODO EntityNotFound Propagation
     public static void additionalOperations(Scanner scanner, Trip[] trips, Transportation[] transportations, Accommodation[] accommodations) {
         System.out.println("""
                 1. Display the Most Expensive Trip
@@ -637,16 +637,20 @@ public class Main {
                     }
                 }
 
-                if (tripIndex == -1) { // So we break out completely out of the switch case in case trip is not found
-                    break;
+                try {
+                    if (tripIndex == -1) {
+                        throw new EntityNotFoundException("Trip does not exist.");
+                    }
+
+                    double basePrice = trips[tripIndex].getBasePrice();
+                    double transportationPrice = trips[tripIndex].getTransportation().calculateCost();
+                    double accommodationPrice = trips[tripIndex].getAccommodation().calculateCost();
+                    System.out.println("The total cost for this trip is " + (basePrice + transportationPrice) + "$ with a fee of "
+                            + accommodationPrice + "$ per night.");
                 }
-
-                double basePrice = trips[tripIndex].getBasePrice();
-                double transportationPrice = trips[tripIndex].getTransportation().calculateCost();
-                double accommodationPrice = trips[tripIndex].getAccommodation().calculateCost();
-                System.out.println("The total cost for this trip is " + (basePrice + transportationPrice) + "$ with a fee of "
-                + accommodationPrice + "$ per night.");
-
+                catch (EntityNotFoundException entityNotFoundException) {
+                    System.out.println(entityNotFoundException);
+                }
             }
             case 3 -> {
                 Transportation[] newTransportations = transportationsDeepCopy(transportations);
