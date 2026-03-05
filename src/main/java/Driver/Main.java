@@ -365,7 +365,6 @@ public class Main {
         }
     }
 
-    // TODO EntityNotFound Propagation
     public static void transportationManagement(Scanner scanner, Transportation[] transportations) {
         System.out.println("""
                 1. Add a transportation option
@@ -503,6 +502,7 @@ public class Main {
         }
     }
 
+    // TODO EntityNotFound Propagation
     public static void accommodationManagement(Scanner scanner, Accommodation[] accommodations) {
         System.out.println("""
                 1. Add an accommodation
@@ -575,7 +575,12 @@ public class Main {
 
                 System.out.println("Choose the ID of an Accommodation you want to delete: ");
                 String id = scanner.next();
-                deleteAccommodation(accommodations, id);
+                try {
+                    deleteAccommodation(accommodations, id);
+                }
+                catch (EntityNotFoundException entityNotFoundException) {
+                    System.out.println(entityNotFoundException);
+                }
             }
             case 3 -> { // Showing accommodations
                 System.out.println("Which type of transportation do you want to list?");
@@ -773,7 +778,7 @@ public class Main {
         }
     }
 
-    public static void deleteAccommodation(Accommodation[] accommodations, String id) {
+    public static void deleteAccommodation(Accommodation[] accommodations, String id) throws EntityNotFoundException {
         boolean deleted = false; // This is used to see if something got deleted or not
 
         for (int i = 0; i < accommodations.length; i++) {
@@ -796,7 +801,7 @@ public class Main {
         }
 
         if (!deleted) {
-            System.out.println("No Accommodations under that ID exists.");
+            throw new EntityNotFoundException("Accommodation does not exist.");
         }
     }
 
