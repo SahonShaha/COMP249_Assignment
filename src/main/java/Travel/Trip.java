@@ -7,6 +7,7 @@
 package Travel;
 
 import Client.Client;
+import Exceptions.InvalidAccommodationDataException;
 import Exceptions.InvalidClientDataException;
 import Exceptions.InvalidTransportDataException;
 import Exceptions.InvalidTripDataException;
@@ -70,10 +71,20 @@ public class Trip {
 
         // Creating Deep Copy of Accommodation
         if (accommodation instanceof Hotel) {
-            this.accommodation = new Hotel((Hotel) accommodation);
+            try {
+                this.accommodation = new Hotel((Hotel) accommodation);
+            }
+            catch (InvalidAccommodationDataException invalidAccommodationDataException) {
+                System.out.println(invalidAccommodationDataException);
+            }
         }
         else if (accommodation instanceof Hostel) {
-            this.accommodation = new Hostel((Hostel) accommodation);
+            try {
+                this.accommodation = new Hostel((Hostel) accommodation);
+            }
+            catch (InvalidAccommodationDataException invalidAccommodationDataException) {
+                System.out.println(invalidAccommodationDataException);
+            }
         }
         else {
             this.accommodation = null;
@@ -81,7 +92,7 @@ public class Trip {
     }
 
     // Copy Constructor
-    public Trip(Trip trip) throws InvalidTripDataException {
+    public Trip(Trip trip) throws InvalidTripDataException, InvalidAccommodationDataException, InvalidTransportDataException {
         if (trip.getBasePrice() < 100) {
             throw new InvalidTripDataException("Base Price must be over 100.00$");
         }
@@ -93,7 +104,6 @@ public class Trip {
         }
 
 
-        // TODO Client ID must exist within the Client Array??
         this.tripID = "T" + count++;
         this.destination = trip.getDestination();
         this.durationInDays = trip.getDurationInDays();
@@ -106,36 +116,27 @@ public class Trip {
             System.out.println(invalidClientDataException);
         }
 
+        // TODO Exception Handling
         // Creating Deep Copy of Transportation
         // Typecasting to the object here will not cause a problem because we are verifying the type during runtime
-        if (trip.getTransportation() instanceof Bus) {
-            try {
+            if (trip.getTransportation() instanceof Bus) {
                 this.transportation = new Bus((Bus) trip.getTransportation());
+            } else if (trip.getTransportation() instanceof Flight) {
+                this.transportation = new Flight((Flight) trip.getTransportation());
+            } else if (trip.getTransportation() instanceof Train) {
+                this.transportation = new Train((Train) trip.getTransportation());
+            } else {
+                this.transportation = null;
             }
-            catch (InvalidTransportDataException invalidTransportDataException) {
-                System.out.println(invalidTransportDataException);
-            }
-        }
-        else if (trip.getTransportation() instanceof Flight) {
-            this.transportation = new Flight((Flight) trip.getTransportation());
-        }
-        else if (trip.getTransportation() instanceof Train) {
-            this.transportation = new Train((Train) trip.getTransportation());
-        }
-        else {
-            this.transportation = null;
-        }
 
         // Creating Deep Copy of Accommodation
-        if (trip.getAccommodation() instanceof Hotel) {
-            this.accommodation = new Hotel((Hotel) trip.getAccommodation());
-        }
-        else if (trip.getAccommodation() instanceof Hostel) {
-            this.accommodation = new Hostel((Hostel) trip.getAccommodation());
-        }
-        else {
-            this.accommodation = null;
-        }
+            if (trip.getAccommodation() instanceof Hotel) {
+                this.accommodation = new Hotel((Hotel) trip.getAccommodation());
+            } else if (trip.getAccommodation() instanceof Hostel) {
+                this.accommodation = new Hostel((Hostel) trip.getAccommodation());
+            } else {
+                this.accommodation = null;
+            }
     }
 
     public String toString() {

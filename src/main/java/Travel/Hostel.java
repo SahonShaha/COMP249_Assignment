@@ -24,7 +24,7 @@ public class Hostel extends Accommodation {
     }
 
     // Copy Constructor
-    public Hostel(Hostel hostel) {
+    public Hostel(Hostel hostel) throws InvalidAccommodationDataException {
         super(hostel);
         this.sharedBeds = hostel.getSharedBeds();
     }

@@ -13,7 +13,7 @@ import Visualization.TripChartGenerator;
 
 import java.io.IOException;
 import java.util.Scanner;
-
+// TODO PROPAGATE ENTITY NOT FOUND EXCEPTION
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -143,29 +143,54 @@ public class Main {
                     }
 
                     // Validating the user choice
-                    if (clientEditIndex == -1) {
-                        System.out.println("Invalid Client Chosen");
+                    try {
+                        if (clientEditIndex == -1) {
+                            throw new EntityNotFoundException("Client does not exist.");
+                        } else {
+                            editClient(scanner, clients, clientEditIndex);
+                        }
                     }
-                    else {
-                        editClient(scanner, clients, clientEditIndex);
+                    catch (EntityNotFoundException entityNotFoundException) {
+                        System.out.println(entityNotFoundException);
                     }
                 }
             }
             case 3 -> { // Deleting Clients
                 showAll(clients, new Client());
 
-                System.out.println("Choose the ID of a client you want to delete: ");
-                String id = scanner.next();
-                deleteClient(clients, id);
-                System.out.println("Updated list of Clients post-deletion:");
-                showAll(clients, new Client());
+                System.out.println("Choose the ID of a client you want to edit: ");
+                String clientID = scanner.next();
+                int clientEditIndex = - 1; // If this stays -1, that means a client of that ID doesn't exist
 
+                for (int i = 0; i < clients.length; i++) {
+                    if (clients[i] == null) { // Once it hits null, that means all available elements have been printed
+                        break;
+                    }
+
+                    if (clients[i].getClientID().equals(clientID)) {
+                        clientEditIndex = i;
+                    }
+                }
+
+                // Validating the user choice
+                try {
+                    if (clientEditIndex == -1) {
+                        throw new EntityNotFoundException("Client does not exist.");
+                    } else {
+                        System.out.println("Updated list of Clients post-deletion:");
+                        showAll(clients, new Client());
+                    }
+                }
+                catch (EntityNotFoundException entityNotFoundException) {
+                    System.out.println(entityNotFoundException);
+                }
             }
             case 4 -> showAll(clients, new Client());
             default -> System.out.println("Invalid Input.");
         }
     }
 
+    // TODO EntityNotFound Propagation
     public static void tripManagement(Scanner scanner, Trip[] trips, Client[] clients, Transportation[] transportations, Accommodation[] accommodations) {
         System.out.println("""
                 1. Create a trip
@@ -962,7 +987,6 @@ public class Main {
         // Creating Deep Copy of the Array
         for (int i = 0; i < original.length; i++) {
             if (original[i] == null) {
-                System.out.println("Empty Array.");
                 break;
             }
 
@@ -995,10 +1019,20 @@ public class Main {
             }
 
             if (accommodations[i] instanceof Hostel) {
-                newAccommodations[i] = new Hostel((Hostel) accommodations[i]);
+                try {
+                    newAccommodations[i] = new Hostel((Hostel) accommodations[i]);
+                }
+                catch (InvalidAccommodationDataException invalidAccommodationDataException) {
+                    System.out.println(invalidAccommodationDataException);
+                }
             }
             else if (accommodations[i] instanceof Hotel) {
-                newAccommodations[i] = new Hotel((Hotel) accommodations[i]);
+                try {
+                    newAccommodations[i] = new Hotel((Hotel) accommodations[i]);
+                }
+                catch (InvalidAccommodationDataException invalidAccommodationDataException) {
+                    System.out.println(invalidAccommodationDataException);
+                }
             }
         }
 

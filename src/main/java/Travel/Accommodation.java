@@ -31,8 +31,11 @@ public abstract class Accommodation {
     }
 
     // Copy Constructor
-    public Accommodation(Accommodation accommodation) {
+    public Accommodation(Accommodation accommodation) throws InvalidAccommodationDataException{
         this.accommodationID = "A" + count++;
+        if (accommodation.pricePerNight < 1) { // TODO Amount of nights?
+            throw new InvalidAccommodationDataException("The price per night needs to be greater than 0.");
+        }
         this.name = accommodation.getName();
         this.location = accommodation.getLocation();
         this.pricePerNight = accommodation.getPricePerNight();

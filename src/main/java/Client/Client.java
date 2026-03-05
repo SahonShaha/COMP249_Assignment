@@ -40,10 +40,10 @@ public class Client {
     // Copy Constructor
     public Client(Client client) throws InvalidClientDataException {
         this.clientID = "C" + count++;
-        if (firstName.length() > 50 || lastName.length() > 50 || email.length() > 100) {
+        if (client.getFirstName().length() > 50 || client.getLastName().length() > 50 || client.getEmail().length() > 100) {
             throw new InvalidClientDataException("Entries too long. Keep First and Last Names under 50 characters and Emails under 100 characters.");
         }
-        else if (!email.contains("@") || !email.contains(".")) {
+        else if (!client.getEmail().contains("@") || !client.getEmail().contains(".")) {
             throw new InvalidClientDataException("Email is missing the '@' or '.' characters.");
         }
         this.firstName = client.getFirstName();

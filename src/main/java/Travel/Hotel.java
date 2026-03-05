@@ -25,7 +25,7 @@ public class Hotel extends Accommodation {
     }
 
     // Copy Constructor
-    public Hotel(Hotel hotel) {
+    public Hotel(Hotel hotel) throws InvalidAccommodationDataException {
         super(hotel);
         this.stars = hotel.getStars();
     }
