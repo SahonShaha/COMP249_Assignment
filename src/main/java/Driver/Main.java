@@ -7,6 +7,7 @@
 package Driver;
 
 import Exceptions.*;
+import Persistence.AccommodationFileManager;
 import Persistence.ClientFileManager;
 import Persistence.ErrorLogger;
 import Travel.*;
@@ -15,7 +16,7 @@ import Visualization.TripChartGenerator;
 
 import java.io.IOException;
 import java.util.Scanner;
-// TODO PROPAGATE ENTITY NOT FOUND EXCEPTION
+// TODO GENERAL SCANNER EXCEPTION HANDLING
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -65,6 +66,7 @@ public class Main {
                             case 6 -> {
                                 try {
                                     ClientFileManager.saveClients(clients, countValidObjects(clients), "output/data/clients.csv");
+                                    AccommodationFileManager.saveAccommodations(accommodations, countValidObjects(accommodations), "output/data/accommodations.csv");
                                 }
                                 catch (IOException ioException) {
                                     System.out.println(ioException);
@@ -73,6 +75,7 @@ public class Main {
                             case 7 -> {
                                 try {
                                     ClientFileManager.loadClients(clients, "output/data/clients.csv");
+                                    AccommodationFileManager.loadAccommodations(accommodations, "output/data/accommodations.csv");
                                 }
                                 catch (IOException ioException) {
                                     System.out.println(ioException);
