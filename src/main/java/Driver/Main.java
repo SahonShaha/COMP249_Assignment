@@ -7,6 +7,7 @@
 package Driver;
 
 import Exceptions.*;
+import Persistence.ClientFileManager;
 import Travel.*;
 import Client.*;
 import Visualization.TripChartGenerator;
@@ -20,11 +21,10 @@ public class Main {
         boolean isMenuRunning = true;
 
         // Creating storage for the arrays
-        // TODO UPDATED ARRAY QUANTITY
-        Client[] clients = new Client[20]; // 100 MAX
-        Trip[] trips = new Trip[20]; // 200 MAX
-        Transportation[] transportations = new Transportation[20]; // 50 MAX
-        Accommodation[] accommodations = new Accommodation[20]; // 50 MAX
+        Client[] clients = new Client[100]; // 100 MAX
+        Trip[] trips = new Trip[200]; // 200 MAX
+        Transportation[] transportations = new Transportation[50]; // 50 MAX
+        Accommodation[] accommodations = new Accommodation[50]; // 50 MAX
 
         System.out.println("Welcome to SmartTravel!");
 
@@ -49,7 +49,9 @@ public class Main {
                         3. Transportation Management
                         4. Accommodation Management
                         5. Additional Operations
-                        6. Exit
+                        6. Save All Data
+                        7. Load All Data
+                        8. Exit
                         """);
                         int choice = scanner.nextInt();
 
@@ -59,7 +61,23 @@ public class Main {
                             case 3 -> transportationManagement(scanner, transportations);
                             case 4 -> accommodationManagement(scanner, accommodations);
                             case 5 -> additionalOperations(scanner, trips, transportations, accommodations);
-                            case 6 -> userMenu = false;
+                            case 6 -> {
+                                try {
+                                    ClientFileManager.saveClients(clients, countValidObjects(clients), "output/data/clients.csv");
+                                }
+                                catch (IOException ioException) {
+                                    System.out.println(ioException);
+                                }
+                            }
+                            case 7 -> {
+                                try {
+                                    ClientFileManager.loadClients(clients, "output/data/clients.csv");
+                                }
+                                catch (IOException ioException) {
+                                    System.out.println(ioException);
+                                }
+                            }
+                            case 8 -> userMenu = false;
                             default -> System.out.println("Invalid Option.");
                         }
                     }
@@ -606,7 +624,6 @@ public class Main {
         }
     }
 
-    // TODO EntityNotFound Propagation
     public static void additionalOperations(Scanner scanner, Trip[] trips, Transportation[] transportations, Accommodation[] accommodations) {
         System.out.println("""
                 1. Display the Most Expensive Trip
