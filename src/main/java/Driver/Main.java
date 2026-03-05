@@ -20,6 +20,7 @@ public class Main {
         boolean isMenuRunning = true;
 
         // Creating storage for the arrays
+        // TODO UPDATED ARRAY QUANTITY
         Client[] clients = new Client[20]; // 100 MAX
         Trip[] trips = new Trip[20]; // 200 MAX
         Transportation[] transportations = new Transportation[20]; // 50 MAX
@@ -190,7 +191,6 @@ public class Main {
         }
     }
 
-    // TODO EntityNotFound Propagation
     public static void tripManagement(Scanner scanner, Trip[] trips, Client[] clients, Transportation[] transportations, Accommodation[] accommodations) {
         System.out.println("""
                 1. Create a trip
@@ -242,7 +242,6 @@ public class Main {
                 // LOCATING INDEX OF SELECTED CLIENT, TRANSPORTATION AND ACCOMMODATION
                 for (int i = 0; i < clients.length; i++) {
                     if (clients[i] == null) {
-                        System.out.println("Invalid Client ID");
                         break;
                     }
                     if (clients[i].getClientID().equals(clientId)) {
@@ -253,7 +252,6 @@ public class Main {
 
                 for (int i = 0; i < transportations.length; i++) {
                     if (transportations[i] == null) {
-                        System.out.println("Invalid Transportation ID");
                         break;
                     }
                     if (transportations[i].getTransportationID().equals(transportationId)) {
@@ -264,7 +262,6 @@ public class Main {
 
                 for (int i = 0; i < accommodations.length; i++) {
                     if (accommodations[i] == null) {
-                        System.out.println("Invalid Accommodation ID");
                         break;
                     }
                     if (accommodations[i].getAccommodationID().equals(accommodationId)) {
@@ -274,8 +271,22 @@ public class Main {
                 }
 
                 try {
+                    // Ensuring the indices have been updated
+                    if (clientIndex == -1) {
+                        throw new EntityNotFoundException("Client does not exist.");
+                    }
+                    if (transportIndex == -1) {
+                        throw new EntityNotFoundException("Transportation does not exist.");
+                    }
+                    if (accommodationIndex == -1) {
+                        throw new EntityNotFoundException("Accommodation does not exist.");
+                    }
+
                     Trip trip = new Trip(destination, duration, basePrice, clients[clientIndex], transportations[transportIndex], accommodations[accommodationIndex]);
                     add(trips, trip);
+                }
+                catch (EntityNotFoundException entityNotFoundException) {
+                    System.out.println(entityNotFoundException);
                 }
                 catch (InvalidTripDataException invalidTripDataException) {
                     System.out.println(invalidTripDataException);
@@ -290,16 +301,26 @@ public class Main {
 
                     System.out.println("Enter the ID of the trip you want to edit: ");
                     String id = scanner.next();
-                    editTrip(scanner, trips, id, clients, transportations, accommodations);
+                    try {
+                        editTrip(scanner, trips, id, clients, transportations, accommodations);
+                    }
+                    catch (EntityNotFoundException entityNotFoundException) {
+                        System.out.println(entityNotFoundException);
+                    }
                 }
             }
             case 3 -> { // Deleting Trip
                 showAll(trips, new Trip());
                 System.out.println("Choose the ID of the trip you want to delete: ");
                 String id = scanner.next();
-                deleteTrip(trips, id);
-                System.out.println("Updated list of Trips post-deletion:");
-                showAll(trips, new Trip());
+                try {
+                    deleteTrip(trips, id);
+                    System.out.println("Updated list of Trips post-deletion:");
+                    showAll(trips, new Trip());
+                }
+                catch (EntityNotFoundException entityNotFoundException) {
+                    System.out.println(entityNotFoundException);
+                }
 
             }
             case 4 -> showAll(trips, new Trip());
@@ -319,23 +340,32 @@ public class Main {
                     }
                 }
 
-                if (clientIndex > -1) {
-                    for (int i = 0; i < trips.length; i++) {
-                        if (trips[i] == null) {
-                            break; // If we reach a null object, that means we've gone through every existing trip
-                        }
+                try {
+                    if (clientIndex == -1) {
+                        throw new EntityNotFoundException("Client does not exist.");
+                    }
+                    else {
+                        for (int i = 0; i < trips.length; i++) {
+                            if (trips[i] == null) {
+                                break; // If we reach a null object, that means we've gone through every existing trip
+                            }
 
-                        // We check if the client of trip at i is the same as the client the user chose
-                        if (trips[i].getClientOnTrip().equals(clients[clientIndex])) {
-                            System.out.println(trips[i]);
+                            // We check if the client of trip at i is the same as the client the user chose
+                            if (trips[i].getClientOnTrip().equals(clients[clientIndex])) {
+                                System.out.println(trips[i]);
+                            }
                         }
                     }
+                }
+                catch (EntityNotFoundException entityNotFoundException) {
+                    System.out.println(entityNotFoundException);
                 }
             }
             default -> System.out.println("Invalid Input.");
         }
     }
 
+    // TODO EntityNotFound Propagation
     public static void transportationManagement(Scanner scanner, Transportation[] transportations) {
         System.out.println("""
                 1. Add a transportation option
@@ -684,7 +714,7 @@ public class Main {
         }
     }
 
-    public static void deleteTrip(Trip[] trips, String id) {
+    public static void deleteTrip(Trip[] trips, String id) throws EntityNotFoundException {
         boolean deleted = false; // This is used to see if something got deleted or not
 
         for (int i = 0; i < trips.length; i++) {
@@ -707,7 +737,7 @@ public class Main {
         }
 
         if (!deleted) {
-            System.out.println("No Trips under that ID exists.");
+            throw new EntityNotFoundException("Entity not found.");
         }
     }
 
@@ -846,18 +876,21 @@ public class Main {
         }
     }
 
-    public static void editTrip(Scanner scanner, Trip[] trips, String id, Client[] clients, Transportation[] transportations, Accommodation[] accommodations) {
+    public static void editTrip(Scanner scanner, Trip[] trips, String id, Client[] clients, Transportation[] transportations, Accommodation[] accommodations) throws EntityNotFoundException{
         // Find Index of selected trip
         int tripIndex = -1;
         for (int i = 0; i < trips.length; i++) {
             if (trips[i] == null) {
-                System.out.println("No Trips available in the Array.");
                 break;
             }
             if (trips[i].getTripID().equals(id)) {
                 tripIndex = i;
                 break;
             }
+        }
+
+        if (tripIndex == -1) {
+            throw new EntityNotFoundException("Trip does not exist.");
         }
 
         if (tripIndex > -1) {
@@ -909,13 +942,16 @@ public class Main {
 
                         for (int i = 0; i < clients.length; i++) {
                             if (clients[i] == null) {
-                                System.out.println("Invalid Client ID");
                                 break;
                             }
                             if (clients[i].getClientID().equals(newClientId)) {
                                 clientIndex = i;
                                 break;
                             }
+                        }
+
+                        if (clientIndex == -1) {
+                            throw new EntityNotFoundException("Client does not exist.");
                         }
                         trips[tripIndex].setClientOnTrip(clients[clientIndex]);
                         System.out.println("Profile of the new client going on this trip: ");
@@ -933,13 +969,15 @@ public class Main {
 
                         for (int i = 0; i < transportations.length; i++) {
                             if (transportations[i] == null) {
-                                System.out.println("Invalid Transportation ID");
                                 break;
                             }
                             if (transportations[i].getTransportationID().equals(newTransportationId)) {
                                 transportationIndex = i;
                                 break;
                             }
+                        }
+                        if (transportationIndex == -1) {
+                            throw new EntityNotFoundException("Transportation does not exist.");
                         }
 
                         trips[tripIndex].setTransportation(transportations[transportationIndex]);
@@ -958,13 +996,16 @@ public class Main {
 
                         for (int i = 0; i < accommodations.length; i++) {
                             if (accommodations[i] == null) {
-                                System.out.println("Invalid Accommodation ID");
                                 break;
                             }
                             if (accommodations[i].getAccommodationID().equals(newAccommodationId)) {
                                 accommodationIndex = i;
                                 break;
                             }
+                        }
+
+                        if (accommodationIndex == -1) {
+                            throw new EntityNotFoundException("Accommodation not found");
                         }
 
                         trips[tripIndex].setAccommodation(accommodations[accommodationIndex]);
