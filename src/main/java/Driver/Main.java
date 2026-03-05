@@ -8,6 +8,7 @@ package Driver;
 
 import Exceptions.*;
 import Persistence.ClientFileManager;
+import Persistence.ErrorLogger;
 import Travel.*;
 import Client.*;
 import Visualization.TripChartGenerator;
@@ -138,6 +139,12 @@ public class Main {
                 }
                 catch (DuplicateEmailException duplicateEmailException) {
                     System.out.println(duplicateEmailException);
+                    try {
+                        ErrorLogger.log(duplicateEmailException);
+                    }
+                    catch (IOException ioException) {
+                        System.out.println(ioException);
+                    }
                 }
             }
             case 2 -> { // Editing Clients
@@ -171,6 +178,12 @@ public class Main {
                     }
                     catch (EntityNotFoundException entityNotFoundException) {
                         System.out.println(entityNotFoundException);
+                        try {
+                            ErrorLogger.log(entityNotFoundException);
+                        }
+                        catch (IOException ioException) {
+                            System.out.println(ioException);
+                        }
                     }
                 }
             }
@@ -202,6 +215,12 @@ public class Main {
                 }
                 catch (EntityNotFoundException entityNotFoundException) {
                     System.out.println(entityNotFoundException);
+                    try {
+                        ErrorLogger.log(entityNotFoundException);
+                    }
+                    catch (IOException ioException) {
+                        System.out.println(ioException);
+                    }
                 }
             }
             case 4 -> showAll(clients, new Client());
@@ -305,9 +324,21 @@ public class Main {
                 }
                 catch (EntityNotFoundException entityNotFoundException) {
                     System.out.println(entityNotFoundException);
+                    try {
+                        ErrorLogger.log(entityNotFoundException);
+                    }
+                    catch (IOException ioException) {
+                        System.out.println(ioException);
+                    }
                 }
                 catch (InvalidTripDataException invalidTripDataException) {
                     System.out.println(invalidTripDataException);
+                    try {
+                        ErrorLogger.log(invalidTripDataException);
+                    }
+                    catch (IOException ioException) {
+                        System.out.println(ioException);
+                    }
                 }
             }
             case 2 -> { // Editing Trip
@@ -324,6 +355,12 @@ public class Main {
                     }
                     catch (EntityNotFoundException entityNotFoundException) {
                         System.out.println(entityNotFoundException);
+                        try {
+                            ErrorLogger.log(entityNotFoundException);
+                        }
+                        catch (IOException ioException) {
+                            System.out.println(ioException);
+                        }
                     }
                 }
             }
@@ -338,6 +375,12 @@ public class Main {
                 }
                 catch (EntityNotFoundException entityNotFoundException) {
                     System.out.println(entityNotFoundException);
+                    try {
+                        ErrorLogger.log(entityNotFoundException);
+                    }
+                    catch (IOException ioException) {
+                        System.out.println(ioException);
+                    }
                 }
 
             }
@@ -377,6 +420,12 @@ public class Main {
                 }
                 catch (EntityNotFoundException entityNotFoundException) {
                     System.out.println(entityNotFoundException);
+                    try {
+                        ErrorLogger.log(entityNotFoundException);
+                    }
+                    catch (IOException ioException) {
+                        System.out.println(ioException);
+                    }
                 }
             }
             default -> System.out.println("Invalid Input.");
@@ -423,6 +472,12 @@ public class Main {
                         }
                         catch (InvalidTransportDataException invalidTransportDataException) {
                             System.out.println(invalidTransportDataException);
+                            try {
+                                ErrorLogger.log(invalidTransportDataException);
+                            }
+                            catch (IOException ioException) {
+                                System.out.println(ioException);
+                            }
                         }
                     }
 
@@ -440,6 +495,12 @@ public class Main {
                         }
                         catch (InvalidTransportDataException invalidTransportDataException) {
                             System.out.println(invalidTransportDataException);
+                            try {
+                                ErrorLogger.log(invalidTransportDataException);
+                            }
+                            catch (IOException ioException) {
+                                System.out.println(ioException);
+                            }
                         }
                     }
 
@@ -488,6 +549,12 @@ public class Main {
                 }
                 catch (EntityNotFoundException entityNotFoundException) {
                     System.out.println(entityNotFoundException);
+                    try {
+                        ErrorLogger.log(entityNotFoundException);
+                    }
+                    catch (IOException ioException) {
+                        System.out.println(ioException);
+                    }
                 }
             }
 
@@ -555,6 +622,12 @@ public class Main {
                         }
                         catch (InvalidAccommodationDataException invalidAccommodationDataException) {
                             System.out.println(invalidAccommodationDataException);
+                            try {
+                                ErrorLogger.log(invalidAccommodationDataException);
+                            }
+                            catch (IOException ioException) {
+                                System.out.println(ioException);
+                            }
                         }
                     }
                     case 2 -> { // Adding a hotel
@@ -567,6 +640,12 @@ public class Main {
                         }
                         catch (InvalidAccommodationDataException invalidAccommodationDataException) {
                             System.out.println(invalidAccommodationDataException);
+                            try {
+                                ErrorLogger.log(invalidAccommodationDataException);
+                            }
+                            catch (IOException ioException) {
+                                System.out.println(ioException);
+                            }
                         }
                     }
                     default -> System.out.println("Invalid Input.");
@@ -597,6 +676,12 @@ public class Main {
                 }
                 catch (EntityNotFoundException entityNotFoundException) {
                     System.out.println(entityNotFoundException);
+                    try {
+                        ErrorLogger.log(entityNotFoundException);
+                    }
+                    catch (IOException ioException) {
+                        System.out.println(ioException);
+                    }
                 }
             }
             case 3 -> { // Showing accommodations
@@ -667,6 +752,12 @@ public class Main {
                 }
                 catch (EntityNotFoundException entityNotFoundException) {
                     System.out.println(entityNotFoundException);
+                    try {
+                        ErrorLogger.log(entityNotFoundException);
+                    }
+                    catch (IOException ioException) {
+                        System.out.println(ioException);
+                    }
                 }
             }
             case 3 -> {
@@ -879,6 +970,12 @@ public class Main {
                     }
                     catch (InvalidClientDataException invalidClientDataException) {
                         System.out.println(invalidClientDataException);
+                        try {
+                            ErrorLogger.log(invalidClientDataException);
+                        }
+                        catch (IOException ioException) {
+                            System.out.println(ioException);
+                        }
                     }
                 }
                 case 2 -> {
@@ -889,6 +986,12 @@ public class Main {
                     }
                     catch (InvalidClientDataException invalidClientDataException) {
                         System.out.println(invalidClientDataException);
+                        try {
+                            ErrorLogger.log(invalidClientDataException);
+                        }
+                        catch (IOException ioException) {
+                            System.out.println(ioException);
+                        }
                     }
                 }
                 case 3 -> {
@@ -899,6 +1002,12 @@ public class Main {
                     }
                     catch (InvalidClientDataException invalidClientDataException) {
                         System.out.println(invalidClientDataException);
+                        try {
+                            ErrorLogger.log(invalidClientDataException);
+                        }
+                        catch (IOException ioException) {
+                            System.out.println(ioException);
+                        }
                     }
                 }
                 case 4 -> running = false;
@@ -953,6 +1062,12 @@ public class Main {
                         }
                         catch (InvalidTripDataException invalidTripDataException) {
                             System.out.println(invalidTripDataException);
+                            try {
+                                ErrorLogger.log(invalidTripDataException);
+                            }
+                            catch (IOException ioException) {
+                                System.out.println(ioException);
+                            }
                         }
                     }
                     case 3 -> {
@@ -963,6 +1078,12 @@ public class Main {
                         }
                         catch (InvalidTripDataException invalidTripDataException) {
                             System.out.println(invalidTripDataException);
+                            try {
+                                ErrorLogger.log(invalidTripDataException);
+                            }
+                            catch (IOException ioException) {
+                                System.out.println(ioException);
+                            }
                         }
                     }
                     case 4 -> {
@@ -1068,6 +1189,12 @@ public class Main {
                 }
                 catch (InvalidTransportDataException invalidTransportDataException) {
                     System.out.println(invalidTransportDataException);
+                    try {
+                        ErrorLogger.log(invalidTransportDataException);
+                    }
+                    catch (IOException ioException) {
+                        System.out.println(ioException);
+                    }
                 }
             }
             else if (original[i] instanceof Flight) {
@@ -1086,7 +1213,6 @@ public class Main {
         // Creating Deep Copy of the Array
         for (int i = 0; i < accommodations.length; i++) {
             if (accommodations[i] == null) { // If the first entry of the array is null, then that means the entire array is null
-                System.out.println("Empty Array.");
                 break;
             }
 
@@ -1096,6 +1222,12 @@ public class Main {
                 }
                 catch (InvalidAccommodationDataException invalidAccommodationDataException) {
                     System.out.println(invalidAccommodationDataException);
+                    try {
+                        ErrorLogger.log(invalidAccommodationDataException);
+                    }
+                    catch (IOException ioException) {
+                        System.out.println(ioException);
+                    }
                 }
             }
             else if (accommodations[i] instanceof Hotel) {
@@ -1104,6 +1236,12 @@ public class Main {
                 }
                 catch (InvalidAccommodationDataException invalidAccommodationDataException) {
                     System.out.println(invalidAccommodationDataException);
+                    try {
+                        ErrorLogger.log(invalidAccommodationDataException);
+                    }
+                    catch (IOException ioException) {
+                        System.out.println(ioException);
+                    }
                 }
             }
         }
