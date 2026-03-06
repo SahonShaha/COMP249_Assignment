@@ -1,7 +1,6 @@
 package Persistence;
 
 import Exceptions.InvalidAccommodationDataException;
-import Exceptions.InvalidClientDataException;
 import Travel.Accommodation;
 import Travel.Hostel;
 import Travel.Hotel;

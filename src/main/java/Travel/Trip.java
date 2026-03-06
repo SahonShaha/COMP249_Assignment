@@ -104,7 +104,7 @@ public class Trip {
         }
 
 
-        this.tripID = "T" + count++;
+        this.tripID = trip.getTripID();
         this.destination = trip.getDestination();
         this.durationInDays = trip.getDurationInDays();
         this.basePrice = trip.getBasePrice();

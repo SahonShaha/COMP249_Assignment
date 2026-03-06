@@ -32,7 +32,7 @@ public abstract class Accommodation {
 
     // Copy Constructor
     public Accommodation(Accommodation accommodation) throws InvalidAccommodationDataException{
-        this.accommodationID = "A" + count++;
+        this.accommodationID = accommodation.getAccommodationID();
         if (accommodation.pricePerNight < 1) { // TODO Amount of nights?
             throw new InvalidAccommodationDataException("The price per night needs to be greater than 0.");
         }

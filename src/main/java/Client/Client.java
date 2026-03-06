@@ -39,7 +39,7 @@ public class Client {
 
     // Copy Constructor
     public Client(Client client) throws InvalidClientDataException {
-        this.clientID = "C" + count++;
+        this.clientID = client.getClientID();
         if (client.getFirstName().length() > 50 || client.getLastName().length() > 50 || client.getEmail().length() > 100) {
             throw new InvalidClientDataException("Entries too long. Keep First and Last Names under 50 characters and Emails under 100 characters.");
         }

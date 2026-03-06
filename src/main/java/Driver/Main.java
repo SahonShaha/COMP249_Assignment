@@ -7,10 +7,7 @@
 package Driver;
 
 import Exceptions.*;
-import Persistence.AccommodationFileManager;
-import Persistence.ClientFileManager;
-import Persistence.ErrorLogger;
-import Persistence.TransportationFileManager;
+import Persistence.*;
 import Travel.*;
 import Client.*;
 import Visualization.TripChartGenerator;
@@ -69,6 +66,7 @@ public class Main {
                                     ClientFileManager.saveClients(clients, countValidObjects(clients), "output/data/clients.csv");
                                     AccommodationFileManager.saveAccommodations(accommodations, countValidObjects(accommodations), "output/data/accommodations.csv");
                                     TransportationFileManager.saveTransportations(transportations, countValidObjects(transportations), "output/data/transportations.csv");
+                                    TripFileManager.saveTrip(trips, countValidObjects(trips), "output/data/trips.csv");
                                 }
                                 catch (IOException ioException) {
                                     System.out.println(ioException);
@@ -79,6 +77,7 @@ public class Main {
                                     ClientFileManager.loadClients(clients, "output/data/clients.csv");
                                     AccommodationFileManager.loadAccommodations(accommodations, "output/data/accommodations.csv");
                                     TransportationFileManager.loadTransportations(transportations, "output/data/transportations.csv");
+                                    TripFileManager.loadTrip(trips, "output/data/trips.csv", clients, accommodations, transportations);
                                 }
                                 catch (IOException ioException) {
                                     System.out.println(ioException);

@@ -9,7 +9,7 @@ public class ErrorLogger {
 
     public static void log(Exception e) throws IOException  {
         FileWriter fileWriter = new FileWriter(fileName);
-        PrintWriter printWriter = new PrintWriter(fileWriter);
+        PrintWriter printWriter = new PrintWriter(fileWriter); // TODO APPEND (currently cant have more than 1 error in the log)
 
         printWriter.println(e);
         printWriter.close();

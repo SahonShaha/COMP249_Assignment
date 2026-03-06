@@ -26,7 +26,7 @@ public abstract class Transportation {
 
     // Copy Constructor
     public Transportation(Transportation transportation) {
-        this.transportationID = "TR" + count++;
+        this.transportationID = transportation.getTransportationID();
         this.companyName = transportation.getCompanyName();
         this.departureCity = transportation.getDepartureCity();
         this.arrivalCity = transportation.getArrivalCity();
