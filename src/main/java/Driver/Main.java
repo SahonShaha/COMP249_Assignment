@@ -16,8 +16,9 @@ import Visualization.TripChartGenerator;
 import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
-// TODO GENERAL SCANNER EXCEPTION HANDLING
+// TODO GENERAL SCANNER EXCEPTION HANDLING -> MISMATCH EXCEPTION = ENTER CUSTOM MESSAGE
 // TODO LOG ALL EXCEPTIONS
+// TODO spread .getMessage
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -63,9 +64,9 @@ public class Main {
 
                                 switch (choice) {
                                     case 1 -> clientManagement(sts, scanner, clients);
-                                    case 2 -> tripManagement(sts, scanner, trips, clients, transportations, accommodations);
-                                    case 3 -> transportationManagement(sts, scanner, transportations);
-                                    case 4 -> accommodationManagement(sts, scanner, accommodations);
+                                    case 2 -> tripManagement(scanner, trips, clients, transportations, accommodations);
+                                    case 3 -> transportationManagement(scanner, transportations);
+                                    case 4 -> accommodationManagement(scanner, accommodations);
                                     case 5 -> additionalOperations(scanner, trips, transportations, accommodations);
                                     case 6 -> {
                                         try {
@@ -74,7 +75,7 @@ public class Main {
                                             TransportationFileManager.saveTransportations(transportations, SmartTravelService.countValidObjects(transportations), "output/data/transportations.csv");
                                             TripFileManager.saveTrip(trips, SmartTravelService.countValidObjects(trips), "output/data/trips.csv");
                                         } catch (IOException ioException) {
-                                            System.out.println(ioException);
+                                            System.out.println(ioException.getMessage());
                                         }
                                     }
                                     case 7 -> {
@@ -85,7 +86,7 @@ public class Main {
                                             TransportationFileManager.loadTransportations(transportations, "output/data/transportations.csv");
                                             TripFileManager.loadTrip(trips, "output/data/trips.csv", clients, accommodations, transportations);
                                         } catch (IOException ioException) {
-                                            System.out.println(ioException);
+                                            System.out.println(ioException.getMessage());
                                         }
                                     }
                                     case 8 -> userMenu = false;
@@ -93,12 +94,12 @@ public class Main {
                                 }
                             }
                             catch (InputMismatchException inputMismatchException) {
-                                System.out.println(inputMismatchException);
+                                System.out.println("Invalid Input. Enter a number.");
                                 try {
                                     ErrorLogger.log(inputMismatchException);
                                 }
                                 catch (IOException ioException) {
-                                    System.out.println(ioException);
+                                    System.out.println(ioException.getMessage());
                                 }
                                 scanner.nextLine();
                             }
@@ -122,7 +123,7 @@ public class Main {
                 }
             }
             catch (InputMismatchException inputMismatchException) {
-                System.out.println(inputMismatchException);
+                System.out.println("Invalid Input. Enter a number.");
                 scanner.nextLine();
             }
         }
@@ -160,18 +161,19 @@ public class Main {
                         Client newClient = new Client(firstName, lastName, email);
                         add(clients, newClient);
                     } catch (InvalidClientDataException invalidClientDataException) {
-                        System.out.println("Error: " + invalidClientDataException);
+                        //System.out.println("Error: " + invalidClientDataException);
+                        System.out.println(invalidClientDataException.getMessage());
                         try {
                             ErrorLogger.log(invalidClientDataException);
                         } catch (IOException ioException) {
-                            System.out.println(ioException);
+                            System.out.println(ioException.getMessage());
                         }
                     } catch (DuplicateEmailException duplicateEmailException) {
-                        System.out.println(duplicateEmailException);
+                        System.out.println(duplicateEmailException.getMessage());
                         try {
                             ErrorLogger.log(duplicateEmailException);
                         } catch (IOException ioException) {
-                            System.out.println(ioException);
+                            System.out.println(ioException.getMessage());
                         }
                     }
                 }
@@ -203,11 +205,11 @@ public class Main {
                                 editClient(scanner, clients, clientEditIndex);
                             }
                         } catch (EntityNotFoundException entityNotFoundException) {
-                            System.out.println(entityNotFoundException);
+                            System.out.println(entityNotFoundException.getMessage());
                             try {
                                 ErrorLogger.log(entityNotFoundException);
                             } catch (IOException ioException) {
-                                System.out.println(ioException);
+                                System.out.println(ioException.getMessage());
                             }
                         }
                     }
@@ -238,11 +240,11 @@ public class Main {
                             showAll(clients, new Client());
                         }
                     } catch (EntityNotFoundException entityNotFoundException) {
-                        System.out.println(entityNotFoundException);
+                        System.out.println(entityNotFoundException.getMessage());
                         try {
                             ErrorLogger.log(entityNotFoundException);
                         } catch (IOException ioException) {
-                            System.out.println(ioException);
+                            System.out.println(ioException.getMessage());
                         }
                     }
                 }
@@ -251,17 +253,17 @@ public class Main {
             }
         }
         catch (InputMismatchException inputMismatchException) {
-            System.out.println(inputMismatchException);
+            System.out.println("Invalid Input. Enter a number.");
             try {
                 ErrorLogger.log(inputMismatchException);
             }
             catch (IOException ioException) {
-                System.out.println(ioException);
+                System.out.println(ioException.getMessage());
             }
         }
     }
 
-    public static void tripManagement(SmartTravelService sts, Scanner scanner, Trip[] trips, Client[] clients, Transportation[] transportations, Accommodation[] accommodations) {
+    public static void tripManagement(Scanner scanner, Trip[] trips, Client[] clients, Transportation[] transportations, Accommodation[] accommodations) {
         System.out.println("""
                 1. Create a trip
                 2. Edit trip information
@@ -356,21 +358,21 @@ public class Main {
                     add(trips, trip);
                 }
                 catch (EntityNotFoundException entityNotFoundException) {
-                    System.out.println(entityNotFoundException);
+                    System.out.println(entityNotFoundException.getMessage());
                     try {
                         ErrorLogger.log(entityNotFoundException);
                     }
                     catch (IOException ioException) {
-                        System.out.println(ioException);
+                        System.out.println(ioException.getMessage());
                     }
                 }
                 catch (InvalidTripDataException invalidTripDataException) {
-                    System.out.println(invalidTripDataException);
+                    System.out.println(invalidTripDataException.getMessage());
                     try {
                         ErrorLogger.log(invalidTripDataException);
                     }
                     catch (IOException ioException) {
-                        System.out.println(ioException);
+                        System.out.println(ioException.getMessage());
                     }
                 }
             }
@@ -387,12 +389,12 @@ public class Main {
                         editTrip(scanner, trips, id, clients, transportations, accommodations);
                     }
                     catch (EntityNotFoundException entityNotFoundException) {
-                        System.out.println(entityNotFoundException);
+                        System.out.println(entityNotFoundException.getMessage());
                         try {
                             ErrorLogger.log(entityNotFoundException);
                         }
                         catch (IOException ioException) {
-                            System.out.println(ioException);
+                            System.out.println(ioException.getMessage());
                         }
                     }
                 }
@@ -407,12 +409,12 @@ public class Main {
                     showAll(trips, new Trip());
                 }
                 catch (EntityNotFoundException entityNotFoundException) {
-                    System.out.println(entityNotFoundException);
+                    System.out.println(entityNotFoundException.getMessage());
                     try {
                         ErrorLogger.log(entityNotFoundException);
                     }
                     catch (IOException ioException) {
-                        System.out.println(ioException);
+                        System.out.println(ioException.getMessage());
                     }
                 }
 
@@ -452,12 +454,12 @@ public class Main {
                     }
                 }
                 catch (EntityNotFoundException entityNotFoundException) {
-                    System.out.println(entityNotFoundException);
+                    System.out.println(entityNotFoundException.getMessage());
                     try {
                         ErrorLogger.log(entityNotFoundException);
                     }
                     catch (IOException ioException) {
-                        System.out.println(ioException);
+                        System.out.println(ioException.getMessage());
                     }
                 }
             }
@@ -465,7 +467,7 @@ public class Main {
         }
     }
 
-    public static void transportationManagement(SmartTravelService sts, Scanner scanner, Transportation[] transportations) {
+    public static void transportationManagement(Scanner scanner, Transportation[] transportations) {
         System.out.println("""
                 1. Add a transportation option
                 2. Remove a transportation option
@@ -504,12 +506,12 @@ public class Main {
                             add(transportations, newBus);
                         }
                         catch (InvalidTransportDataException invalidTransportDataException) {
-                            System.out.println(invalidTransportDataException);
+                            System.out.println(invalidTransportDataException.getMessage());
                             try {
                                 ErrorLogger.log(invalidTransportDataException);
                             }
                             catch (IOException ioException) {
-                                System.out.println(ioException);
+                                System.out.println(ioException.getMessage());
                             }
                         }
                     }
@@ -527,12 +529,12 @@ public class Main {
                             add(transportations, newFlight);
                         }
                         catch (InvalidTransportDataException invalidTransportDataException) {
-                            System.out.println(invalidTransportDataException);
+                            System.out.println(invalidTransportDataException.getMessage());
                             try {
                                 ErrorLogger.log(invalidTransportDataException);
                             }
                             catch (IOException ioException) {
-                                System.out.println(ioException);
+                                System.out.println(ioException.getMessage());
                             }
                         }
                     }
@@ -562,16 +564,9 @@ public class Main {
                 int transportationChoice = scanner.nextInt();
 
                 switch (transportationChoice) {
-                    case 1 -> {
-                        showAll(transportations, new Bus());
-                    }
-                    case 2 -> {
-                        showAll(transportations, new Flight());
-                    }
-
-                    case 3 -> {
-                        showAll(transportations, new Train());
-                    }
+                    case 1 -> showAll(transportations, new Bus());
+                    case 2 -> showAll(transportations, new Flight());
+                    case 3 -> showAll(transportations, new Train());
                     default -> System.out.println("Invalid Input.");
                 }
 
@@ -581,12 +576,12 @@ public class Main {
                     deleteTransportation(transportations, id);
                 }
                 catch (EntityNotFoundException entityNotFoundException) {
-                    System.out.println(entityNotFoundException);
+                    System.out.println(entityNotFoundException.getMessage());
                     try {
                         ErrorLogger.log(entityNotFoundException);
                     }
                     catch (IOException ioException) {
-                        System.out.println(ioException);
+                        System.out.println(ioException.getMessage());
                     }
                 }
             }
@@ -620,7 +615,7 @@ public class Main {
         }
     }
 
-    public static void accommodationManagement(SmartTravelService sts, Scanner scanner, Accommodation[] accommodations) {
+    public static void accommodationManagement(Scanner scanner, Accommodation[] accommodations) {
         System.out.println("""
                 1. Add an accommodation
                 2. Remove an accommodation
@@ -654,12 +649,12 @@ public class Main {
                             add(accommodations, newHostel);
                         }
                         catch (InvalidAccommodationDataException invalidAccommodationDataException) {
-                            System.out.println(invalidAccommodationDataException);
+                            System.out.println(invalidAccommodationDataException.getMessage());
                             try {
                                 ErrorLogger.log(invalidAccommodationDataException);
                             }
                             catch (IOException ioException) {
-                                System.out.println(ioException);
+                                System.out.println(ioException.getMessage());
                             }
                         }
                     }
@@ -672,12 +667,12 @@ public class Main {
                             add(accommodations, newHotel);
                         }
                         catch (InvalidAccommodationDataException invalidAccommodationDataException) {
-                            System.out.println(invalidAccommodationDataException);
+                            System.out.println(invalidAccommodationDataException.getMessage());
                             try {
                                 ErrorLogger.log(invalidAccommodationDataException);
                             }
                             catch (IOException ioException) {
-                                System.out.println(ioException);
+                                System.out.println(ioException.getMessage());
                             }
                         }
                     }
@@ -693,12 +688,8 @@ public class Main {
                 int accommodationChoice = scanner.nextInt();
 
                 switch (accommodationChoice) {
-                    case 1 -> {
-                        showAll(accommodations, new Hostel());
-                    }
-                    case 2 -> {
-                        showAll(accommodations, new Hotel());
-                    }
+                    case 1 -> showAll(accommodations, new Hostel());
+                    case 2 -> showAll(accommodations, new Hotel());
                     default -> System.out.println("Invalid Input.");
                 }
 
@@ -708,12 +699,12 @@ public class Main {
                     deleteAccommodation(accommodations, id);
                 }
                 catch (EntityNotFoundException entityNotFoundException) {
-                    System.out.println(entityNotFoundException);
+                    System.out.println(entityNotFoundException.getMessage());
                     try {
                         ErrorLogger.log(entityNotFoundException);
                     }
                     catch (IOException ioException) {
-                        System.out.println(ioException);
+                        System.out.println(ioException.getMessage());
                     }
                 }
             }
@@ -752,9 +743,7 @@ public class Main {
         int choice = scanner.nextInt();
 
         switch (choice) {
-            case 1 -> {
-                System.out.println(mostExpensiveTrip(trips));
-            }
+            case 1 -> System.out.println(mostExpensiveTrip(trips));
             case 2 -> { // Total cost of a trip
                 showAll(trips, new Trip());
                 System.out.println("Enter the ID of the trip you want to see the total cost of: ");
@@ -784,12 +773,12 @@ public class Main {
                             + accommodationPrice + "$ per night.");
                 }
                 catch (EntityNotFoundException entityNotFoundException) {
-                    System.out.println(entityNotFoundException);
+                    System.out.println(entityNotFoundException.getMessage());
                     try {
                         ErrorLogger.log(entityNotFoundException);
                     }
                     catch (IOException ioException) {
-                        System.out.println(ioException);
+                        System.out.println(ioException.getMessage());
                     }
                 }
             }
@@ -1002,12 +991,12 @@ public class Main {
                         System.out.println("First Name Updated to: " + clients[clientIndex].getFirstName());
                     }
                     catch (InvalidClientDataException invalidClientDataException) {
-                        System.out.println(invalidClientDataException);
+                        System.out.println(invalidClientDataException.getMessage());
                         try {
                             ErrorLogger.log(invalidClientDataException);
                         }
                         catch (IOException ioException) {
-                            System.out.println(ioException);
+                            System.out.println(ioException.getMessage());
                         }
                     }
                 }
@@ -1018,12 +1007,12 @@ public class Main {
                         System.out.println("Last Name Updated to: " + clients[clientIndex].getLastName());
                     }
                     catch (InvalidClientDataException invalidClientDataException) {
-                        System.out.println(invalidClientDataException);
+                        System.out.println(invalidClientDataException.getMessage());
                         try {
                             ErrorLogger.log(invalidClientDataException);
                         }
                         catch (IOException ioException) {
-                            System.out.println(ioException);
+                            System.out.println(ioException.getMessage());
                         }
                     }
                 }
@@ -1034,12 +1023,12 @@ public class Main {
                         System.out.println("Email Updated to: " + clients[clientIndex].getEmail());
                     }
                     catch (InvalidClientDataException invalidClientDataException) {
-                        System.out.println(invalidClientDataException);
+                        System.out.println(invalidClientDataException.getMessage());
                         try {
                             ErrorLogger.log(invalidClientDataException);
                         }
                         catch (IOException ioException) {
-                            System.out.println(ioException);
+                            System.out.println(ioException.getMessage());
                         }
                     }
                 }
@@ -1094,12 +1083,12 @@ public class Main {
                             System.out.println("Updated Duration to: " + trips[tripIndex].getDurationInDays() + " days.");
                         }
                         catch (InvalidTripDataException invalidTripDataException) {
-                            System.out.println(invalidTripDataException);
+                            System.out.println(invalidTripDataException.getMessage());
                             try {
                                 ErrorLogger.log(invalidTripDataException);
                             }
                             catch (IOException ioException) {
-                                System.out.println(ioException);
+                                System.out.println(ioException.getMessage());
                             }
                         }
                     }
@@ -1110,12 +1099,12 @@ public class Main {
                             System.out.println("Base Price Updated to: " + trips[tripIndex].getBasePrice());
                         }
                         catch (InvalidTripDataException invalidTripDataException) {
-                            System.out.println(invalidTripDataException);
+                            System.out.println(invalidTripDataException.getMessage());
                             try {
                                 ErrorLogger.log(invalidTripDataException);
                             }
                             catch (IOException ioException) {
-                                System.out.println(ioException);
+                                System.out.println(ioException.getMessage());
                             }
                         }
                     }
@@ -1221,12 +1210,12 @@ public class Main {
                     newTransportations[i] = new Bus((Bus) original[i]);
                 }
                 catch (InvalidTransportDataException invalidTransportDataException) {
-                    System.out.println(invalidTransportDataException);
+                    System.out.println(invalidTransportDataException.getMessage());
                     try {
                         ErrorLogger.log(invalidTransportDataException);
                     }
                     catch (IOException ioException) {
-                        System.out.println(ioException);
+                        System.out.println(ioException.getMessage());
                     }
                 }
             }
@@ -1254,12 +1243,12 @@ public class Main {
                     newAccommodations[i] = new Hostel((Hostel) accommodations[i]);
                 }
                 catch (InvalidAccommodationDataException invalidAccommodationDataException) {
-                    System.out.println(invalidAccommodationDataException);
+                    System.out.println(invalidAccommodationDataException.getMessage());
                     try {
                         ErrorLogger.log(invalidAccommodationDataException);
                     }
                     catch (IOException ioException) {
-                        System.out.println(ioException);
+                        System.out.println(ioException.getMessage());
                     }
                 }
             }
@@ -1268,12 +1257,12 @@ public class Main {
                     newAccommodations[i] = new Hotel((Hotel) accommodations[i]);
                 }
                 catch (InvalidAccommodationDataException invalidAccommodationDataException) {
-                    System.out.println(invalidAccommodationDataException);
+                    System.out.println(invalidAccommodationDataException.getMessage());
                     try {
                         ErrorLogger.log(invalidAccommodationDataException);
                     }
                     catch (IOException ioException) {
-                        System.out.println(ioException);
+                        System.out.println(ioException.getMessage());
                     }
                 }
             }
@@ -1321,7 +1310,7 @@ public class Main {
             add(clients, client4);
         }
         catch (InvalidClientDataException invalidClientDataException) {
-            System.out.println(invalidClientDataException);
+            System.out.println(invalidClientDataException.getMessage());
         }
 
         try {
@@ -1342,7 +1331,13 @@ public class Main {
             add(transportations, flight2);
         }
         catch (InvalidTransportDataException invalidTransportDataException) {
-            System.out.println(invalidTransportDataException);
+            System.out.println(invalidTransportDataException.getMessage());
+            try {
+                ErrorLogger.log(invalidTransportDataException);
+            }
+            catch (IOException ioException) {
+                System.out.println(ioException.getMessage());
+            }
         }
 
         try {
@@ -1358,7 +1353,13 @@ public class Main {
             add(accommodations, hostel2);
         }
         catch (InvalidAccommodationDataException invalidAccommodationDataException) {
-            System.out.println(invalidAccommodationDataException);
+            System.out.println(invalidAccommodationDataException.getMessage());
+            try {
+                ErrorLogger.log(invalidAccommodationDataException);
+            }
+            catch (IOException ioException) {
+                System.out.println(ioException.getMessage());
+            }
         }
 
         try {
@@ -1371,7 +1372,7 @@ public class Main {
             add(trips, trip3);
         }
         catch (InvalidTripDataException invalidTripDataException) {
-            System.out.println(invalidTripDataException);
+            System.out.println(invalidTripDataException.getMessage());
         }
 
         System.out.println("CLIENTS:");
@@ -1427,7 +1428,13 @@ public class Main {
             deepCopied[1] = new Flight("VIP Vacations", "Wuyang", "Beijing", "Delta Airlines", 20, 20000);
         }
         catch (InvalidTransportDataException invalidTransportDataException) {
-            System.out.println(invalidTransportDataException);
+            System.out.println(invalidTransportDataException.getMessage());
+            try {
+                ErrorLogger.log(invalidTransportDataException);
+            }
+            catch (IOException ioException) {
+                System.out.println(ioException.getMessage());
+            }
         }
 
         System.out.println("ORIGINAL ARRAY");
