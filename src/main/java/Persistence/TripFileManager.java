@@ -31,7 +31,6 @@ public class TripFileManager {
         printWriter.close();
     }
 
-    // FIXME TRIPS NOT LOADING, STUCK AT CLIENTS
     public static int loadTrip(Trip[] trips, String filePath, Client[] clients, Accommodation[] accommodations, Transportation[] transportations) throws IOException {
         int count = 0;
 
@@ -102,12 +101,12 @@ public class TripFileManager {
                     count++;
                 }
                 catch (EntityNotFoundException entityNotFoundException) {
-                    System.out.println(entityNotFoundException);
+                    System.out.println(entityNotFoundException.getMessage());
                     ErrorLogger.log(entityNotFoundException);
                 }
             }
             catch (InvalidTripDataException invalidTripDataException) {
-                System.out.println(invalidTripDataException);
+                System.out.println(invalidTripDataException.getMessage());
                 ErrorLogger.log(invalidTripDataException);
             }
         }

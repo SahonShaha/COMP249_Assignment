@@ -46,7 +46,7 @@ public class Trip {
             this.clientOnTrip = new Client(client);
         }
         catch (InvalidClientDataException invalidClientDataException) {
-            System.out.println(invalidClientDataException);
+            System.out.println(invalidClientDataException.getMessage());
         }
 
         // Creating Deep Copy of Transportation
@@ -56,7 +56,7 @@ public class Trip {
                 this.transportation = new Bus((Bus) transportation);
             }
             catch (InvalidTransportDataException invalidTransportDataException) {
-                System.out.println(invalidTransportDataException);
+                System.out.println(invalidTransportDataException.getMessage());
             }
         }
         else if (transportation instanceof Flight) {
@@ -75,7 +75,7 @@ public class Trip {
                 this.accommodation = new Hotel((Hotel) accommodation);
             }
             catch (InvalidAccommodationDataException invalidAccommodationDataException) {
-                System.out.println(invalidAccommodationDataException);
+                System.out.println(invalidAccommodationDataException.getMessage());
             }
         }
         else if (accommodation instanceof Hostel) {
@@ -83,7 +83,7 @@ public class Trip {
                 this.accommodation = new Hostel((Hostel) accommodation);
             }
             catch (InvalidAccommodationDataException invalidAccommodationDataException) {
-                System.out.println(invalidAccommodationDataException);
+                System.out.println(invalidAccommodationDataException.getMessage());
             }
         }
         else {
@@ -113,7 +113,7 @@ public class Trip {
             this.clientOnTrip = new Client(trip.getClientOnTrip());
         }
         catch (InvalidClientDataException invalidClientDataException) {
-            System.out.println(invalidClientDataException);
+            System.out.println(invalidClientDataException.getMessage());
         }
 
         // Creating Deep Copy of Transportation

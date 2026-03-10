@@ -44,7 +44,7 @@ public class ClientFileManager {
                 count++;
             }
             catch (InvalidClientDataException invalidClientDataException) {
-                System.out.println(invalidClientDataException);
+                System.out.println(invalidClientDataException.getMessage());
                 ErrorLogger.log(invalidClientDataException);
             }
         }

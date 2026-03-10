@@ -23,11 +23,6 @@ public class Client {
     public Client(String firstName, String lastName, String email) throws InvalidClientDataException {
         this.clientID = "C" + count++;
 
-        /* FIXME .next() doesn't accept blank anyways so there is no reason for this?
-        if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty()) {
-            throw new InvalidClientDataException("Blank Inputs are not accepted.");
-        }*/
-
         if (firstName.length() > 50 || lastName.length() > 50 || email.length() > 100) {
             throw new InvalidClientDataException("Entries too long. Keep First and Last Names under 50 characters and Emails under 100 characters.");
         }
@@ -50,7 +45,7 @@ public class Client {
         }
         this.firstName = client.getFirstName();
         this.lastName = client.getLastName();
-        this.email = client.getEmail(); // TODO how to manage Duplicate Email Exception
+        this.email = client.getEmail();
     }
 
     public String toString() {

@@ -22,7 +22,6 @@ public class Bus extends Transportation {
         if (stopsNum < 1) {
             throw new InvalidTransportDataException("A Bus must have at least 1 stop.");
         }
-        // TODO ^
         this.busCompany = busCompany;
         this.stopsNum = stopsNum;
         this.baseFare = baseFare;

@@ -67,7 +67,7 @@ public class AccommodationFileManager {
                 count++;
             }
             catch (InvalidAccommodationDataException invalidAccommodationDataException) {
-                System.out.println(invalidAccommodationDataException);
+                System.out.println(invalidAccommodationDataException.getMessage());
                 ErrorLogger.log(invalidAccommodationDataException);
             }
         }

@@ -85,7 +85,7 @@ public class TransportationFileManager {
                 count++;
             }
             catch (InvalidTransportDataException invalidAccommodationDataException) {
-                System.out.println(invalidAccommodationDataException);
+                System.out.println(invalidAccommodationDataException.getMessage());
                 ErrorLogger.log(invalidAccommodationDataException);
             }
         }

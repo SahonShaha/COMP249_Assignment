@@ -18,7 +18,6 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 // TODO GENERAL SCANNER EXCEPTION HANDLING -> MISMATCH EXCEPTION = ENTER CUSTOM MESSAGE
 // TODO LOG ALL EXCEPTIONS
-// TODO spread .getMessage
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
