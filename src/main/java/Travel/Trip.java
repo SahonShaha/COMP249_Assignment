@@ -116,7 +116,6 @@ public class Trip {
             System.out.println(invalidClientDataException);
         }
 
-        // TODO Exception Handling
         // Creating Deep Copy of Transportation
         // Typecasting to the object here will not cause a problem because we are verifying the type during runtime
             if (trip.getTransportation() instanceof Bus) {

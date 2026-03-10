@@ -8,117 +8,138 @@ package Driver;
 
 import Exceptions.*;
 import Persistence.*;
+import Service.SmartTravelService;
 import Travel.*;
 import Client.*;
 import Visualization.TripChartGenerator;
 
 import java.io.IOException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 // TODO GENERAL SCANNER EXCEPTION HANDLING
+// TODO LOG ALL EXCEPTIONS
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        SmartTravelService sts = new SmartTravelService();
         boolean isMenuRunning = true;
 
         // Creating storage for the arrays
-        Client[] clients = new Client[100]; // 100 MAX
-        Trip[] trips = new Trip[200]; // 200 MAX
-        Transportation[] transportations = new Transportation[50]; // 50 MAX
-        Accommodation[] accommodations = new Accommodation[50]; // 50 MAX
+        Client[] clients = sts.getClients(); // 100 MAX
+        Trip[] trips = sts.getTrips(); // 200 MAX
+        Transportation[] transportations = sts.getTransportations(); // 50 MAX
+        Accommodation[] accommodations = sts.getAccommodations(); // 50 MAX
 
         System.out.println("Welcome to SmartTravel!");
 
         while (isMenuRunning) {
-            boolean userMenu = true;
-
             System.out.println("""
-                Would you like to use the application or run the testing scenario?
-                1 - Run Application
-                2 - Execute Testing Scenario
-                3 - Generate Diagrams
-                4 - Exit
-                """);
-            int initialChoice = scanner.nextInt();
+                    Would you like to use the application or run the testing scenario?
+                    1 - Run Application
+                    2 - Execute Testing Scenario
+                    3 - Generate Diagrams
+                    4 - Exit
+                    """);
+            try {
+                int initialChoice = scanner.nextInt();
 
-            switch (initialChoice) {
-                case 1 -> {
-                    while (userMenu) {
-                        System.out.println("""
-                        1. Client Management
-                        2. Trip Management
-                        3. Transportation Management
-                        4. Accommodation Management
-                        5. Additional Operations
-                        6. Save All Data
-                        7. Load All Data
-                        8. Exit
-                        """);
-                        int choice = scanner.nextInt();
+                boolean userMenu = true;
 
-                        switch (choice) {
-                            case 1 -> clientManagement(scanner, clients);
-                            case 2 -> tripManagement(scanner, trips, clients, transportations, accommodations);
-                            case 3 -> transportationManagement(scanner, transportations);
-                            case 4 -> accommodationManagement(scanner, accommodations);
-                            case 5 -> additionalOperations(scanner, trips, transportations, accommodations);
-                            case 6 -> {
+                switch (initialChoice) {
+                    case 1 -> {
+                        while (userMenu) {
+                            try {
+                                System.out.println("""
+                                        1. Client Management
+                                        2. Trip Management
+                                        3. Transportation Management
+                                        4. Accommodation Management
+                                        5. Additional Operations
+                                        6. Save All Data
+                                        7. Load All Data
+                                        8. Exit
+                                        """);
+                                int choice = scanner.nextInt();
+
+                                switch (choice) {
+                                    case 1 -> clientManagement(sts, scanner, clients);
+                                    case 2 -> tripManagement(sts, scanner, trips, clients, transportations, accommodations);
+                                    case 3 -> transportationManagement(sts, scanner, transportations);
+                                    case 4 -> accommodationManagement(sts, scanner, accommodations);
+                                    case 5 -> additionalOperations(scanner, trips, transportations, accommodations);
+                                    case 6 -> {
+                                        try {
+                                            ClientFileManager.saveClients(clients, SmartTravelService.countValidObjects(clients), "output/data/clients.csv");
+                                            AccommodationFileManager.saveAccommodations(accommodations, SmartTravelService.countValidObjects(accommodations), "output/data/accommodations.csv");
+                                            TransportationFileManager.saveTransportations(transportations, SmartTravelService.countValidObjects(transportations), "output/data/transportations.csv");
+                                            TripFileManager.saveTrip(trips, SmartTravelService.countValidObjects(trips), "output/data/trips.csv");
+                                        } catch (IOException ioException) {
+                                            System.out.println(ioException);
+                                        }
+                                    }
+                                    case 7 -> {
+                                        try {
+                                            //SmartTravelService.loadAllData("output/data/");
+                                            ClientFileManager.loadClients(clients, "output/data/clients.csv");
+                                            AccommodationFileManager.loadAccommodations(accommodations, "output/data/accommodations.csv");
+                                            TransportationFileManager.loadTransportations(transportations, "output/data/transportations.csv");
+                                            TripFileManager.loadTrip(trips, "output/data/trips.csv", clients, accommodations, transportations);
+                                        } catch (IOException ioException) {
+                                            System.out.println(ioException);
+                                        }
+                                    }
+                                    case 8 -> userMenu = false;
+                                    default -> System.out.println("Invalid Option.");
+                                }
+                            }
+                            catch (InputMismatchException inputMismatchException) {
+                                System.out.println(inputMismatchException);
                                 try {
-                                    ClientFileManager.saveClients(clients, countValidObjects(clients), "output/data/clients.csv");
-                                    AccommodationFileManager.saveAccommodations(accommodations, countValidObjects(accommodations), "output/data/accommodations.csv");
-                                    TransportationFileManager.saveTransportations(transportations, countValidObjects(transportations), "output/data/transportations.csv");
-                                    TripFileManager.saveTrip(trips, countValidObjects(trips), "output/data/trips.csv");
+                                    ErrorLogger.log(inputMismatchException);
                                 }
                                 catch (IOException ioException) {
                                     System.out.println(ioException);
                                 }
+                                scanner.nextLine();
                             }
-                            case 7 -> {
-                                try {
-                                    ClientFileManager.loadClients(clients, "output/data/clients.csv");
-                                    AccommodationFileManager.loadAccommodations(accommodations, "output/data/accommodations.csv");
-                                    TransportationFileManager.loadTransportations(transportations, "output/data/transportations.csv");
-                                    TripFileManager.loadTrip(trips, "output/data/trips.csv", clients, accommodations, transportations);
-                                }
-                                catch (IOException ioException) {
-                                    System.out.println(ioException);
-                                }
-                            }
-                            case 8 -> userMenu = false;
-                            default -> System.out.println("Invalid Option.");
                         }
                     }
-                }
 
-                case 2 -> testingScenario(clients, transportations, accommodations, trips);
-                case 3 -> {
-                    try {
-                        TripChartGenerator.generateCostBarChart(trips, countValidObjects(trips));
-                        TripChartGenerator.generateDurationLineChart(trips, countValidObjects(trips));
-                        TripChartGenerator.generateDestinationPieChart(trips, countValidObjects(trips));
+                    case 2 -> testingScenario(clients, transportations, accommodations, trips);
+                    case 3 -> {
+                        try {
+                            TripChartGenerator.generateCostBarChart(trips, SmartTravelService.countValidObjects(trips));
+                            TripChartGenerator.generateDurationLineChart(trips, SmartTravelService.countValidObjects(trips));
+                            TripChartGenerator.generateDestinationPieChart(trips, SmartTravelService.countValidObjects(trips));
+                        } catch (IOException e) {
+                            System.out.println("Error: " + e);
+                        }
                     }
-                    catch (IOException e) {
-                        System.out.println("Error: " + e);
+                    case 4 -> {
+                        System.out.println("Closing Application...Goodbye!");
+                        isMenuRunning = false;
                     }
                 }
-                case 4 -> {
-                    System.out.println("Closing Application...Goodbye!");
-                    isMenuRunning = false;
-                }
+            }
+            catch (InputMismatchException inputMismatchException) {
+                System.out.println(inputMismatchException);
+                scanner.nextLine();
             }
         }
     }
 
-    public static void clientManagement(Scanner scanner, Client[] clients) {
-        System.out.println("""
-                1. Add a client
-                2. Edit a client
-                3. Delete a client
-                4. List all clients
-                """);
-        int choice = scanner.nextInt();
+    public static void clientManagement(SmartTravelService sts, Scanner scanner, Client[] clients) {
+        try {
+            System.out.println("""
+                    1. Add a client
+                    2. Edit a client
+                    3. Delete a client
+                    4. List all clients
+                    """);
+            int choice = scanner.nextInt();
 
-        switch (choice) {
-            case 1 -> { // ADDING CLIENT
+            switch (choice) {
+                case 1 -> { // ADDING CLIENT
                     System.out.println("Enter you First Name: ");
                     String firstName = scanner.next();
                     System.out.println("Enter your Last Name: ");
@@ -126,42 +147,77 @@ public class Main {
                     System.out.println("Enter your Email: ");
                     String email = scanner.next();
 
-                try {
-                    // First we check if there is no duplicate emails.
-                    for (int i = 0; i < clients.length; i++) {
-                        if (clients[i] == null) {
-                            break;
-                        }
-                        if (clients[i].getEmail().equals(email)) {
-                            throw new DuplicateEmailException();
-                        }
-                    }
-                    Client newClient = new Client(firstName, lastName, email);
-                    add(clients, newClient);
-                }
-                catch (InvalidClientDataException invalidClientDataException) {
-                    System.out.println("Error: " + invalidClientDataException);
-                }
-                catch (DuplicateEmailException duplicateEmailException) {
-                    System.out.println(duplicateEmailException);
                     try {
-                        ErrorLogger.log(duplicateEmailException);
-                    }
-                    catch (IOException ioException) {
-                        System.out.println(ioException);
+                        // First we check if there is no duplicate emails.
+                        for (int i = 0; i < clients.length; i++) {
+                            if (clients[i] == null) {
+                                break;
+                            }
+                            if (clients[i].getEmail().equals(email)) {
+                                throw new DuplicateEmailException();
+                            }
+                        }
+                        Client newClient = new Client(firstName, lastName, email);
+                        add(clients, newClient);
+                    } catch (InvalidClientDataException invalidClientDataException) {
+                        System.out.println("Error: " + invalidClientDataException);
+                        try {
+                            ErrorLogger.log(invalidClientDataException);
+                        } catch (IOException ioException) {
+                            System.out.println(ioException);
+                        }
+                    } catch (DuplicateEmailException duplicateEmailException) {
+                        System.out.println(duplicateEmailException);
+                        try {
+                            ErrorLogger.log(duplicateEmailException);
+                        } catch (IOException ioException) {
+                            System.out.println(ioException);
+                        }
                     }
                 }
-            }
-            case 2 -> { // Editing Clients
-                if (clients[0] == null) {
-                    System.out.println("No Clients created. Please create some first.");
+                case 2 -> { // Editing Clients
+                    if (clients[0] == null) {
+                        System.out.println("No Clients created. Please create some first.");
+                    } else {
+                        showAll(clients, new Client());
+
+                        System.out.println("Choose the ID of a client you want to edit: ");
+                        String clientID = scanner.next();
+                        int clientEditIndex = -1; // If this stays -1, that means a client of that ID doesn't exist
+
+                        for (int i = 0; i < clients.length; i++) {
+                            if (clients[i] == null) { // Once it hits null, that means all available elements have been printed
+                                break;
+                            }
+
+                            if (clients[i].getClientID().equals(clientID)) {
+                                clientEditIndex = i;
+                            }
+                        }
+
+                        // Validating the user choice
+                        try {
+                            if (clientEditIndex == -1) {
+                                throw new EntityNotFoundException("Client does not exist.");
+                            } else {
+                                editClient(scanner, clients, clientEditIndex);
+                            }
+                        } catch (EntityNotFoundException entityNotFoundException) {
+                            System.out.println(entityNotFoundException);
+                            try {
+                                ErrorLogger.log(entityNotFoundException);
+                            } catch (IOException ioException) {
+                                System.out.println(ioException);
+                            }
+                        }
+                    }
                 }
-                else {
+                case 3 -> { // Deleting Clients
                     showAll(clients, new Client());
 
                     System.out.println("Choose the ID of a client you want to edit: ");
                     String clientID = scanner.next();
-                    int clientEditIndex = - 1; // If this stays -1, that means a client of that ID doesn't exist
+                    int clientEditIndex = -1; // If this stays -1, that means a client of that ID doesn't exist
 
                     for (int i = 0; i < clients.length; i++) {
                         if (clients[i] == null) { // Once it hits null, that means all available elements have been printed
@@ -178,62 +234,34 @@ public class Main {
                         if (clientEditIndex == -1) {
                             throw new EntityNotFoundException("Client does not exist.");
                         } else {
-                            editClient(scanner, clients, clientEditIndex);
+                            System.out.println("Updated list of Clients post-deletion:");
+                            showAll(clients, new Client());
                         }
-                    }
-                    catch (EntityNotFoundException entityNotFoundException) {
+                    } catch (EntityNotFoundException entityNotFoundException) {
                         System.out.println(entityNotFoundException);
                         try {
                             ErrorLogger.log(entityNotFoundException);
-                        }
-                        catch (IOException ioException) {
+                        } catch (IOException ioException) {
                             System.out.println(ioException);
                         }
                     }
                 }
+                case 4 -> showAll(clients, new Client());
+                default -> System.out.println("Invalid Input.");
             }
-            case 3 -> { // Deleting Clients
-                showAll(clients, new Client());
-
-                System.out.println("Choose the ID of a client you want to edit: ");
-                String clientID = scanner.next();
-                int clientEditIndex = - 1; // If this stays -1, that means a client of that ID doesn't exist
-
-                for (int i = 0; i < clients.length; i++) {
-                    if (clients[i] == null) { // Once it hits null, that means all available elements have been printed
-                        break;
-                    }
-
-                    if (clients[i].getClientID().equals(clientID)) {
-                        clientEditIndex = i;
-                    }
-                }
-
-                // Validating the user choice
-                try {
-                    if (clientEditIndex == -1) {
-                        throw new EntityNotFoundException("Client does not exist.");
-                    } else {
-                        System.out.println("Updated list of Clients post-deletion:");
-                        showAll(clients, new Client());
-                    }
-                }
-                catch (EntityNotFoundException entityNotFoundException) {
-                    System.out.println(entityNotFoundException);
-                    try {
-                        ErrorLogger.log(entityNotFoundException);
-                    }
-                    catch (IOException ioException) {
-                        System.out.println(ioException);
-                    }
-                }
+        }
+        catch (InputMismatchException inputMismatchException) {
+            System.out.println(inputMismatchException);
+            try {
+                ErrorLogger.log(inputMismatchException);
             }
-            case 4 -> showAll(clients, new Client());
-            default -> System.out.println("Invalid Input.");
+            catch (IOException ioException) {
+                System.out.println(ioException);
+            }
         }
     }
 
-    public static void tripManagement(Scanner scanner, Trip[] trips, Client[] clients, Transportation[] transportations, Accommodation[] accommodations) {
+    public static void tripManagement(SmartTravelService sts, Scanner scanner, Trip[] trips, Client[] clients, Transportation[] transportations, Accommodation[] accommodations) {
         System.out.println("""
                 1. Create a trip
                 2. Edit trip information
@@ -437,7 +465,7 @@ public class Main {
         }
     }
 
-    public static void transportationManagement(Scanner scanner, Transportation[] transportations) {
+    public static void transportationManagement(SmartTravelService sts, Scanner scanner, Transportation[] transportations) {
         System.out.println("""
                 1. Add a transportation option
                 2. Remove a transportation option
@@ -592,7 +620,7 @@ public class Main {
         }
     }
 
-    public static void accommodationManagement(Scanner scanner, Accommodation[] accommodations) {
+    public static void accommodationManagement(SmartTravelService sts, Scanner scanner, Accommodation[] accommodations) {
         System.out.println("""
                 1. Add an accommodation
                 2. Remove an accommodation
@@ -922,7 +950,7 @@ public class Main {
         }
     }
 
-    public static int countValidObjects(Object[] objects) {
+    /*public static int SmartTravelService.countValidObjects(Object[] objects) {
         int count = 0;
         for (int i = 0; i < objects.length; i++) {
             if (objects[i] == null) {
@@ -932,7 +960,7 @@ public class Main {
         }
 
         return count;
-    }
+    }*/
 
     // Shows all objects from an array of objects
     // Object[] objects takes in any object array
@@ -1393,8 +1421,6 @@ public class Main {
         System.out.println("-----------------------------------------------------------------------------------------");
 
         System.out.println("DEEP COPY OF TRANSPORTATION ARRAY");
-        // There are IDs skipped because
-        // they are implicitly being generated when a Trip Object is made due to the Transportation and Accommodation fields having deep copies
         Transportation[] deepCopied = transportationsDeepCopy(transportations);
 
         try {

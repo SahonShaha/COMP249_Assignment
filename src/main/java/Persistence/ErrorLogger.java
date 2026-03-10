@@ -6,12 +6,14 @@ import java.io.PrintWriter;
 
 public class ErrorLogger {
     final private static String fileName = "output/logs/errors.txt";
+    private static int errorCount = 1;
 
     public static void log(Exception e) throws IOException  {
-        FileWriter fileWriter = new FileWriter(fileName);
-        PrintWriter printWriter = new PrintWriter(fileWriter); // TODO APPEND (currently cant have more than 1 error in the log)
+        FileWriter fileWriter = new FileWriter(fileName, true);
+        PrintWriter printWriter = new PrintWriter(fileWriter);
 
-        printWriter.println(e);
+        printWriter.println(errorCount + " - " + e);
+        errorCount++;
         printWriter.close();
     }
 }

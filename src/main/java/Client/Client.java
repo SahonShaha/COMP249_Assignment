@@ -7,6 +7,8 @@
 package Client;
 
 import Exceptions.InvalidClientDataException;
+import Persistence.ErrorLogger;
+
 public class Client {
     private static int count = 1001; // Represents the amount of objects created. Will be used to create the ID
     private String clientID;
