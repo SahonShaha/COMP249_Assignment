@@ -55,9 +55,11 @@ public class Main {
                                         3. Transportation Management
                                         4. Accommodation Management
                                         5. Additional Operations
-                                        6. Save All Data
-                                        7. Load All Data
-                                        8. Exit
+                                        6. List All Data
+                                        7. Save All Data
+                                        8. Load All Data
+                                        9. Generate HTML Dashboard
+                                        10. Exit
                                         """);
                                 int choice = scanner.nextInt();
 
@@ -68,6 +70,19 @@ public class Main {
                                     case 4 -> accommodationManagement(scanner, accommodations);
                                     case 5 -> additionalOperations(scanner, trips, transportations, accommodations);
                                     case 6 -> {
+                                        System.out.println("==============================CLIENTS==============================");
+                                        showAll(clients, new Client());
+                                        System.out.println("==============================TRANSPORTATIONS==============================");
+                                        showAll(transportations, new Flight());
+                                        showAll(transportations, new Train());
+                                        showAll(transportations, new Bus());
+                                        System.out.println("==============================ACCOMMODATIONS==============================");
+                                        showAll(accommodations, new Hotel());
+                                        showAll(accommodations, new Hostel());
+                                        System.out.println("==============================TRIPS==============================");
+                                        showAll(trips, new Trip());
+                                    }
+                                    case 7 -> {
                                         try {
                                             SmartTravelService.saveAllData("output/data/");
                                             /*ClientFileManager.saveClients(clients, SmartTravelService.countValidObjects(clients), "output/data/clients.csv");
@@ -78,7 +93,7 @@ public class Main {
                                             System.out.println(ioException.getMessage());
                                         }
                                     }
-                                    case 7 -> {
+                                    case 8 -> {
                                         try {
                                             SmartTravelService.loadAllData("output/data/");
                                             /*ClientFileManager.loadClients(clients, "output/data/clients.csv");
@@ -89,7 +104,10 @@ public class Main {
                                             System.out.println(ioException.getMessage());
                                         }
                                     }
-                                    case 8 -> userMenu = false;
+                                    case 9 -> {
+
+                                    }
+                                    case 10 -> userMenu = false;
                                     default -> System.out.println("Invalid Option.");
                                 }
                             }
