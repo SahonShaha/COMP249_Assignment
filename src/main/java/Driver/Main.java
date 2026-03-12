@@ -69,21 +69,22 @@ public class Main {
                                     case 5 -> additionalOperations(scanner, trips, transportations, accommodations);
                                     case 6 -> {
                                         try {
-                                            ClientFileManager.saveClients(clients, SmartTravelService.countValidObjects(clients), "output/data/clients.csv");
+                                            SmartTravelService.saveAllData("output/data/");
+                                            /*ClientFileManager.saveClients(clients, SmartTravelService.countValidObjects(clients), "output/data/clients.csv");
                                             AccommodationFileManager.saveAccommodations(accommodations, SmartTravelService.countValidObjects(accommodations), "output/data/accommodations.csv");
                                             TransportationFileManager.saveTransportations(transportations, SmartTravelService.countValidObjects(transportations), "output/data/transportations.csv");
-                                            TripFileManager.saveTrip(trips, SmartTravelService.countValidObjects(trips), "output/data/trips.csv");
+                                            TripFileManager.saveTrip(trips, SmartTravelService.countValidObjects(trips), "output/data/trips.csv");*/
                                         } catch (IOException ioException) {
                                             System.out.println(ioException.getMessage());
                                         }
                                     }
                                     case 7 -> {
                                         try {
-                                            //SmartTravelService.loadAllData("output/data/");
-                                            ClientFileManager.loadClients(clients, "output/data/clients.csv");
+                                            SmartTravelService.loadAllData("output/data/");
+                                            /*ClientFileManager.loadClients(clients, "output/data/clients.csv");
                                             AccommodationFileManager.loadAccommodations(accommodations, "output/data/accommodations.csv");
                                             TransportationFileManager.loadTransportations(transportations, "output/data/transportations.csv");
-                                            TripFileManager.loadTrip(trips, "output/data/trips.csv", clients, accommodations, transportations);
+                                            TripFileManager.loadTrip(trips, "output/data/trips.csv", clients, accommodations, transportations);*/
                                         } catch (IOException ioException) {
                                             System.out.println(ioException.getMessage());
                                         }

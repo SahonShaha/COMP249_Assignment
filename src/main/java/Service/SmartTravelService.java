@@ -47,20 +47,18 @@ public class SmartTravelService {
         }
     }*/
 
-    // todo WHAT SHOULD THE FILENAME BE
     public static void loadAllData(String filename) throws IOException {
-        ClientFileManager.loadClients(clients, filename);
-        AccommodationFileManager.loadAccommodations(accommodations, filename);
-        TransportationFileManager.loadTransportations(transportations, filename);
-        TripFileManager.loadTrip(trips, filename, clients, accommodations, transportations);
+        ClientFileManager.loadClients(clients, (filename + "clients.csv"));
+        AccommodationFileManager.loadAccommodations(accommodations, (filename + "accommodations.csv"));
+        TransportationFileManager.loadTransportations(transportations, (filename + "transportations.csv"));
+        TripFileManager.loadTrip(trips, (filename + "trips.csv"), clients, accommodations, transportations);
     }
 
-    // todo WHAT SHOULD THE FILENAME BE
     public static void saveAllData(String filename) throws IOException {
-        ClientFileManager.saveClients(clients, countValidObjects(clients), filename);
-        AccommodationFileManager.saveAccommodations(accommodations, countValidObjects(accommodations), filename);
-        TransportationFileManager.saveTransportations(transportations, countValidObjects(transportations), filename);
-        TripFileManager.saveTrip(trips, countValidObjects(trips), filename);
+        ClientFileManager.saveClients(clients, countValidObjects(clients), (filename + "clients.csv"));
+        AccommodationFileManager.saveAccommodations(accommodations, countValidObjects(accommodations), (filename + "accommodations.csv"));
+        TransportationFileManager.saveTransportations(transportations, countValidObjects(transportations), (filename + "transportations.csv"));
+        TripFileManager.saveTrip(trips, countValidObjects(trips), (filename + "trips.csv"));
     }
 
     public static double calculateTripTotal(int index) {
