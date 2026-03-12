@@ -357,19 +357,10 @@ public class Main {
                     Trip trip = new Trip(destination, duration, basePrice, clients[clientIndex], transportations[transportIndex], accommodations[accommodationIndex]);
                     add(trips, trip);
                 }
-                catch (EntityNotFoundException entityNotFoundException) {
+                catch (EntityNotFoundException | InvalidTripDataException entityNotFoundException) {
                     System.out.println(entityNotFoundException.getMessage());
                     try {
                         ErrorLogger.log(entityNotFoundException);
-                    }
-                    catch (IOException ioException) {
-                        System.out.println(ioException.getMessage());
-                    }
-                }
-                catch (InvalidTripDataException invalidTripDataException) {
-                    System.out.println(invalidTripDataException.getMessage());
-                    try {
-                        ErrorLogger.log(invalidTripDataException);
                     }
                     catch (IOException ioException) {
                         System.out.println(ioException.getMessage());

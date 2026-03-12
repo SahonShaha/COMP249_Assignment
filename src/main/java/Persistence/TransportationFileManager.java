@@ -65,24 +65,44 @@ public class TransportationFileManager {
             try {
                 String[] fields = currentLine.split(";"); // Splits a line at every ';'
 
-                if (fields.length != 8) { // If the split array has more than 7 elements
+                if (fields.length != 7 && fields.length != 8) { // If the split array has more than 7 elements
                     ErrorLogger.log(new Exception("Unable to read line " + (count + 1)));
                     continue; // We go to the next line
                 }
 
-                if (fields[0].equals("BUS")) {
-                    transportations[count] = new Bus(fields[2], fields[3], fields[4], fields[5], Integer.parseInt(fields[6]), Integer.parseInt(fields[7]));
-                    transportations[count].setTransportationID(fields[1]);
+                if (fields.length == 7) { // PDF Style
+                    // Flight: Price + Luggage Allowance; airlineName = "N/A"
+                    // Train: Fare + TrainType; SeatClass = "N/A"
+                    // Bus: Price + StopsNum; busCompany = "N/A"
+                    if (fields[0].equals("BUS")) {
+                        transportations[count] = new Bus(fields[2], fields[3], fields[4], "N/A", Integer.parseInt(fields[5]), Integer.parseInt(fields[6]));
+                        transportations[count].setTransportationID(fields[1]);
+                    }
+                    else if (fields[0].equals("TRAIN")) {
+                        transportations[count] = new Train(fields[2], fields[3], fields[4], fields[5], "N/A", Integer.parseInt(fields[6]));
+                        transportations[count].setTransportationID(fields[1]);
+                    }
+                    else if (fields[0].equals("FLIGHT")) {
+                        transportations[count] = new Flight(fields[2], fields[3], fields[4], "N/A", Integer.parseInt(fields[5]), Integer.parseInt(fields[6]));
+                        transportations[count].setTransportationID(fields[1]);
+                    }
+                    count++;
                 }
-                else if (fields[0].equals("TRAIN")) {
-                    transportations[count] = new Train(fields[2], fields[3], fields[4], fields[5], fields[6], Integer.parseInt(fields[7]));
-                    transportations[count].setTransportationID(fields[1]);
+                if (fields.length == 8) { // Full Loading
+                    if (fields[0].equals("BUS")) {
+                        transportations[count] = new Bus(fields[2], fields[3], fields[4], fields[5], Integer.parseInt(fields[6]), Integer.parseInt(fields[7]));
+                        transportations[count].setTransportationID(fields[1]);
+                    }
+                    else if (fields[0].equals("TRAIN")) {
+                        transportations[count] = new Train(fields[2], fields[3], fields[4], fields[5], fields[6], Integer.parseInt(fields[7]));
+                        transportations[count].setTransportationID(fields[1]);
+                    }
+                    else if (fields[0].equals("FLIGHT")) {
+                        transportations[count] = new Flight(fields[2], fields[3], fields[4], fields[5], Integer.parseInt(fields[6]), Integer.parseInt(fields[7]));
+                        transportations[count].setTransportationID(fields[1]);
+                    }
+                    count++;
                 }
-                else if (fields[0].equals("FLIGHT")) {
-                    transportations[count] = new Flight(fields[2], fields[3], fields[4], fields[5], Integer.parseInt(fields[6]), Integer.parseInt(fields[7]));
-                    transportations[count].setTransportationID(fields[1]);
-                }
-                count++;
             }
             catch (InvalidTransportDataException invalidAccommodationDataException) {
                 System.out.println(invalidAccommodationDataException.getMessage());

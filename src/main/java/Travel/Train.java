@@ -65,6 +65,9 @@ public class Train extends Transportation{
         else if (this.seatClass.equals("Deluxe")) {
             seatPrice += 100;
         }
+        else {
+            seatPrice += 0;
+        }
 
         return seatPrice + fare;
     }

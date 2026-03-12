@@ -1,6 +1,6 @@
-BUS;TR3001;CanadaTravels;Montreal;Quebec;STM;2;61
-BUS;TR3002;AmericaUnited;Toronto;New York City;TTC;3;65
-TRAIN;TR3003;ViaRail Canada;Montreal;Vancouver City;High Speed;Cabin;100
-TRAIN;TR3004;North America Transit;Boston;Montreal;Bullet Train;Deluxe;75
-FLIGHT;TR3005;Europe Travel Agency;Montreal;France;Air France Canada;27;4000
-FLIGHT;TR3006;Japan Airways;Montreal;Japan;Air Canada;31;3200
+BUS;TR3001;CanadaTravels;Montreal;Quebec;2;61
+BUS;TR3002;AmericaUnited;Toronto;New York City;3;65
+TRAIN;TR3003;ViaRail Canada;Montreal;Vancouver City;High Speed;100
+TRAIN;TR3004;North America Transit;Boston;Montreal;Bullet Train;75
+FLIGHT;TR3005;Europe Travel Agency;Montreal;France;27;4000
+FLIGHT;TR3006;Japan Airways;Montreal;Japan;31;3200
