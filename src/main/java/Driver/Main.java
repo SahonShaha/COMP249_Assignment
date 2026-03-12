@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 // TODO GENERAL SCANNER EXCEPTION HANDLING -> MISMATCH EXCEPTION = ENTER CUSTOM MESSAGE
-// TODO LOG ALL EXCEPTIONS
+
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -62,7 +62,7 @@ public class Main {
                                 int choice = scanner.nextInt();
 
                                 switch (choice) {
-                                    case 1 -> clientManagement(sts, scanner, clients);
+                                    case 1 -> clientManagement(scanner, clients);
                                     case 2 -> tripManagement(scanner, trips, clients, transportations, accommodations);
                                     case 3 -> transportationManagement(scanner, transportations);
                                     case 4 -> accommodationManagement(scanner, accommodations);
@@ -128,7 +128,7 @@ public class Main {
         }
     }
 
-    public static void clientManagement(SmartTravelService sts, Scanner scanner, Client[] clients) {
+    public static void clientManagement(Scanner scanner, Client[] clients) {
         try {
             System.out.println("""
                     1. Add a client
@@ -637,6 +637,8 @@ public class Main {
                 String location = scanner.next();
                 System.out.println("Enter the price per night: ");
                 int pricePerNight = scanner.nextInt();
+                System.out.println("Enter the amount of nights you will be staying: ");
+                int numberOfNights = scanner.nextInt();
 
                 switch (accommodationChoice) {
                     case 1 -> { // Adding a hostel
@@ -644,7 +646,7 @@ public class Main {
                         int beds = scanner.nextInt();
 
                         try {
-                            Hostel newHostel = new Hostel(name, location, pricePerNight, beds);
+                            Hostel newHostel = new Hostel(name, location, pricePerNight, numberOfNights, beds);
                             add(accommodations, newHostel);
                         }
                         catch (InvalidAccommodationDataException invalidAccommodationDataException) {
@@ -662,7 +664,7 @@ public class Main {
                         int stars = scanner.nextInt();
 
                         try {
-                            Hotel newHotel = new Hotel(name, location, pricePerNight, stars);
+                            Hotel newHotel = new Hotel(name, location, pricePerNight, numberOfNights, stars);
                             add(accommodations, newHotel);
                         }
                         catch (InvalidAccommodationDataException invalidAccommodationDataException) {
@@ -1340,11 +1342,11 @@ public class Main {
         }
 
         try {
-            hotel1 = new Hotel("Hilton Paris Opera", "France", 457, 5);
-            hotel2 = new Hotel("Hotel Fine Sakai", "Japan", 37, 3);
+            hotel1 = new Hotel("Hilton Paris Opera", "France", 457, 4, 5);
+            hotel2 = new Hotel("Hotel Fine Sakai", "Japan", 37, 7, 3);
 
-            hostel1 = new Hostel("Marseille Deluxe", "France", 114, 4);
-            hostel2 = new Hostel("Tokyo Yasashi", "Japan", 100, 2);
+            hostel1 = new Hostel("Marseille Deluxe", "France", 114, 1, 4);
+            hostel2 = new Hostel("Tokyo Yasashi", "Japan", 100, 2, 2);
 
             add(accommodations, hotel1);
             add(accommodations, hotel2);
@@ -1410,8 +1412,7 @@ public class Main {
                 double transportationPrice = trips[i].getTransportation().calculateCost();
                 double accommodationPrice = trips[i].getAccommodation().calculateCost();
 
-                System.out.println("The total cost for this trip is " + (basePrice + transportationPrice) + "$ with a fee of "
-                        + accommodationPrice + "$ per night.");
+                System.out.println("The total cost for this trip is " + (basePrice + transportationPrice + accommodationPrice));
             }
         }
         System.out.println("-----------------------------------------------------------------------------------------");

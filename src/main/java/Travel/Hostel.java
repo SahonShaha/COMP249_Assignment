@@ -15,8 +15,8 @@ public class Hostel extends Accommodation {
     public Hostel(){}
 
     // Parametrized Constructor
-    public Hostel (String name, String location, int pricePerNight, int sharedBeds) throws InvalidAccommodationDataException {
-        super(name, location, pricePerNight);
+    public Hostel (String name, String location, int pricePerNight, int numberOfNights, int sharedBeds) throws InvalidAccommodationDataException {
+        super(name, location, pricePerNight, numberOfNights);
         if (pricePerNight > 150) {
             throw new InvalidAccommodationDataException("A hostel's price must be lower than 150$");
         }
@@ -55,7 +55,7 @@ public class Hostel extends Accommodation {
 
     public double calculateCost() {
         // Discount of 10%
-        return this.getPricePerNight() - (this.getPricePerNight() * 0.1);
+        return (this.getPricePerNight() * this.getNumberOfNights()) - (this.getPricePerNight() * 0.1);
     }
 
     public int getSharedBeds() {

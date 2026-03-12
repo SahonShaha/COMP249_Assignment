@@ -15,8 +15,8 @@ public class Hotel extends Accommodation {
     public Hotel(){}
 
     // Parametrized Constructor
-    public Hotel(String name, String location, int pricePerNight, int stars) throws InvalidAccommodationDataException {
-        super(name, location, pricePerNight);
+    public Hotel(String name, String location, int pricePerNight, int numberOfNights, int stars) throws InvalidAccommodationDataException {
+        super(name, location, pricePerNight, numberOfNights);
 
         if (stars < 0 || stars > 5) {
             throw new InvalidAccommodationDataException("Stars must be between 1 and 5.");
@@ -56,7 +56,7 @@ public class Hotel extends Accommodation {
 
     public double calculateCost() {
         // Service Fee of 5$ per night
-        return this.getPricePerNight() + 5;
+        return ((this.getPricePerNight() * this.getNumberOfNights()) + (this.getNumberOfNights() * 5));
     }
 
     public int getStars() {
