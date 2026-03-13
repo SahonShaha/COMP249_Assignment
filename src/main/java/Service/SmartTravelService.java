@@ -114,4 +114,29 @@ public class SmartTravelService {
             }
         }
     }
+
+    public static int findClientById(String id) {
+        int clientIndex = -1;
+
+        for (int i = 0; i < clients.length; i++) {
+            if (clients[i] == null) {
+                break;
+            }
+            if (clients[i].getClientID().equals(id)) {
+                clientIndex = i;
+                break;
+            }
+        }
+
+        return clientIndex;
+    }
+
+    public static boolean clientExists(String id) {
+        if (findClientById(id) == -1) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
 }

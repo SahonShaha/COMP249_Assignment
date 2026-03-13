@@ -1049,17 +1049,7 @@ public class Main {
                         SmartTravelService.showAll(clients, new Client());
                         System.out.println("Enter the ID of the new client going on the trip: ");
                         String newClientId = scanner.next();
-                        int clientIndex = -1;
-
-                        for (int i = 0; i < clients.length; i++) {
-                            if (clients[i] == null) {
-                                break;
-                            }
-                            if (clients[i].getClientID().equals(newClientId)) {
-                                clientIndex = i;
-                                break;
-                            }
-                        }
+                        int clientIndex = SmartTravelService.findClientById(newClientId);
 
                         if (clientIndex == -1) {
                             throw new EntityNotFoundException("Client does not exist.");
