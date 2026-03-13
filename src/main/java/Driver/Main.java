@@ -71,16 +71,16 @@ public class Main {
                                     case 5 -> additionalOperations(scanner, trips, transportations, accommodations);
                                     case 6 -> {
                                         System.out.println("==============================CLIENTS==============================");
-                                        showAll(clients, new Client());
+                                        SmartTravelService.showAll(clients, new Client());
                                         System.out.println("==============================TRANSPORTATIONS==============================");
-                                        showAll(transportations, new Flight());
-                                        showAll(transportations, new Train());
-                                        showAll(transportations, new Bus());
+                                        SmartTravelService.showAll(transportations, new Flight());
+                                        SmartTravelService.showAll(transportations, new Train());
+                                        SmartTravelService.showAll(transportations, new Bus());
                                         System.out.println("==============================ACCOMMODATIONS==============================");
-                                        showAll(accommodations, new Hotel());
-                                        showAll(accommodations, new Hostel());
+                                        SmartTravelService.showAll(accommodations, new Hotel());
+                                        SmartTravelService.showAll(accommodations, new Hostel());
                                         System.out.println("==============================TRIPS==============================");
-                                        showAll(trips, new Trip());
+                                        SmartTravelService.showAll(trips, new Trip());
                                     }
                                     case 7 -> {
                                         try {
@@ -177,7 +177,7 @@ public class Main {
                             }
                         }
                         Client newClient = new Client(firstName, lastName, email);
-                        add(clients, newClient);
+                        SmartTravelService.add(clients, newClient);
                     } catch (InvalidClientDataException invalidClientDataException) {
                         //System.out.println("Error: " + invalidClientDataException);
                         System.out.println(invalidClientDataException.getMessage());
@@ -199,7 +199,7 @@ public class Main {
                     if (clients[0] == null) {
                         System.out.println("No Clients created. Please create some first.");
                     } else {
-                        showAll(clients, new Client());
+                        SmartTravelService.showAll(clients, new Client());
 
                         System.out.println("Choose the ID of a client you want to edit: ");
                         String clientID = scanner.next();
@@ -233,30 +233,17 @@ public class Main {
                     }
                 }
                 case 3 -> { // Deleting Clients
-                    showAll(clients, new Client());
+                    SmartTravelService.showAll(clients, new Client());
 
-                    System.out.println("Choose the ID of a client you want to edit: ");
+                    System.out.println("Choose the ID of a client you want to delete: ");
                     String clientID = scanner.next();
-                    int clientEditIndex = -1; // If this stays -1, that means a client of that ID doesn't exist
-
-                    for (int i = 0; i < clients.length; i++) {
-                        if (clients[i] == null) { // Once it hits null, that means all available elements have been printed
-                            break;
-                        }
-
-                        if (clients[i].getClientID().equals(clientID)) {
-                            clientEditIndex = i;
-                        }
-                    }
 
                     // Validating the user choice
                     try {
-                        if (clientEditIndex == -1) {
-                            throw new EntityNotFoundException("Client does not exist.");
-                        } else {
+                            deleteClient(clients, clientID);
                             System.out.println("Updated list of Clients post-deletion:");
-                            showAll(clients, new Client());
-                        }
+                            SmartTravelService.showAll(clients, new Client());
+
                     } catch (EntityNotFoundException entityNotFoundException) {
                         System.out.println(entityNotFoundException.getMessage());
                         try {
@@ -266,7 +253,7 @@ public class Main {
                         }
                     }
                 }
-                case 4 -> showAll(clients, new Client());
+                case 4 -> SmartTravelService.showAll(clients, new Client());
                 default -> System.out.println("Invalid Input.");
             }
         }
@@ -301,7 +288,7 @@ public class Main {
                 int basePrice = scanner.nextInt();
 
                 System.out.println("Enter the ID one of the following clients that will be going on this trip: ");
-                showAll(clients, new Client());
+                SmartTravelService.showAll(clients, new Client());
                 String clientId = scanner.next();
 
                 System.out.println("Enter the ID of one of the following transportations the client will take: ");
@@ -373,7 +360,7 @@ public class Main {
                     }
 
                     Trip trip = new Trip(destination, duration, basePrice, clients[clientIndex], transportations[transportIndex], accommodations[accommodationIndex]);
-                    add(trips, trip);
+                    SmartTravelService.add(trips, trip);
                 }
                 catch (EntityNotFoundException | InvalidTripDataException entityNotFoundException) {
                     System.out.println(entityNotFoundException.getMessage());
@@ -390,7 +377,7 @@ public class Main {
                     System.out.println("No Trips created. Please create some first.");
                 }
                 else {
-                    showAll(trips, new Trip());
+                    SmartTravelService.showAll(trips, new Trip());
 
                     System.out.println("Enter the ID of the trip you want to edit: ");
                     String id = scanner.next();
@@ -409,13 +396,13 @@ public class Main {
                 }
             }
             case 3 -> { // Deleting Trip
-                showAll(trips, new Trip());
+                SmartTravelService.showAll(trips, new Trip());
                 System.out.println("Choose the ID of the trip you want to delete: ");
                 String id = scanner.next();
                 try {
                     deleteTrip(trips, id);
                     System.out.println("Updated list of Trips post-deletion:");
-                    showAll(trips, new Trip());
+                    SmartTravelService.showAll(trips, new Trip());
                 }
                 catch (EntityNotFoundException entityNotFoundException) {
                     System.out.println(entityNotFoundException.getMessage());
@@ -428,9 +415,9 @@ public class Main {
                 }
 
             }
-            case 4 -> showAll(trips, new Trip());
+            case 4 -> SmartTravelService.showAll(trips, new Trip());
             case 5 -> { // Showing Trips based on a client ID
-                showAll(clients, new Client());
+                SmartTravelService.showAll(clients, new Client());
                 System.out.println("Enter the ID of the client you want to see the trips of: ");
                 String clientID = scanner.next();
                 int clientIndex = -1;
@@ -512,7 +499,7 @@ public class Main {
                         int baseFare = scanner.nextInt();
                         try {
                             Bus newBus = new Bus(companyName, departureCity, arrivalCity, busCompany, stops, baseFare);
-                            add(transportations, newBus);
+                            SmartTravelService.add(transportations, newBus);
                         }
                         catch (InvalidTransportDataException invalidTransportDataException) {
                             System.out.println(invalidTransportDataException.getMessage());
@@ -535,7 +522,7 @@ public class Main {
 
                         try {
                             Flight newFlight = new Flight(companyName, departureCity, arrivalCity, airlineName, weight, ticketPrice);
-                            add(transportations, newFlight);
+                            SmartTravelService.add(transportations, newFlight);
                         }
                         catch (InvalidTransportDataException invalidTransportDataException) {
                             System.out.println(invalidTransportDataException.getMessage());
@@ -557,7 +544,7 @@ public class Main {
                          int fare = scanner.nextInt();
 
                          Train newTrain = new Train(companyName, departureCity, arrivalCity, trainType, seatClass, fare);
-                         add(transportations, newTrain);
+                         SmartTravelService.add(transportations, newTrain);
                      }
                     default -> System.out.println("Invalid Input");
                 }
@@ -573,9 +560,9 @@ public class Main {
                 int transportationChoice = scanner.nextInt();
 
                 switch (transportationChoice) {
-                    case 1 -> showAll(transportations, new Bus());
-                    case 2 -> showAll(transportations, new Flight());
-                    case 3 -> showAll(transportations, new Train());
+                    case 1 -> SmartTravelService.showAll(transportations, new Bus());
+                    case 2 -> SmartTravelService.showAll(transportations, new Flight());
+                    case 3 -> SmartTravelService.showAll(transportations, new Train());
                     default -> System.out.println("Invalid Input.");
                 }
 
@@ -606,16 +593,16 @@ public class Main {
                 int listViewChoice = scanner.nextInt();
 
                 switch (listViewChoice) {
-                    case 1 -> showAll(transportations, new Bus());
-                    case 2 -> showAll(transportations, new Flight());
-                    case 3 -> showAll(transportations, new Train());
+                    case 1 -> SmartTravelService.showAll(transportations, new Bus());
+                    case 2 -> SmartTravelService.showAll(transportations, new Flight());
+                    case 3 -> SmartTravelService.showAll(transportations, new Train());
                     case 4 -> {
                         System.out.println("BUSES");
-                        showAll(transportations, new Bus());
+                        SmartTravelService.showAll(transportations, new Bus());
                         System.out.println("FLIGHTS");
-                        showAll(transportations, new Flight());
+                        SmartTravelService.showAll(transportations, new Flight());
                         System.out.println("TRAINS");
-                        showAll(transportations, new Train());
+                        SmartTravelService.showAll(transportations, new Train());
                     }
                     default -> System.out.println("Invalid Input.");
                 }
@@ -657,7 +644,7 @@ public class Main {
 
                         try {
                             Hostel newHostel = new Hostel(name, location, pricePerNight, numberOfNights, beds);
-                            add(accommodations, newHostel);
+                            SmartTravelService.add(accommodations, newHostel);
                         }
                         catch (InvalidAccommodationDataException invalidAccommodationDataException) {
                             System.out.println(invalidAccommodationDataException.getMessage());
@@ -675,7 +662,7 @@ public class Main {
 
                         try {
                             Hotel newHotel = new Hotel(name, location, pricePerNight, numberOfNights, stars);
-                            add(accommodations, newHotel);
+                            SmartTravelService.add(accommodations, newHotel);
                         }
                         catch (InvalidAccommodationDataException invalidAccommodationDataException) {
                             System.out.println(invalidAccommodationDataException.getMessage());
@@ -699,8 +686,8 @@ public class Main {
                 int accommodationChoice = scanner.nextInt();
 
                 switch (accommodationChoice) {
-                    case 1 -> showAll(accommodations, new Hostel());
-                    case 2 -> showAll(accommodations, new Hotel());
+                    case 1 -> SmartTravelService.showAll(accommodations, new Hostel());
+                    case 2 -> SmartTravelService.showAll(accommodations, new Hotel());
                     default -> System.out.println("Invalid Input.");
                 }
 
@@ -729,13 +716,13 @@ public class Main {
                 int listViewChoice = scanner.nextInt();
 
                 switch (listViewChoice) {
-                    case 1 -> showAll(accommodations, new Hostel());
-                    case 2 -> showAll(accommodations, new Hotel());
+                    case 1 -> SmartTravelService.showAll(accommodations, new Hostel());
+                    case 2 -> SmartTravelService.showAll(accommodations, new Hotel());
                     case 3 -> {
                         System.out.println("Hostels");
-                        showAll(accommodations, new Hostel());
+                        SmartTravelService.showAll(accommodations, new Hostel());
                         System.out.println("Hotels");
-                        showAll(accommodations, new Hotel());
+                        SmartTravelService.showAll(accommodations, new Hotel());
                     }
                     default -> System.out.println("Invalid Input.");
                 }
@@ -756,7 +743,7 @@ public class Main {
         switch (choice) {
             case 1 -> System.out.println(mostExpensiveTrip(trips));
             case 2 -> { // Total cost of a trip
-                showAll(trips, new Trip());
+                SmartTravelService.showAll(trips, new Trip());
                 System.out.println("Enter the ID of the trip you want to see the total cost of: ");
                 String tripID = scanner.next();
                 int tripIndex = -1;
@@ -813,36 +800,7 @@ public class Main {
         }
     }
 
-    // Adds an object to an array
-    public static void add(Object[] objects, Object object) {
-        if (objects[objects.length - 1] != null) { // The 19 is hard coded due to the size of the class arrays
-            System.out.println("Storage Full.");
-        }
-        else {
-            for (int i = 0; i < objects.length; i++) { // We iterate until we reach a null element
-                if (objects[i] == null) {
-                    objects[i] = object;
-                    break;
-                }
-            }
-        }
-    }
-
-    /*public static void addClient(Client[] clients, Client client) throws DuplicateEmailException {
-        if (clients[clients.length - 1] != null) {
-            System.out.println("Storage Full.");
-        }
-        else {
-            for (int i = 0; i < clients.length; i++) { // We iterate until we reach a null element
-                if (clients[i] == null) {
-                    clients[i] = client;
-                    break;
-                }
-            }
-        }
-    }*/
-
-    public static void deleteClient(Client[] clients, String id) {
+    public static void deleteClient(Client[] clients, String id) throws EntityNotFoundException {
         boolean deleted = false; // This is used to see if something got deleted or not
 
         for (int i = 0; i < clients.length; i++) {
@@ -865,7 +823,7 @@ public class Main {
         }
 
         if (!deleted) {
-            System.out.println("No Clients under that ID exists.");
+            throw new EntityNotFoundException("Client of that ID does not exist");
         }
     }
 
@@ -947,38 +905,6 @@ public class Main {
 
         if (!deleted) {
             throw new EntityNotFoundException("Accommodation does not exist.");
-        }
-    }
-
-    /*public static int SmartTravelService.countValidObjects(Object[] objects) {
-        int count = 0;
-        for (int i = 0; i < objects.length; i++) {
-            if (objects[i] == null) {
-                break;
-            }
-            count++;
-        }
-
-        return count;
-    }*/
-
-    // Shows all objects from an array of objects
-    // Object[] objects takes in any object array
-    // Object objects will be used to know which objects we want to print out
-    //      For example, if we want to print out only Trains, we would call this method in the following manner:
-    //          showAll(transportations, new train)
-    public static void showAll(Object[] objects, Object object) {
-        // Prints all non-null objects
-        for (int i = 0; i < objects.length; i++) {
-            if (objects[i] == null) { // Once we reach the first null in the array, it means that the rest will be null too
-                break;
-            }
-            else {
-                if (objects[i].getClass() == object.getClass()) {
-                    //System.out.println("\nEntry " + (i+1));
-                    System.out.println(objects[i]);
-                }
-            }
         }
     }
 
@@ -1120,7 +1046,7 @@ public class Main {
                         }
                     }
                     case 4 -> {
-                        showAll(clients, new Client());
+                        SmartTravelService.showAll(clients, new Client());
                         System.out.println("Enter the ID of the new client going on the trip: ");
                         String newClientId = scanner.next();
                         int clientIndex = -1;
@@ -1315,10 +1241,10 @@ public class Main {
             client3 = new Client("Jane", "Doe", "janedoe@gmail.com");
             client4 = new Client(client3);
 
-            add(clients, client1);
-            add(clients, client2);
-            add(clients, client3);
-            add(clients, client4);
+            SmartTravelService.add(clients, client1);
+            SmartTravelService.add(clients, client2);
+            SmartTravelService.add(clients, client3);
+            SmartTravelService.add(clients, client4);
         }
         catch (InvalidClientDataException invalidClientDataException) {
             System.out.println(invalidClientDataException.getMessage());
@@ -1334,12 +1260,12 @@ public class Main {
             flight1 = new Flight("Europe Travel Agency", "Montreal", "France", "Air France Canada", 27, 4000);
             flight2 = new Flight("Japan Airways", "Montreal", "Japan", "Air Canada", 31, 3200);
 
-            add(transportations, bus1);
-            add(transportations, bus2);
-            add(transportations, train1);
-            add(transportations, train2);
-            add(transportations, flight1);
-            add(transportations, flight2);
+            SmartTravelService.add(transportations, bus1);
+            SmartTravelService.add(transportations, bus2);
+            SmartTravelService.add(transportations, train1);
+            SmartTravelService.add(transportations, train2);
+            SmartTravelService.add(transportations, flight1);
+            SmartTravelService.add(transportations, flight2);
         }
         catch (InvalidTransportDataException invalidTransportDataException) {
             System.out.println(invalidTransportDataException.getMessage());
@@ -1358,10 +1284,10 @@ public class Main {
             hostel1 = new Hostel("Marseille Deluxe", "France", 114, 1, 4);
             hostel2 = new Hostel("Tokyo Yasashi", "Japan", 100, 2, 2);
 
-            add(accommodations, hotel1);
-            add(accommodations, hotel2);
-            add(accommodations, hostel1);
-            add(accommodations, hostel2);
+            SmartTravelService.add(accommodations, hotel1);
+            SmartTravelService.add(accommodations, hotel2);
+            SmartTravelService.add(accommodations, hostel1);
+            SmartTravelService.add(accommodations, hostel2);
         }
         catch (InvalidAccommodationDataException invalidAccommodationDataException) {
             System.out.println(invalidAccommodationDataException.getMessage());
@@ -1378,19 +1304,19 @@ public class Main {
             Trip trip2 = new Trip("France", 14, 3500, client2, bus2, hotel1);
             Trip trip3 = new Trip("France", 14, 3500, client3, flight1, hostel1);
 
-            add(trips, trip1);
-            add(trips, trip2);
-            add(trips, trip3);
+            SmartTravelService.add(trips, trip1);
+            SmartTravelService.add(trips, trip2);
+            SmartTravelService.add(trips, trip3);
         }
         catch (InvalidTripDataException invalidTripDataException) {
             System.out.println(invalidTripDataException.getMessage());
         }
 
         System.out.println("CLIENTS:");
-        showAll(clients, new Client());
+        SmartTravelService.showAll(clients, new Client());
         System.out.println("-----------------------------------------------------------------------------------------");
         System.out.println("TRIPS");
-        showAll(trips, new Trip());
+        SmartTravelService.showAll(trips, new Trip());
         System.out.println("-----------------------------------------------------------------------------------------");
         System.out.println("TRANSPORTATIONS");
         for (int i = 0; i < transportations.length; i++) {

@@ -102,7 +102,7 @@ public class SmartTravelService {
     }
 
     public static void add(Object[] objects, Object object) {
-        if (objects[objects.length - 1] != null) { // The 19 is hard coded due to the size of the class arrays
+        if (objects[objects.length - 1] != null) {
             System.out.println("Storage Full.");
         }
         else {
@@ -111,73 +111,6 @@ public class SmartTravelService {
                     objects[i] = object;
                     break;
                 }
-            }
-        }
-    }
-
-    public static void editClient(Scanner scanner, Client[] clients, int clientIndex) {
-        boolean running = true;
-        while (running) {
-            System.out.println("""
-                        Which section do you want to edit?
-                        1 - First Name
-                        2 - Last Name
-                        3 - Email
-                        4 - Finished Editing
-                        """);
-            int choice = scanner.nextInt();
-
-            switch (choice) {
-                case 1 -> {
-                    System.out.println("Enter a new first name: ");
-                    try {
-                        clients[clientIndex].setFirstName(scanner.next());
-                        System.out.println("First Name Updated to: " + clients[clientIndex].getFirstName());
-                    }
-                    catch (InvalidClientDataException invalidClientDataException) {
-                        System.out.println(invalidClientDataException.getMessage());
-                        try {
-                            ErrorLogger.log(invalidClientDataException);
-                        }
-                        catch (IOException ioException) {
-                            System.out.println(ioException.getMessage());
-                        }
-                    }
-                }
-                case 2 -> {
-                    System.out.println("Enter a new last name: ");
-                    try {
-                        clients[clientIndex].setLastName(scanner.next());
-                        System.out.println("Last Name Updated to: " + clients[clientIndex].getLastName());
-                    }
-                    catch (InvalidClientDataException invalidClientDataException) {
-                        System.out.println(invalidClientDataException.getMessage());
-                        try {
-                            ErrorLogger.log(invalidClientDataException);
-                        }
-                        catch (IOException ioException) {
-                            System.out.println(ioException.getMessage());
-                        }
-                    }
-                }
-                case 3 -> {
-                    System.out.println("Enter a new email: ");
-                    try {
-                        clients[clientIndex].setEmail(scanner.next());
-                        System.out.println("Email Updated to: " + clients[clientIndex].getEmail());
-                    }
-                    catch (InvalidClientDataException invalidClientDataException) {
-                        System.out.println(invalidClientDataException.getMessage());
-                        try {
-                            ErrorLogger.log(invalidClientDataException);
-                        }
-                        catch (IOException ioException) {
-                            System.out.println(ioException.getMessage());
-                        }
-                    }
-                }
-                case 4 -> running = false;
-                default -> System.out.println("Invalid Input. Try Again");
             }
         }
     }
