@@ -1209,22 +1209,22 @@ public class Main {
     }
 
     public static Trip mostExpensiveTrip(Trip[] trips) {
-        Trip mostExpensive = null;
+        int mostExpensive = -1;
 
         for (int i = 0; i < trips.length; i++) {
-            if (mostExpensive == null) { // First iteration is obviously gonna be more expensive than a null object
-                mostExpensive = trips[i];
+            if (mostExpensive == -1) {
+                mostExpensive = i;
             }
             if (trips[i] != null) {
-                double previousTotal = mostExpensive.getBasePrice() + mostExpensive.getTransportation().calculateCost() + mostExpensive.getAccommodation().calculateCost();
-                double ithTotal = trips[i].getBasePrice() + trips[i].getTransportation().calculateCost() + trips[i].getAccommodation().calculateCost();
+                double ithTotal = SmartTravelService.calculateTripTotal(i);
+                double previousTotal = SmartTravelService.calculateTripTotal(mostExpensive);
                 if (ithTotal > previousTotal) {
-                    mostExpensive = trips[i];
+                    mostExpensive = i;
                 }
             }
         }
 
-        return mostExpensive;
+        return trips[mostExpensive];
     }
 
     public static void testingScenario(Client[] clients, Transportation[] transportations, Accommodation[] accommodations, Trip[] trips) {
@@ -1344,11 +1344,7 @@ public class Main {
         System.out.println("DEMONSTRATING POLYMORPHISM");
         for (int i = 0; i < trips.length; i++) {
             if (trips[i] != null) {
-                double basePrice = trips[i].getBasePrice();
-                double transportationPrice = trips[i].getTransportation().calculateCost();
-                double accommodationPrice = trips[i].getAccommodation().calculateCost();
-
-                System.out.println("The total cost for this trip is " + (basePrice + transportationPrice + accommodationPrice));
+                System.out.println("The total cost for this trip is " + (SmartTravelService.calculateTripTotal(i)));
             }
         }
         System.out.println("-----------------------------------------------------------------------------------------");
