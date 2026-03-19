@@ -1240,6 +1240,38 @@ public class Main {
             System.out.println(invalidClientDataException.getMessage());
         }
 
+        // CLIENT EXCEPTION HANDLING SHOWCASE
+        // Name too long
+        try {
+            Client badClient = new Client("A".repeat(51), "Smith", "smith@gmail.com");
+            SmartTravelService.add(clients, badClient);
+        } catch (InvalidClientDataException e) {
+            System.out.println(e.getMessage());
+        }
+
+        // Invalid email (missing @)
+        try {
+            Client badClient = new Client("Bob", "Smith", "bobsmithgmail.com");
+            SmartTravelService.add(clients, badClient);
+        } catch (InvalidClientDataException e) {
+            System.out.println(e.getMessage());
+        }
+
+        // Duplicate Email Exception
+        try {
+            Client duplicateClient = new Client("Another", "Sahon", "shahsahon@gmail.com"); // same email as client1
+            // Check for duplicate before adding
+            for (int i = 0; i < clients.length; i++) {
+                if (clients[i] == null) break;
+                if (clients[i].getEmail().equals(duplicateClient.getEmail())) {
+                    throw new DuplicateEmailException();
+                }
+            }
+            SmartTravelService.add(clients, duplicateClient);
+        } catch (InvalidClientDataException | DuplicateEmailException e) {
+            System.out.println(e.getMessage());
+        }
+
         try {
             bus1 = new Bus("CanadaTravels", "Montreal", "Quebec", "STM", 2, 61);
             bus2 = new Bus("AmericaUnited", "Toronto", "New York City", "TTC", 3, 65);
@@ -1267,6 +1299,23 @@ public class Main {
             }
         }
 
+        // TRANSPORTATION EXCEPTIONS SHOWCASE
+        // Negative Luggage Allowance
+        try {
+            Flight badFlight = new Flight("Bad Airways", "Montreal", "Tokyo", "Air Bad", -5, 3000);
+            SmartTravelService.add(transportations, badFlight);
+        } catch (InvalidTransportDataException e) {
+            System.out.println(e.getMessage());
+        }
+
+        // Bus with 0 stops
+        try {
+            Bus badBus = new Bus("BadBus", "Montreal", "Quebec", "STM", 0, 50);
+            SmartTravelService.add(transportations, badBus);
+        } catch (InvalidTransportDataException e) {
+            System.out.println(e.getMessage());
+        }
+
         try {
             hotel1 = new Hotel("Hilton Paris Opera", "France", 457, 4, 5);
             hotel2 = new Hotel("Hotel Fine Sakai", "Japan", 37, 7, 3);
@@ -1289,6 +1338,31 @@ public class Main {
             }
         }
 
+        // ACCOMMODATION EXCEPTION SHOWCASE
+        // Price per night = 0
+        try {
+            Hotel badHotel = new Hotel("Free Hotel", "France", 0, 3, 4);
+            SmartTravelService.add(accommodations, badHotel);
+        } catch (InvalidAccommodationDataException e) {
+            System.out.println(e.getMessage());
+        }
+
+        // Invalid star rating
+        try {
+            Hotel badHotel = new Hotel("Six Star Hotel", "France", 500, 3, 6);
+            SmartTravelService.add(accommodations, badHotel);
+        } catch (InvalidAccommodationDataException e) {
+            System.out.println(e.getMessage());
+        }
+
+        // Hostel price > $150 (business rule violation)
+        try {
+            Hostel badHostel = new Hostel("Luxury Hostel", "Japan", 200, 2, 3);
+            SmartTravelService.add(accommodations, badHostel);
+        } catch (InvalidAccommodationDataException e) {
+            System.out.println(e.getMessage());
+        }
+
         try {
             Trip trip1 = new Trip("Japan", 7, 2000, client1, flight2, hostel2);
             Trip trip2 = new Trip("France", 14, 3500, client2, bus2, hotel1);
@@ -1300,6 +1374,34 @@ public class Main {
         }
         catch (InvalidTripDataException invalidTripDataException) {
             System.out.println(invalidTripDataException.getMessage());
+        }
+
+        // TRIP EXCEPTION SHOWCASE
+        // Base price below $100
+        try {
+            Trip badTrip = new Trip("Japan", 7, 50, client1, flight2, hostel2);
+            SmartTravelService.add(trips, badTrip);
+        } catch (InvalidTripDataException e) {
+            System.out.println(e.getMessage());
+        }
+
+        // Duration out of range
+        try {
+            Trip badTrip = new Trip("Japan", 25, 2000, client1, flight2, hostel2);
+            SmartTravelService.add(trips, badTrip);
+        } catch (InvalidTripDataException e) {
+            System.out.println(e.getMessage());
+        }
+
+        // ENTITYNOTFOUND EXCEPTION SHOWCASE
+        try {
+            // Search for a client ID that doesn't exist
+            String fakeID = "C9999";
+            if (SmartTravelService.findClientById(fakeID) == -1) {
+                throw new EntityNotFoundException("No client found with ID: " + fakeID);
+            }
+        } catch (EntityNotFoundException e) {
+            System.out.println(e.getMessage());
         }
 
         System.out.println("CLIENTS:");

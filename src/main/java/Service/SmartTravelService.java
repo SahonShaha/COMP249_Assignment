@@ -14,8 +14,6 @@ import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-
-// TODO ADD GENERIC METHODS HERE
 public class SmartTravelService {
     private static Client[] clients = new Client[100];
     private static Trip[] trips = new Trip[200];
