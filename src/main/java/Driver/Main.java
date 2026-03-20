@@ -25,10 +25,10 @@ public class Main {
         boolean isMenuRunning = true;
 
         // Assigning storage for the arrays
-        Client[] clients = SmartTravelService.getClients(); // 100 MAX
-        Trip[] trips = SmartTravelService.getTrips(); // 200 MAX
-        Transportation[] transportations = SmartTravelService.getTransportations(); // 50 MAX
-        Accommodation[] accommodations = SmartTravelService.getAccommodations(); // 50 MAX
+        Client[] clients = SmartTravelService.getClients();
+        Trip[] trips = SmartTravelService.getTrips();
+        Transportation[] transportations = SmartTravelService.getTransportations();
+        Accommodation[] accommodations = SmartTravelService.getAccommodations();
 
         // Whenever the application opens, it clears the 'errors.txt' file so that errors from a previous run doesn't carry over
         ErrorLogger.clear();
