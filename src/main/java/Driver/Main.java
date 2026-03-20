@@ -1,5 +1,5 @@
 // ---------------------------------------------------------
-// Assignment: 1
+// Assignment: 2
 // Question: 1
 // Written by: Sahon Shaha 40339419
 // ---------------------------------------------------------
@@ -24,117 +24,103 @@ public class Main {
         SmartTravelService sts = new SmartTravelService();
         boolean isMenuRunning = true;
 
-        // Creating storage for the arrays
-        Client[] clients = sts.getClients(); // 100 MAX
-        Trip[] trips = sts.getTrips(); // 200 MAX
-        Transportation[] transportations = sts.getTransportations(); // 50 MAX
-        Accommodation[] accommodations = sts.getAccommodations(); // 50 MAX
+        // Assigning storage for the arrays
+        Client[] clients = SmartTravelService.getClients(); // 100 MAX
+        Trip[] trips = SmartTravelService.getTrips(); // 200 MAX
+        Transportation[] transportations = SmartTravelService.getTransportations(); // 50 MAX
+        Accommodation[] accommodations = SmartTravelService.getAccommodations(); // 50 MAX
+
+        // Whenever the application opens, it clears the 'errors.txt' file so that errors from a previous run doesn't carry over
+        ErrorLogger.clear();
 
         System.out.println("Welcome to SmartTravel!");
 
         while (isMenuRunning) {
-            System.out.println("""
-                    Would you like to use the application or run the testing scenario?
-                    1 - Run Application
-                    2 - Execute Testing Scenario
-                    3 - Generate Diagrams
-                    4 - Exit
-                    """);
-            try {
-                int initialChoice = scanner.nextInt();
+            try { // This try-catch block is for scenarios where the user enters a string rather than a number
+                try {
+                    System.out.println("""
+                            1. Client Management
+                            2. Trip Management
+                            3. Transportation Management
+                            4. Accommodation Management
+                            5. Additional Operations
+                            6. Generate Diagrams
+                            7. List All Data
+                            8. Save All Data
+                            9. Load All Data
+                            10. Run Predefined Scenario
+                            11. Generate HTML Dashboard
+                            0. Exit
+                            """);
+                    int choice = scanner.nextInt();
 
-                boolean userMenu = true;
-
-                switch (initialChoice) {
-                    case 1 -> {
-                        while (userMenu) {
+                    switch (choice) {
+                        case 0 -> {
+                            System.out.println("Closing Application...Goodbye!");
+                            isMenuRunning = false;
+                        }
+                        case 1 -> clientManagement(scanner, clients);
+                        case 2 -> tripManagement(scanner, trips, clients, transportations, accommodations);
+                        case 3 -> transportationManagement(scanner, transportations);
+                        case 4 -> accommodationManagement(scanner, accommodations);
+                        case 5 -> additionalOperations(scanner, trips, transportations, accommodations);
+                        case 6 -> {
                             try {
-                                System.out.println("""
-                                        1. Client Management
-                                        2. Trip Management
-                                        3. Transportation Management
-                                        4. Accommodation Management
-                                        5. Additional Operations
-                                        6. List All Data
-                                        7. Save All Data
-                                        8. Load All Data
-                                        9. Generate HTML Dashboard
-                                        10. Exit
-                                        """);
-                                int choice = scanner.nextInt();
-
-                                switch (choice) {
-                                    case 1 -> clientManagement(scanner, clients);
-                                    case 2 -> tripManagement(scanner, trips, clients, transportations, accommodations);
-                                    case 3 -> transportationManagement(scanner, transportations);
-                                    case 4 -> accommodationManagement(scanner, accommodations);
-                                    case 5 -> additionalOperations(scanner, trips, transportations, accommodations);
-                                    case 6 -> {
-                                        System.out.println("==============================CLIENTS==============================");
-                                        SmartTravelService.showAll(clients, new Client());
-                                        System.out.println("==============================TRANSPORTATIONS==============================");
-                                        SmartTravelService.showAll(transportations, new Flight());
-                                        SmartTravelService.showAll(transportations, new Train());
-                                        SmartTravelService.showAll(transportations, new Bus());
-                                        System.out.println("==============================ACCOMMODATIONS==============================");
-                                        SmartTravelService.showAll(accommodations, new Hotel());
-                                        SmartTravelService.showAll(accommodations, new Hostel());
-                                        System.out.println("==============================TRIPS==============================");
-                                        SmartTravelService.showAll(trips, new Trip());
-                                    }
-                                    case 7 -> {
-                                        try {
-                                            SmartTravelService.saveAllData("output/data/");
-                                        } catch (IOException ioException) {
-                                            System.out.println(ioException.getMessage());
-                                        }
-                                    }
-                                    case 8 -> {
-                                        try {
-                                            SmartTravelService.loadAllData("output/data/");
-                                        } catch (IOException ioException) {
-                                            System.out.println(ioException.getMessage());
-                                        }
-                                    }
-                                    case 9 -> {
-                                        try {
-                                            DashboardGenerator.generateDashboard(sts);
-                                        }
-                                        catch (IOException io) {
-                                            System.out.println(io.getMessage());
-                                        }
-                                    }
-                                    case 10 -> userMenu = false;
-                                    default -> System.out.println("Invalid Option.");
-                                }
-                            }
-                            catch (InputMismatchException inputMismatchException) {
-                                System.out.println("Invalid Input. Enter a number.");
-                                try {
-                                    ErrorLogger.log(inputMismatchException);
-                                }
-                                catch (IOException ioException) {
-                                    System.out.println(ioException.getMessage());
-                                }
-                                scanner.nextLine();
+                                TripChartGenerator.generateCostBarChart(trips, SmartTravelService.countValidObjects(trips));
+                                TripChartGenerator.generateDurationLineChart(trips, SmartTravelService.countValidObjects(trips));
+                                TripChartGenerator.generateDestinationPieChart(trips, SmartTravelService.countValidObjects(trips));
+                            } catch (IOException e) {
+                                System.out.println("Error: " + e);
                             }
                         }
-                    }
-
-                    case 2 -> testingScenario(clients, transportations, accommodations, trips);
-                    case 3 -> {
-                        try {
-                            TripChartGenerator.generateCostBarChart(trips, SmartTravelService.countValidObjects(trips));
-                            TripChartGenerator.generateDurationLineChart(trips, SmartTravelService.countValidObjects(trips));
-                            TripChartGenerator.generateDestinationPieChart(trips, SmartTravelService.countValidObjects(trips));
-                        } catch (IOException e) {
-                            System.out.println("Error: " + e);
+                        case 7-> {
+                            System.out.println("==============================CLIENTS==============================");
+                            SmartTravelService.showAll(clients, new Client());
+                            System.out.println("==============================TRANSPORTATIONS==============================");
+                            SmartTravelService.showAll(transportations, new Flight());
+                            SmartTravelService.showAll(transportations, new Train());
+                            SmartTravelService.showAll(transportations, new Bus());
+                            System.out.println("==============================ACCOMMODATIONS==============================");
+                            SmartTravelService.showAll(accommodations, new Hotel());
+                            SmartTravelService.showAll(accommodations, new Hostel());
+                            System.out.println("==============================TRIPS==============================");
+                            SmartTravelService.showAll(trips, new Trip());
                         }
+                        case 8 -> {
+                            try {
+                                SmartTravelService.saveAllData("output/data/");
+                            } catch (IOException ioException) {
+                                System.out.println(ioException.getMessage());
+                            }
+                        }
+                        case 9 -> {
+                            try {
+                                SmartTravelService.loadAllData("output/data/");
+                            } catch (IOException ioException) {
+                                System.out.println(ioException.getMessage());
+                            }
+                        }
+                        case 10 -> testingScenario(clients, transportations, accommodations, trips);
+                        case 11 -> {
+                            try {
+                                DashboardGenerator.generateDashboard(sts);
+                            }
+                            catch (IOException io) {
+                                System.out.println(io.getMessage());
+                            }
+                        }
+                        default -> System.out.println("Invalid Option.");
                     }
-                    case 4 -> {
-                        System.out.println("Closing Application...Goodbye!");
-                        isMenuRunning = false;
+                }
+                catch (InputMismatchException inputMismatchException) {
+                    System.out.println("Invalid Input. Enter a number.");
+                    try {
+                        ErrorLogger.log(inputMismatchException);
                     }
+                    catch (IOException ioException) {
+                        System.out.println(ioException.getMessage());
+                    }
+                    scanner.nextLine();
                 }
             }
             catch (InputMismatchException inputMismatchException) {
@@ -743,7 +729,14 @@ public class Main {
         int choice = scanner.nextInt();
 
         switch (choice) {
-            case 1 -> System.out.println(mostExpensiveTrip(trips));
+            case 1 -> {
+                try {
+                    System.out.println(mostExpensiveTrip(trips));
+                }
+                catch (EntityNotFoundException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
             case 2 -> { // Total cost of a trip
                 SmartTravelService.showAll(trips, new Trip());
                 System.out.println("Enter the ID of the trip you want to see the total cost of: ");
@@ -766,6 +759,7 @@ public class Main {
                         throw new EntityNotFoundException("Trip does not exist.");
                     }
 
+                    // Summing all prices
                     double basePrice = trips[tripIndex].getBasePrice();
                     double transportationPrice = trips[tripIndex].getTransportation().calculateCost();
                     double accommodationPrice = trips[tripIndex].getAccommodation().calculateCost();
@@ -1131,6 +1125,7 @@ public class Main {
     }
 
 
+    // DEEP COPY METHODS
     public static Transportation[] transportationsDeepCopy(Transportation[] original) {
         Transportation[] newTransportations = new Transportation[original.length];
 
@@ -1140,26 +1135,24 @@ public class Main {
                 break;
             }
 
-            // Ensures that
-            if (original[i] instanceof Bus) {
-                try {
+            // Type Checking so we can use the proper copy method for the respective class
+            try {
+                if (original[i] instanceof Bus) {
                     newTransportations[i] = new Bus((Bus) original[i]);
-                }
-                catch (InvalidTransportDataException invalidTransportDataException) {
-                    System.out.println(invalidTransportDataException.getMessage());
-                    try {
-                        ErrorLogger.log(invalidTransportDataException);
-                    }
-                    catch (IOException ioException) {
-                        System.out.println(ioException.getMessage());
-                    }
+                } else if (original[i] instanceof Flight) {
+                    newTransportations[i] = new Flight((Flight) original[i]);
+                } else if (original[i] instanceof Train) {
+                    newTransportations[i] = new Train((Train) original[i]);
                 }
             }
-            else if (original[i] instanceof Flight) {
-                newTransportations[i] = new Flight((Flight) original[i]);
-            }
-            else if (original[i] instanceof Train) {
-                newTransportations[i] = new Train((Train) original[i]);
+            catch (InvalidTransportDataException invalidTransportDataException) {
+                System.out.println(invalidTransportDataException.getMessage());
+                try {
+                    ErrorLogger.log(invalidTransportDataException);
+                }
+                catch (IOException io) {
+                    System.out.println(io.getMessage());
+                }
             }
         }
         return newTransportations;
@@ -1207,7 +1200,13 @@ public class Main {
         return newAccommodations;
     }
 
-    public static Trip mostExpensiveTrip(Trip[] trips) {
+    // Cycles through all trips and compares them till it finds the most expensive trip
+    public static Trip mostExpensiveTrip(Trip[] trips) throws EntityNotFoundException {
+        if (trips[0] == null) {
+
+            throw new EntityNotFoundException("No trips have been initialized");
+        }
+
         int mostExpensive = -1;
 
         for (int i = 0; i < trips.length; i++) {
@@ -1451,7 +1450,12 @@ public class Main {
         System.out.println("-----------------------------------------------------------------------------------------");
 
         System.out.println("MOST EXPENSIVE TRIP");
-        System.out.println(mostExpensiveTrip(trips));
+        try {
+            System.out.println(mostExpensiveTrip(trips));
+        }
+        catch (EntityNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
         System.out.println("-----------------------------------------------------------------------------------------");
 
         System.out.println("DEEP COPY OF TRANSPORTATION ARRAY");
@@ -1479,7 +1483,7 @@ public class Main {
         }
         System.out.println("COPIED ARRAY");
         for (int i = 0; i < deepCopied.length; i++) {
-            if (transportations[i] == null) {
+            if (deepCopied[i] == null) {
                 break;
             }
             System.out.println(deepCopied[i]);
