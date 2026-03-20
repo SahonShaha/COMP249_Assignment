@@ -1,18 +1,12 @@
 package Service;
 
 import Client.Client;
-import Exceptions.DuplicateEmailException;
-import Exceptions.EntityNotFoundException;
-import Exceptions.InvalidClientDataException;
-import Exceptions.InvalidTripDataException;
 import Persistence.*;
 import Travel.Accommodation;
 import Travel.Transportation;
 import Travel.Trip;
 
 import java.io.IOException;
-import java.util.InputMismatchException;
-import java.util.Scanner;
 
 public class SmartTravelService {
     private static Client[] clients = new Client[100];
@@ -20,35 +14,21 @@ public class SmartTravelService {
     private static Transportation[] transportations = new Transportation[50];
     private static Accommodation[] accommodations = new Accommodation[50];
 
-    public Client[] getClients() {
+    public static Client[] getClients() {
         return clients;
     }
 
-    public Trip[] getTrips() {
+    public static Trip[] getTrips() {
         return trips;
     }
 
-    public Transportation[] getTransportations() {
+    public static Transportation[] getTransportations() {
         return transportations;
     }
 
-    public Accommodation[] getAccommodations() {
+    public static Accommodation[] getAccommodations() {
         return accommodations;
     }
-
-    /*public static void add(Object[] objects, Object object) {
-        if (objects[objects.length - 1] != null) {
-            System.out.println("Storage Full.");
-        }
-        else {
-            for (int i = 0; i < objects.length; i++) { // We iterate until we reach a null element
-                if (objects[i] == null) {
-                    objects[i] = object;
-                    break;
-                }
-            }
-        }
-    }*/
 
     public static void loadAllData(String filename) throws IOException {
         ClientFileManager.loadClients(clients, (filename + "clients.csv"));

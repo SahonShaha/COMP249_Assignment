@@ -11,12 +11,12 @@ import Persistence.*;
 import Service.SmartTravelService;
 import Travel.*;
 import Client.*;
+import Visualization.DashboardGenerator;
 import Visualization.TripChartGenerator;
 
 import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
-// TODO GENERAL SCANNER EXCEPTION HANDLING -> MISMATCH EXCEPTION = ENTER CUSTOM MESSAGE
 
 public class Main {
     public static void main(String[] args) {
@@ -85,10 +85,6 @@ public class Main {
                                     case 7 -> {
                                         try {
                                             SmartTravelService.saveAllData("output/data/");
-                                            /*ClientFileManager.saveClients(clients, SmartTravelService.countValidObjects(clients), "output/data/clients.csv");
-                                            AccommodationFileManager.saveAccommodations(accommodations, SmartTravelService.countValidObjects(accommodations), "output/data/accommodations.csv");
-                                            TransportationFileManager.saveTransportations(transportations, SmartTravelService.countValidObjects(transportations), "output/data/transportations.csv");
-                                            TripFileManager.saveTrip(trips, SmartTravelService.countValidObjects(trips), "output/data/trips.csv");*/
                                         } catch (IOException ioException) {
                                             System.out.println(ioException.getMessage());
                                         }
@@ -96,16 +92,17 @@ public class Main {
                                     case 8 -> {
                                         try {
                                             SmartTravelService.loadAllData("output/data/");
-                                            /*ClientFileManager.loadClients(clients, "output/data/clients.csv");
-                                            AccommodationFileManager.loadAccommodations(accommodations, "output/data/accommodations.csv");
-                                            TransportationFileManager.loadTransportations(transportations, "output/data/transportations.csv");
-                                            TripFileManager.loadTrip(trips, "output/data/trips.csv", clients, accommodations, transportations);*/
                                         } catch (IOException ioException) {
                                             System.out.println(ioException.getMessage());
                                         }
                                     }
                                     case 9 -> {
-
+                                        try {
+                                            DashboardGenerator.generateDashboard(sts);
+                                        }
+                                        catch (IOException io) {
+                                            System.out.println(io.getMessage());
+                                        }
                                     }
                                     case 10 -> userMenu = false;
                                     default -> System.out.println("Invalid Option.");
@@ -147,6 +144,7 @@ public class Main {
         }
     }
 
+    // Handles the Client Menu
     public static void clientManagement(Scanner scanner, Client[] clients) {
         try {
             System.out.println("""
@@ -268,6 +266,7 @@ public class Main {
         }
     }
 
+    // Handles the Trip Menu
     public static void tripManagement(Scanner scanner, Trip[] trips, Client[] clients, Transportation[] transportations, Accommodation[] accommodations) {
         System.out.println("""
                 1. Create a trip
@@ -463,6 +462,7 @@ public class Main {
         }
     }
 
+    // Handles the Transportation Menu
     public static void transportationManagement(Scanner scanner, Transportation[] transportations) {
         System.out.println("""
                 1. Add a transportation option
@@ -611,6 +611,7 @@ public class Main {
         }
     }
 
+    // Handles the Accommodation Menu
     public static void accommodationManagement(Scanner scanner, Accommodation[] accommodations) {
         System.out.println("""
                 1. Add an accommodation
@@ -731,6 +732,7 @@ public class Main {
         }
     }
 
+    // Handles additional operations
     public static void additionalOperations(Scanner scanner, Trip[] trips, Transportation[] transportations, Accommodation[] accommodations) {
         System.out.println("""
                 1. Display the Most Expensive Trip
@@ -800,6 +802,9 @@ public class Main {
         }
     }
 
+    // Deletes a client by searching through an array using an id.
+    // The deletion is done by shifting back every client after the target.
+    // This goes for all the following deletion methods
     public static void deleteClient(Client[] clients, String id) throws EntityNotFoundException {
         boolean deleted = false; // This is used to see if something got deleted or not
 
@@ -908,6 +913,7 @@ public class Main {
         }
     }
 
+    // Handles the Client Editing Submenu
     public static void editClient(Scanner scanner, Client[] clients, int clientIndex) {
         boolean running = true;
         while (running) {
@@ -975,6 +981,7 @@ public class Main {
         }
     }
 
+    // Handles the Trip Editing Submenu
     public static void editTrip(Scanner scanner, Trip[] trips, String id, Client[] clients, Transportation[] transportations, Accommodation[] accommodations) throws EntityNotFoundException{
         // Find Index of selected trip
         int tripIndex = -1;
@@ -1123,6 +1130,7 @@ public class Main {
         }
     }
 
+
     public static Transportation[] transportationsDeepCopy(Transportation[] original) {
         Transportation[] newTransportations = new Transportation[original.length];
 
@@ -1132,6 +1140,7 @@ public class Main {
                 break;
             }
 
+            // Ensures that
             if (original[i] instanceof Bus) {
                 try {
                     newTransportations[i] = new Bus((Bus) original[i]);
