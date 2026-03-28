@@ -8,6 +8,7 @@ package Driver;
 
 import Exceptions.*;
 import Persistence.*;
+import Service.RecentList;
 import Service.SmartTravelService;
 import Travel.*;
 import Client.*;
@@ -29,6 +30,8 @@ public class Main {
         Trip[] trips = SmartTravelService.getTrips();
         Transportation[] transportations = SmartTravelService.getTransportations();
         Accommodation[] accommodations = SmartTravelService.getAccommodations();
+
+        RecentList<Object> recentList = new RecentList<>(); // TODO ADD TO RECENT LIST FOR EVERY "SHOW" INTERACTION
 
         // Whenever the application opens, it clears the 'errors.txt' file so that errors from a previous run doesn't carry over
         ErrorLogger.clear();
@@ -194,7 +197,7 @@ public class Main {
                                 break;
                             }
 
-                            if (clients[i].getClientID().equals(clientID)) {
+                            if (clients[i].getId().equals(clientID)) {
                                 clientEditIndex = i;
                             }
                         }
@@ -306,7 +309,7 @@ public class Main {
                     if (clients[i] == null) {
                         break;
                     }
-                    if (clients[i].getClientID().equals(clientId)) {
+                    if (clients[i].getId().equals(clientId)) {
                         clientIndex = i;
                         break;
                     }
@@ -316,7 +319,7 @@ public class Main {
                     if (transportations[i] == null) {
                         break;
                     }
-                    if (transportations[i].getTransportationID().equals(transportationId)) {
+                    if (transportations[i].getId().equals(transportationId)) {
                         transportIndex = i;
                         break;
                     }
@@ -326,7 +329,7 @@ public class Main {
                     if (accommodations[i] == null) {
                         break;
                     }
-                    if (accommodations[i].getAccommodationID().equals(accommodationId)) {
+                    if (accommodations[i].getId().equals(accommodationId)) {
                         accommodationIndex = i;
                         break;
                     }
@@ -412,7 +415,7 @@ public class Main {
                         break;
                     }
 
-                    if (clients[i] != null && clients[i].getClientID().equals(clientID)) {
+                    if (clients[i] != null && clients[i].getId().equals(clientID)) {
                         clientIndex = i;
                     }
                 }
@@ -807,7 +810,7 @@ public class Main {
                 break; // We kill the loop once we reach a null object because it means that we reached the end of the partiall filled array
             }
 
-            if (clients[i].getClientID().equals(id)) {
+            if (clients[i].getId().equals(id)) {
                 clients[i] = null; // Deleting the client if it matches the id
                 deleted = true;
 
@@ -861,7 +864,7 @@ public class Main {
                 break; // We kill the loop once we reach a null object because it means that we reached the end of the partially filled array
             }
 
-            if (transportations[i].getTransportationID().equals(id)) {
+            if (transportations[i].getId().equals(id)) {
                 transportations[i] = null; // Deleting the transportations if it matches the id
                 deleted = true;
 
@@ -888,7 +891,7 @@ public class Main {
                 break; // We kill the loop once we reach a null object because it means that we reached the end of the partiall filled array
             }
 
-            if (accommodations[i].getAccommodationID().equals(id)) {
+            if (accommodations[i].getId().equals(id)) {
                 accommodations[i] = null; // Deleting the accommodation if it matches the id
                 deleted = true;
 
@@ -1073,7 +1076,7 @@ public class Main {
                             if (transportations[i] == null) {
                                 break;
                             }
-                            if (transportations[i].getTransportationID().equals(newTransportationId)) {
+                            if (transportations[i].getId().equals(newTransportationId)) {
                                 transportationIndex = i;
                                 break;
                             }
@@ -1100,7 +1103,7 @@ public class Main {
                             if (accommodations[i] == null) {
                                 break;
                             }
-                            if (accommodations[i].getAccommodationID().equals(newAccommodationId)) {
+                            if (accommodations[i].getId().equals(newAccommodationId)) {
                                 accommodationIndex = i;
                                 break;
                             }

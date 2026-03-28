@@ -6,7 +6,9 @@
 
 package Travel;
 
-public abstract class Transportation {
+import Interfaces.Identifiable;
+
+public abstract class Transportation implements Identifiable {
     private static int count = 3001; // Represents the amount of objects created. Will be used to create the ID
     private String transportationID;
     private String companyName;
@@ -26,7 +28,7 @@ public abstract class Transportation {
 
     // Copy Constructor
     public Transportation(Transportation transportation) {
-        this.transportationID = transportation.getTransportationID();
+        this.transportationID = transportation.getId();
         this.companyName = transportation.getCompanyName();
         this.departureCity = transportation.getDepartureCity();
         this.arrivalCity = transportation.getArrivalCity();
@@ -60,7 +62,7 @@ public abstract class Transportation {
 
     public abstract double calculateCost();
 
-    public String getTransportationID() {
+    public String getId() {
         return transportationID;
     }
 

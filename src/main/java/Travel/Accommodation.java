@@ -7,8 +7,9 @@
 package Travel;
 
 import Exceptions.InvalidAccommodationDataException;
+import Interfaces.Identifiable;
 
-public abstract class Accommodation {
+public abstract class Accommodation implements Identifiable {
     private static int count = 4001; // Represents the amount of objects created. Will be used to create the ID
     private String accommodationID;
     private String name;
@@ -37,7 +38,7 @@ public abstract class Accommodation {
 
     // Copy Constructor
     public Accommodation(Accommodation accommodation) throws InvalidAccommodationDataException{
-        this.accommodationID = accommodation.getAccommodationID();
+        this.accommodationID = accommodation.getId();
         if (accommodation.getPricePerNight() < 1) {
             throw new InvalidAccommodationDataException("The price per night needs to be greater than 0.");
         }
@@ -77,7 +78,7 @@ public abstract class Accommodation {
 
     public abstract double calculateCost();
 
-    public String getAccommodationID() {
+    public String getId() {
         return accommodationID;
     }
 

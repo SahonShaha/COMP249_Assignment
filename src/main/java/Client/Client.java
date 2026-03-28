@@ -7,9 +7,10 @@
 package Client;
 
 import Exceptions.InvalidClientDataException;
+import Interfaces.Identifiable;
 import Persistence.ErrorLogger;
 
-public class Client {
+public class Client implements Identifiable {
     private static int count = 1001; // Represents the amount of objects created. Will be used to create the ID
     private String clientID;
     private String firstName;
@@ -36,7 +37,7 @@ public class Client {
 
     // Copy Constructor
     public Client(Client client) throws InvalidClientDataException {
-        this.clientID = client.getClientID();
+        this.clientID = client.getId();
         if (client.getFirstName().length() > 50 || client.getLastName().length() > 50 || client.getEmail().length() > 100) {
             throw new InvalidClientDataException("Entries too long. Keep First and Last Names under 50 characters and Emails under 100 characters.");
         }
@@ -73,7 +74,7 @@ public class Client {
         }
     }
 
-    public String getClientID() {
+    public String getId() {
         return clientID;
     }
 
