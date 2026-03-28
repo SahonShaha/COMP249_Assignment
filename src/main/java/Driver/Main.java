@@ -751,7 +751,7 @@ public class Main {
                         break;
                     }
 
-                    if (trips[i].getTripID().equals(tripID)) {
+                    if (trips[i].getId().equals(tripID)) {
                         tripIndex = i;
                         break;
                     }
@@ -837,7 +837,7 @@ public class Main {
                 break; // We kill the loop once we reach a null object because it means that we reached the end of the partiall filled array
             }
 
-            if (trips[i].getTripID().equals(id)) {
+            if (trips[i].getId().equals(id)) {
                 trips[i] = null; // Deleting the trip if it matches the id
                 deleted = true;
 
@@ -986,7 +986,7 @@ public class Main {
             if (trips[i] == null) {
                 break;
             }
-            if (trips[i].getTripID().equals(id)) {
+            if (trips[i].getId().equals(id)) {
                 tripIndex = i;
                 break;
             }

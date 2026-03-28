@@ -106,7 +106,7 @@ public class SmartTravelService {
             if (clients[i] == null) {
                 break;
             }
-            if (clients[i].getClientID().equals(id)) {
+            if (clients[i].getId().equals(id)) {
                 clientIndex = i;
                 break;
             }

@@ -18,7 +18,7 @@ public class ClientFileManager {
 
         for (int i = 0; i < clientCount; i++) {
             printWriter.println(
-                clients[i].getClientID() + ";" +
+                clients[i].getId() + ";" +
                 clients[i].getFirstName() + ";" +
                 clients[i].getLastName() + ";" +
                 clients[i].getEmail()

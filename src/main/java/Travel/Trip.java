@@ -11,13 +11,15 @@ import Exceptions.InvalidAccommodationDataException;
 import Exceptions.InvalidClientDataException;
 import Exceptions.InvalidTransportDataException;
 import Exceptions.InvalidTripDataException;
+import Interfaces.Billable;
+import Interfaces.Identifiable;
 
-public class Trip {
+public class Trip implements Identifiable {
     private static int count = 2001; // Represents the amount of objects created. Will be used to create the ID
     private String tripID;
     private String destination;
     private int durationInDays;
-    private int basePrice;
+    private double basePrice;
     private Client clientOnTrip;
     private Transportation transportation;
     private Accommodation accommodation;
@@ -104,7 +106,7 @@ public class Trip {
         }
 
 
-        this.tripID = trip.getTripID();
+        this.tripID = trip.getId();
         this.destination = trip.getDestination();
         this.durationInDays = trip.getDurationInDays();
         this.basePrice = trip.getBasePrice();
@@ -164,7 +166,7 @@ public class Trip {
         }
     }
 
-    public String getTripID() {
+    public String getId() {
         return tripID;
     }
 
@@ -191,7 +193,7 @@ public class Trip {
         this.durationInDays = durationInDays;
     }
 
-    public int getBasePrice() {
+    public double getBasePrice() {
         return basePrice;
     }
 

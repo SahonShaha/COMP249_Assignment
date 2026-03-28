@@ -87,7 +87,7 @@ public class TripChartGenerator {
     public static void generateCostBarChart(Trip[] trips, int count) throws IOException {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         for (int i = 0; i < count; i++) {
-            dataset.addValue((trips[i].getAccommodation().calculateCost() + trips[i].getTransportation().calculateCost()), "Total Cost", trips[i].getTripID());
+            dataset.addValue((trips[i].getAccommodation().calculateCost() + trips[i].getTransportation().calculateCost()), "Total Cost", trips[i].getId());
         }
 
         JFreeChart chart = ChartFactory.createBarChart(
@@ -144,7 +144,7 @@ public class TripChartGenerator {
     public static void generateDurationLineChart(Trip[] trips, int count) throws IOException {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         for (int i = 0; i < count; i++) {
-            dataset.addValue(trips[i].getDurationInDays(), "Duration (days)", trips[i].getTripID());
+            dataset.addValue(trips[i].getDurationInDays(), "Duration (days)", trips[i].getId());
         }
 
         JFreeChart chart = ChartFactory.createLineChart(

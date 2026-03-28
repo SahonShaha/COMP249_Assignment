@@ -21,7 +21,7 @@ public class TransportationFileManager {
             if (transportations[i] instanceof Bus) {
                 printWriter.println(
                         "BUS;" +
-                        transportations[i].getTransportationID() + ";" +
+                        transportations[i].getId() + ";" +
                         transportations[i].getCompanyName() + ";" +
                         transportations[i].getDepartureCity() + ";" +
                         transportations[i].getArrivalCity() + ";" +
@@ -33,7 +33,7 @@ public class TransportationFileManager {
             else if (transportations[i] instanceof Train) {
                 printWriter.println(
                         "TRAIN;" +
-                        transportations[i].getTransportationID() + ";" +
+                        transportations[i].getId() + ";" +
                         transportations[i].getCompanyName() + ";" +
                         transportations[i].getDepartureCity() + ";" +
                         transportations[i].getArrivalCity() + ";" +
@@ -45,7 +45,7 @@ public class TransportationFileManager {
             else if (transportations[i] instanceof Flight) {
                 printWriter.println(
                         "FLIGHT;" +
-                        transportations[i].getTransportationID() + ";" +
+                        transportations[i].getId() + ";" +
                         transportations[i].getCompanyName() + ";" +
                         transportations[i].getDepartureCity() + ";" +
                         transportations[i].getArrivalCity() + ";" +

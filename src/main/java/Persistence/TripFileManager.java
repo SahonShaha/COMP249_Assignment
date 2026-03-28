@@ -24,10 +24,10 @@ public class TripFileManager {
 
         for (int i = 0; i < tripCount; i++) {
             printWriter.println(
-                trips[i].getTripID() + ";" +
-                trips[i].getClientOnTrip().getClientID() + ";" +
-                trips[i].getAccommodation().getAccommodationID() + ";" +
-                trips[i].getTransportation().getTransportationID() + ";" +
+                trips[i].getId() + ";" +
+                trips[i].getClientOnTrip().getId() + ";" +
+                trips[i].getAccommodation().getId() + ";" +
+                trips[i].getTransportation().getId() + ";" +
                 trips[i].getDestination() + ";" +
                 trips[i].getDurationInDays() + ";" +
                 trips[i].getBasePrice()
@@ -62,7 +62,7 @@ public class TripFileManager {
                         break;
                     }
 
-                    if (clients[i].getClientID().equals(fields[1])) {
+                    if (clients[i].getId().equals(fields[1])) {
                         clientIndex = i;
                         break;
                     }
@@ -74,7 +74,7 @@ public class TripFileManager {
                         break;
                     }
 
-                    if (accommodations[i].getAccommodationID().equals(fields[2])) {
+                    if (accommodations[i].getId().equals(fields[2])) {
                         accommodationIndex = i;
                         break;
                     }
@@ -86,7 +86,7 @@ public class TripFileManager {
                         break;
                     }
 
-                    if (transportations[i].getTransportationID().equals(fields[3])) {
+                    if (transportations[i].getId().equals(fields[3])) {
                         transportationIndex = i;
                         break;
                     }

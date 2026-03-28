@@ -23,7 +23,7 @@ public class AccommodationFileManager {
             if (accommodations[i] instanceof Hotel) {
                 printWriter.println(
                     "HOTEL;" +
-                    accommodations[i].getAccommodationID() + ";" +
+                    accommodations[i].getId() + ";" +
                     accommodations[i].getName() + ";" +
                     accommodations[i].getLocation() + ";" +
                     accommodations[i].getPricePerNight() + ";" +
@@ -34,7 +34,7 @@ public class AccommodationFileManager {
             else if (accommodations[i] instanceof Hostel) {
                 printWriter.println(
                     "HOSTEL;" +
-                    accommodations[i].getAccommodationID() + ";" +
+                    accommodations[i].getId() + ";" +
                     accommodations[i].getName() + ";" +
                     accommodations[i].getLocation() + ";" +
                     accommodations[i].getPricePerNight() + ";" +

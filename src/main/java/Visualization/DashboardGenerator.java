@@ -142,12 +142,12 @@ public class DashboardGenerator {
             double spent = 0;
             // Find trip the client is associated to and calculate total spent
             for (int j = 0; j < validTripCount; j++) {
-                if (SmartTravelService.getTrips()[j].getClientOnTrip().getClientID().equals(client.getClientID())) {
+                if (SmartTravelService.getTrips()[j].getClientOnTrip().getId().equals(client.getId())) {
                     spent = SmartTravelService.calculateTripTotal(j);
                 }
             }
             out.println("                    <tr>");
-            out.println("                        <td><strong>" + client.getClientID() + "</strong></td>");
+            out.println("                        <td><strong>" + client.getId() + "</strong></td>");
             out.println("                        <td>" + client.getFirstName() + " " + client.getLastName() + "</td>");
             out.println("                        <td>" + client.getEmail() + "</td>");
             out.println("                        <td style='font-weight: bold; color: " + 
@@ -181,8 +181,8 @@ public class DashboardGenerator {
         for (int i = 0; i < validTripCount; i++) {
             Trip trip = SmartTravelService.getTrips()[i];
             out.println("                    <tr>");
-            out.println("                        <td><strong>" + trip.getTripID() + "</strong></td>");
-            out.println("                        <td>" + trip.getClientOnTrip().getClientID() + "</td>");
+            out.println("                        <td><strong>" + trip.getId() + "</strong></td>");
+            out.println("                        <td>" + trip.getClientOnTrip().getId() + "</td>");
             out.println("                        <td>" + trip.getDestination() + "</td>");
             out.println("                        <td>" + trip.getDurationInDays() + "</td>");
             out.println("                        <td>$" + String.format("%.2f", SmartTravelService.calculateTripTotal(i)) + "</td>");
