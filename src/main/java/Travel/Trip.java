@@ -14,7 +14,7 @@ import Exceptions.InvalidTripDataException;
 import Interfaces.Billable;
 import Interfaces.Identifiable;
 
-public class Trip implements Identifiable {
+public class Trip implements Identifiable, Billable {
     private static int count = 2001; // Represents the amount of objects created. Will be used to create the ID
     private String tripID;
     private String destination;
@@ -202,6 +202,10 @@ public class Trip implements Identifiable {
             throw new InvalidTripDataException("Base Price must be over 100.00$");
         }
         this.basePrice = basePrice;
+    }
+
+    public double getTotalCost() {
+        return basePrice + transportation.calculateCost() + accommodation.calculateCost();
     }
 
     public Client getClientOnTrip() {
