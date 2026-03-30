@@ -8,7 +8,7 @@ package Exceptions;
 
 public class EntityNotFoundException extends Exception {
     public EntityNotFoundException() {
-        super("Entity not fount.");
+        super("Entity not found.");
     }
 
     public EntityNotFoundException(String error) {

@@ -12,7 +12,7 @@ import Travel.Hostel;
 import Travel.Hotel;
 
 import java.io.*;
-
+// TODO LOADING BROKEN ACCOMMODATION FILES BREAKS EVERYTHING RATHER THAN JUST 1 CSV LINE
 public class AccommodationFileManager {
     public static void saveAccommodations(Accommodation[] accommodations, int accommodationCount, String filePath) throws IOException {
         FileWriter fileWriter = new FileWriter(filePath);
@@ -73,6 +73,9 @@ public class AccommodationFileManager {
                         accommodations[count] = new Hostel(fields[2], fields[3], Integer.parseInt(fields[4]), Integer.parseInt(fields[5]), 0);
                         accommodations[count].setAccommodationID(fields[1]);
                     }
+                    else {
+                        throw new InvalidAccommodationDataException("CSV line was neither a hotel or hostel");
+                    }
                     count++;
                 }
                 if (fields.length == 7) { // Full Loading with every field loaded
@@ -83,6 +86,9 @@ public class AccommodationFileManager {
                     else if (fields[0].equals("HOSTEL")) {
                         accommodations[count] = new Hostel(fields[2], fields[3], Integer.parseInt(fields[4]), Integer.parseInt(fields[5]), Integer.parseInt(fields[6]));
                         accommodations[count].setAccommodationID(fields[1]);
+                    }
+                    else {
+                        throw new InvalidAccommodationDataException("CSV line was neither a hotel or hostel");
                     }
                     count++;
                 }

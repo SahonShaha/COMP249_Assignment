@@ -28,7 +28,7 @@ public class Trip implements Identifiable {
     public Trip() {}
 
     // Parametrized Constructor
-    public Trip(String destination, int durationInDays, int basePrice, Client client, Transportation transportation, Accommodation accommodation) throws InvalidTripDataException{
+    public Trip(String destination, int durationInDays, double basePrice, Client client, Transportation transportation, Accommodation accommodation) throws InvalidTripDataException{
         if (basePrice < 100) {
             throw new InvalidTripDataException("Base Price must be over 100.00$");
         }
@@ -39,7 +39,7 @@ public class Trip implements Identifiable {
             throw new InvalidTripDataException("Client, Transportation or Accommodation Object is null");
         }
 
-        // TODO Client ID must exist within the Client Array??
+
         this.tripID = "T" + count++;
         this.destination = destination;
         this.durationInDays = durationInDays;

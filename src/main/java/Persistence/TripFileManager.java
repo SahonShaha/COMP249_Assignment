@@ -102,7 +102,7 @@ public class TripFileManager {
                     if (accommodationIndex == -1) {
                         throw new EntityNotFoundException("Accommodation does not exist.");
                     }
-                    trips[count] = new Trip(fields[4], Integer.parseInt(fields[5]), Integer.parseInt(fields[6]), clients[clientIndex], transportations[transportationIndex], accommodations[accommodationIndex]);
+                    trips[count] = new Trip(fields[4], Integer.parseInt(fields[5]), Double.parseDouble(fields[6]), clients[clientIndex], transportations[transportationIndex], accommodations[accommodationIndex]);
                     trips[count].setTripID(fields[0]); // Since the parametrized constructor does not take an ID field
                     count++;
                 }
