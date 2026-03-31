@@ -21,44 +21,48 @@ public class TransportationFileManager {
             // First check if its a hotel or hostel
             if (transportations.get(i) instanceof Bus) {
                 printWriter.println(
-                        "BUS;" +
+                        /*"BUS;" +
                         transportations.get(i).getId() + ";" +
                         transportations.get(i).getCompanyName() + ";" +
                         transportations.get(i).getDepartureCity() + ";" +
                         transportations.get(i).getArrivalCity() + ";" +
                         ((Bus) transportations.get(i)).getBusCompany() + ";" +
                         ((Bus) transportations.get(i)).getStopsNum() + ";" +
-                        ((Bus) transportations.get(i)).getBaseFare()
+                        ((Bus) transportations.get(i)).getBaseFare()*/
+                        transportations.get(i).toCsvRow()
                 );
             }
             else if (transportations.get(i) instanceof Train) {
                 printWriter.println(
-                        "TRAIN;" +
+                        /*"TRAIN;" +
                         transportations.get(i).getId() + ";" +
                         transportations.get(i).getCompanyName() + ";" +
                         transportations.get(i).getDepartureCity() + ";" +
                         transportations.get(i).getArrivalCity() + ";" +
                         ((Train) transportations.get(i)).getTrainType() + ";" +
                         ((Train) transportations.get(i)).getSeatClass() + ";" +
-                        ((Train) transportations.get(i)).getFare()
+                        ((Train) transportations.get(i)).getFare()*/
+                        transportations.get(i).toCsvRow()
                 );
             }
             else if (transportations.get(i) instanceof Flight) {
                 printWriter.println(
-                        "FLIGHT;" +
+                        /*"FLIGHT;" +
                         transportations.get(i).getId() + ";" +
                         transportations.get(i).getCompanyName() + ";" +
                         transportations.get(i).getDepartureCity() + ";" +
                         transportations.get(i).getArrivalCity() + ";" +
                         ((Flight) transportations.get(i)).getAirlineName() + ";" +
                         ((Flight) transportations.get(i)).getLuggageAllowance() + ";" +
-                        ((Flight) transportations.get(i)).getTicketPrice()
+                        ((Flight) transportations.get(i)).getTicketPrice()*/
+                        transportations.get(i).toCsvRow()
                 );
             }
         }
         printWriter.close();
     }
 
+    // TODO LOADS SAME OBJECTS MULTIPLE TIMES
     public static int loadTransportations(List<Transportation> transportations, String filePath) throws IOException {
         int count = 0;
 

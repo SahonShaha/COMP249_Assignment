@@ -25,13 +25,14 @@ public class TripFileManager {
 
         for (int i = 0; i < tripCount; i++) {
             printWriter.println(
-                trips.get(i).getId() + ";" +
+                /*trips.get(i).getId() + ";" +
                 trips.get(i).getClientOnTrip().getId() + ";" +
                 trips.get(i).getAccommodation().getId() + ";" +
                 trips.get(i).getTransportation().getId() + ";" +
                 trips.get(i).getDestination() + ";" +
                 trips.get(i).getDurationInDays() + ";" +
-                trips.get(i).getBasePrice()
+                trips.get(i).getBasePrice()*/
+                    trips.get(i).toCsvRow()
             );
         }
 

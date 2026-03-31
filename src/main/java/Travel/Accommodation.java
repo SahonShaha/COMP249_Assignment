@@ -7,9 +7,10 @@
 package Travel;
 
 import Exceptions.InvalidAccommodationDataException;
+import Interfaces.CsvPersistable;
 import Interfaces.Identifiable;
 
-public abstract class Accommodation implements Identifiable {
+public abstract class Accommodation implements Identifiable, CsvPersistable {
     private static int count = 4001; // Represents the amount of objects created. Will be used to create the ID
     private String accommodationID;
     private String name;
@@ -75,6 +76,8 @@ public abstract class Accommodation implements Identifiable {
             return false;
         }
     }
+
+
 
     public abstract double calculateCost();
 

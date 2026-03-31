@@ -7,10 +7,11 @@
 package Client;
 
 import Exceptions.InvalidClientDataException;
+import Interfaces.CsvPersistable;
 import Interfaces.Identifiable;
 import Persistence.ErrorLogger;
 
-public class Client implements Identifiable {
+public class Client implements Identifiable, CsvPersistable {
     private static int count = 1001; // Represents the amount of objects created. Will be used to create the ID
     private String clientID;
     private String firstName;
@@ -72,6 +73,10 @@ public class Client implements Identifiable {
         else {
             return false;
         }
+    }
+
+    public String toCsvRow() {
+        return clientID + ";" + firstName + ";" + lastName + ";" + email;
     }
 
     public String getId() {

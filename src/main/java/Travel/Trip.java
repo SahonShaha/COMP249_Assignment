@@ -12,9 +12,10 @@ import Exceptions.InvalidClientDataException;
 import Exceptions.InvalidTransportDataException;
 import Exceptions.InvalidTripDataException;
 import Interfaces.Billable;
+import Interfaces.CsvPersistable;
 import Interfaces.Identifiable;
 
-public class Trip implements Identifiable, Billable {
+public class Trip implements Identifiable, Billable, CsvPersistable {
     private static int count = 2001; // Represents the amount of objects created. Will be used to create the ID
     private String tripID;
     private String destination;
@@ -164,6 +165,10 @@ public class Trip implements Identifiable, Billable {
         else {
             return false;
         }
+    }
+
+    public String toCsvRow() {
+        return tripID + ";" + clientOnTrip.getId() + ";" + accommodation.getId() + ";" + transportation.getId() + ";" + destination + ";" + durationInDays + ";" + basePrice + ";";
     }
 
     public String getId() {

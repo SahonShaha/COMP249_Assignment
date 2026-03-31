@@ -23,30 +23,33 @@ public class AccommodationFileManager {
             // First check if its a hotel or hostel
             if (accommodations.get(i) instanceof Hotel) {
                 printWriter.println(
-                    "HOTEL;" +
+                    /*"HOTEL;" +
                     accommodations.get(i).getId() + ";" +
                     accommodations.get(i).getName() + ";" +
                     accommodations.get(i).getLocation() + ";" +
                     accommodations.get(i).getPricePerNight() + ";" +
                     accommodations.get(i).getNumberOfNights() + ";" +
-                    ((Hotel) accommodations.get(i)).getStars()
+                    ((Hotel) accommodations.get(i)).getStars()*/
+                        accommodations.get(i).toCsvRow()
                 );
             }
             else if (accommodations.get(i) instanceof Hostel) {
                 printWriter.println(
-                    "HOSTEL;" +
+                    /*"HOSTEL;" +
                     accommodations.get(i).getId() + ";" +
                     accommodations.get(i).getName() + ";" +
                     accommodations.get(i).getLocation() + ";" +
                     accommodations.get(i).getPricePerNight() + ";" +
                     accommodations.get(i).getNumberOfNights() + ";" +
-                    ((Hostel) accommodations.get(i)).getSharedBeds()
+                    ((Hostel) accommodations.get(i)).getSharedBeds()*/
+                        accommodations.get(i).toCsvRow()
                 );
             }
         }
         printWriter.close();
     }
 
+    // TODO LOADS SAME OBJECTS TWICE
     public static int loadAccommodations(List<Accommodation> accommodations, String filePath) throws IOException {
         int count = 0;
 

@@ -55,6 +55,10 @@ public class Train extends Transportation{
         }
     }
 
+    public String toCsvRow() {
+        return "TRAIN;" +  super.getId() + ";" + super.getCompanyName() + ";" + super.getDepartureCity() + ";" + super.getArrivalCity()
+                + trainType + ";" + seatClass + ";" + fare;
+    }
 
     public double calculateCost() {
         int seatPrice = 0;

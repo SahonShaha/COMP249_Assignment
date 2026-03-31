@@ -63,6 +63,11 @@ public class Bus extends Transportation {
         }
     }
 
+    public String toCsvRow() {
+        return "BUS;" + super.getId() + ";" + super.getCompanyName() + ";" + super.getDepartureCity() + ";" + super.getArrivalCity()
+        + ";" + busCompany + ";" + stopsNum + ";" + baseFare;
+    }
+
     public double calculateCost() {
         // baseFare + a charge of 10cents per stop
         return baseFare + (stopsNum * 0.10);

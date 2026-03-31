@@ -54,6 +54,11 @@ public class Hotel extends Accommodation {
         }
     }
 
+    public String toCsvRow() {
+        return "HOTEL;" + super.getId() + ";" + super.getName() + ";" + super.getLocation() + ";" + super.getPricePerNight() +
+                ";" + super.getNumberOfNights() + ";" + stars;
+    }
+
     public double calculateCost() {
         // Service Fee of 5$ per night
         return ((this.getPricePerNight() * this.getNumberOfNights()) + (this.getNumberOfNights() * 5));

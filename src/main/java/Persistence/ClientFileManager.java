@@ -18,12 +18,7 @@ public class ClientFileManager {
         PrintWriter printWriter = new PrintWriter(fileWriter);
 
         for (int i = 0; i < clientCount; i++) {
-            printWriter.println(
-                clients.get(i).getId() + ";" +
-                clients.get(i).getFirstName() + ";" +
-                clients.get(i).getLastName() + ";" +
-                clients.get(i).getEmail()
-            );
+            printWriter.println(clients.get(i).toCsvRow());
         }
         printWriter.close();
     }

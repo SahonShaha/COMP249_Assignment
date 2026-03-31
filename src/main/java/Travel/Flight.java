@@ -61,6 +61,11 @@ public class Flight extends Transportation {
         }
     }
 
+    public String toCsvRow() {
+        return "FLIGHT;" + super.getId() + ";" + super.getCompanyName() + ";" + super.getDepartureCity() + ";" + super.getArrivalCity()
+                + airlineName + ";" + luggageAllowance + ";" + ticketPrice;
+    }
+
     public double calculateCost() {
         int luggageFee = 0;
         if (luggageAllowance > 50) {

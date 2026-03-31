@@ -6,9 +6,10 @@
 
 package Travel;
 
+import Interfaces.CsvPersistable;
 import Interfaces.Identifiable;
 
-public abstract class Transportation implements Identifiable {
+public abstract class Transportation implements Identifiable, CsvPersistable {
     private static int count = 3001; // Represents the amount of objects created. Will be used to create the ID
     private String transportationID;
     private String companyName;

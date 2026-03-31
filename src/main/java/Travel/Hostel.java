@@ -53,6 +53,11 @@ public class Hostel extends Accommodation {
         }
     }
 
+    public String toCsvRow() {
+        return "HOSTEL;" + super.getId() + ";" + super.getName() + ";" + super.getLocation() + ";" + super.getPricePerNight() +
+                ";" + super.getNumberOfNights() + ";" + sharedBeds;
+    }
+
     public double calculateCost() {
         // Discount of 10%
         return (this.getPricePerNight() * this.getNumberOfNights()) - (this.getPricePerNight() * 0.1);
