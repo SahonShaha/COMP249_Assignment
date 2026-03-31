@@ -10,55 +10,56 @@ import Exceptions.InvalidTransportDataException;
 import Travel.*;
 
 import java.io.*;
+import java.util.List;
 
 public class TransportationFileManager {
-    public static void saveTransportations(Transportation[] transportations, int transportationsCount, String filePath) throws IOException {
+    public static void saveTransportations(List<Transportation> transportations, int transportationsCount, String filePath) throws IOException {
         FileWriter fileWriter = new FileWriter(filePath);
         PrintWriter printWriter = new PrintWriter(fileWriter);
 
         for (int i = 0; i < transportationsCount; i++) {
             // First check if its a hotel or hostel
-            if (transportations[i] instanceof Bus) {
+            if (transportations.get(i) instanceof Bus) {
                 printWriter.println(
                         "BUS;" +
-                        transportations[i].getId() + ";" +
-                        transportations[i].getCompanyName() + ";" +
-                        transportations[i].getDepartureCity() + ";" +
-                        transportations[i].getArrivalCity() + ";" +
-                        ((Bus) transportations[i]).getBusCompany() + ";" +
-                        ((Bus) transportations[i]).getStopsNum() + ";" +
-                        ((Bus) transportations[i]).getBaseFare()
+                        transportations.get(i).getId() + ";" +
+                        transportations.get(i).getCompanyName() + ";" +
+                        transportations.get(i).getDepartureCity() + ";" +
+                        transportations.get(i).getArrivalCity() + ";" +
+                        ((Bus) transportations.get(i)).getBusCompany() + ";" +
+                        ((Bus) transportations.get(i)).getStopsNum() + ";" +
+                        ((Bus) transportations.get(i)).getBaseFare()
                 );
             }
-            else if (transportations[i] instanceof Train) {
+            else if (transportations.get(i) instanceof Train) {
                 printWriter.println(
                         "TRAIN;" +
-                        transportations[i].getId() + ";" +
-                        transportations[i].getCompanyName() + ";" +
-                        transportations[i].getDepartureCity() + ";" +
-                        transportations[i].getArrivalCity() + ";" +
-                        ((Train) transportations[i]).getTrainType() + ";" +
-                        ((Train) transportations[i]).getSeatClass() + ";" +
-                        ((Train) transportations[i]).getFare()
+                        transportations.get(i).getId() + ";" +
+                        transportations.get(i).getCompanyName() + ";" +
+                        transportations.get(i).getDepartureCity() + ";" +
+                        transportations.get(i).getArrivalCity() + ";" +
+                        ((Train) transportations.get(i)).getTrainType() + ";" +
+                        ((Train) transportations.get(i)).getSeatClass() + ";" +
+                        ((Train) transportations.get(i)).getFare()
                 );
             }
-            else if (transportations[i] instanceof Flight) {
+            else if (transportations.get(i) instanceof Flight) {
                 printWriter.println(
                         "FLIGHT;" +
-                        transportations[i].getId() + ";" +
-                        transportations[i].getCompanyName() + ";" +
-                        transportations[i].getDepartureCity() + ";" +
-                        transportations[i].getArrivalCity() + ";" +
-                        ((Flight) transportations[i]).getAirlineName() + ";" +
-                        ((Flight) transportations[i]).getLuggageAllowance() + ";" +
-                        ((Flight) transportations[i]).getTicketPrice()
+                        transportations.get(i).getId() + ";" +
+                        transportations.get(i).getCompanyName() + ";" +
+                        transportations.get(i).getDepartureCity() + ";" +
+                        transportations.get(i).getArrivalCity() + ";" +
+                        ((Flight) transportations.get(i)).getAirlineName() + ";" +
+                        ((Flight) transportations.get(i)).getLuggageAllowance() + ";" +
+                        ((Flight) transportations.get(i)).getTicketPrice()
                 );
             }
         }
         printWriter.close();
     }
 
-    public static int loadTransportations(Transportation[] transportations, String filePath) throws IOException {
+    public static int loadTransportations(List<Transportation> transportations, String filePath) throws IOException {
         int count = 0;
 
         BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath));
@@ -81,31 +82,31 @@ public class TransportationFileManager {
                     // Train: Fare + TrainType; SeatClass = "N/A"
                     // Bus: Price + StopsNum; busCompany = "N/A"
                     if (fields[0].equals("BUS")) {
-                        transportations[count] = new Bus(fields[2], fields[3], fields[4], "N/A", Integer.parseInt(fields[5]), Integer.parseInt(fields[6]));
-                        transportations[count].setTransportationID(fields[1]);
+                        transportations.add(new Bus(fields[2], fields[3], fields[4], "N/A", Integer.parseInt(fields[5]), Integer.parseInt(fields[6])));
+                        transportations.get(count).setTransportationID(fields[1]);
                     }
                     else if (fields[0].equals("TRAIN")) {
-                        transportations[count] = new Train(fields[2], fields[3], fields[4], fields[5], "N/A", Integer.parseInt(fields[6]));
-                        transportations[count].setTransportationID(fields[1]);
+                        transportations.add(new Train(fields[2], fields[3], fields[4], fields[5], "N/A", Integer.parseInt(fields[6])));
+                        transportations.get(count).setTransportationID(fields[1]);
                     }
                     else if (fields[0].equals("FLIGHT")) {
-                        transportations[count] = new Flight(fields[2], fields[3], fields[4], "N/A", Integer.parseInt(fields[5]), Integer.parseInt(fields[6]));
-                        transportations[count].setTransportationID(fields[1]);
+                        transportations.add(new Flight(fields[2], fields[3], fields[4], "N/A", Integer.parseInt(fields[5]), Integer.parseInt(fields[6])));
+                        transportations.get(count).setTransportationID(fields[1]);
                     }
                     count++;
                 }
                 if (fields.length == 8) { // Full Loading
                     if (fields[0].equals("BUS")) {
-                        transportations[count] = new Bus(fields[2], fields[3], fields[4], fields[5], Integer.parseInt(fields[6]), Integer.parseInt(fields[7]));
-                        transportations[count].setTransportationID(fields[1]);
+                        transportations.add(new Bus(fields[2], fields[3], fields[4], fields[5], Integer.parseInt(fields[6]), Integer.parseInt(fields[7])));
+                        transportations.get(count).setTransportationID(fields[1]);
                     }
                     else if (fields[0].equals("TRAIN")) {
-                        transportations[count] = new Train(fields[2], fields[3], fields[4], fields[5], fields[6], Integer.parseInt(fields[7]));
-                        transportations[count].setTransportationID(fields[1]);
+                        transportations.add(new Train(fields[2], fields[3], fields[4], fields[5], fields[6], Integer.parseInt(fields[7])));
+                        transportations.get(count).setTransportationID(fields[1]);
                     }
                     else if (fields[0].equals("FLIGHT")) {
-                        transportations[count] = new Flight(fields[2], fields[3], fields[4], fields[5], Integer.parseInt(fields[6]), Integer.parseInt(fields[7]));
-                        transportations[count].setTransportationID(fields[1]);
+                        transportations.add(new Flight(fields[2], fields[3], fields[4], fields[5], Integer.parseInt(fields[6]), Integer.parseInt(fields[7])));
+                        transportations.get(count).setTransportationID(fields[1]);
                     }
                     count++;
                 }

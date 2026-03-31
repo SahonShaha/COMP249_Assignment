@@ -10,24 +10,25 @@ import Client.Client;
 import Exceptions.InvalidClientDataException;
 
 import java.io.*;
+import java.util.List;
 
 public class ClientFileManager {
-    public static void saveClients(Client[] clients, int clientCount, String filePath) throws IOException {
+    public static void saveClients(List<Client> clients, int clientCount, String filePath) throws IOException {
         FileWriter fileWriter = new FileWriter(filePath);
         PrintWriter printWriter = new PrintWriter(fileWriter);
 
         for (int i = 0; i < clientCount; i++) {
             printWriter.println(
-                clients[i].getId() + ";" +
-                clients[i].getFirstName() + ";" +
-                clients[i].getLastName() + ";" +
-                clients[i].getEmail()
+                clients.get(i).getId() + ";" +
+                clients.get(i).getFirstName() + ";" +
+                clients.get(i).getLastName() + ";" +
+                clients.get(i).getEmail()
             );
         }
         printWriter.close();
     }
 
-    public static int loadClients(Client[] clients, String filePath) throws IOException {
+    public static int loadClients(List<Client> clients, String filePath) throws IOException {
         int count = 0;
 
         BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath));
@@ -45,8 +46,8 @@ public class ClientFileManager {
                     continue; // We go to the next line
                 }
 
-                clients[count] = new Client(fields[1], fields[2], fields[3]);
-                clients[count].setClientID(fields[0]); // Since the parametrized constructor does not take an ID field
+                clients.add(new Client(fields[1], fields[2], fields[3]));
+                clients.get(count).setClientID(fields[0]); // Since the parametrized constructor does not take an ID field
                 count++;
             }
             catch (InvalidClientDataException invalidClientDataException) {

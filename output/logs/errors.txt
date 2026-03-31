@@ -1,2 +1,0 @@
-1: Exceptions.InvalidAccommodationDataException: CSV line was neither a hotel or hostel
-2: Exceptions.EntityNotFoundException: Accommodation does not exist.

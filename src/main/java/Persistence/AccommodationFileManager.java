@@ -12,41 +12,42 @@ import Travel.Hostel;
 import Travel.Hotel;
 
 import java.io.*;
-// TODO LOADING BROKEN ACCOMMODATION FILES BREAKS EVERYTHING RATHER THAN JUST 1 CSV LINE
+import java.util.List;
+
 public class AccommodationFileManager {
-    public static void saveAccommodations(Accommodation[] accommodations, int accommodationCount, String filePath) throws IOException {
+    public static void saveAccommodations(List<Accommodation> accommodations, int accommodationCount, String filePath) throws IOException {
         FileWriter fileWriter = new FileWriter(filePath);
         PrintWriter printWriter = new PrintWriter(fileWriter);
 
         for (int i = 0; i < accommodationCount; i++) {
             // First check if its a hotel or hostel
-            if (accommodations[i] instanceof Hotel) {
+            if (accommodations.get(i) instanceof Hotel) {
                 printWriter.println(
                     "HOTEL;" +
-                    accommodations[i].getId() + ";" +
-                    accommodations[i].getName() + ";" +
-                    accommodations[i].getLocation() + ";" +
-                    accommodations[i].getPricePerNight() + ";" +
-                    accommodations[i].getNumberOfNights() + ";" +
-                    ((Hotel) accommodations[i]).getStars()
+                    accommodations.get(i).getId() + ";" +
+                    accommodations.get(i).getName() + ";" +
+                    accommodations.get(i).getLocation() + ";" +
+                    accommodations.get(i).getPricePerNight() + ";" +
+                    accommodations.get(i).getNumberOfNights() + ";" +
+                    ((Hotel) accommodations.get(i)).getStars()
                 );
             }
-            else if (accommodations[i] instanceof Hostel) {
+            else if (accommodations.get(i) instanceof Hostel) {
                 printWriter.println(
                     "HOSTEL;" +
-                    accommodations[i].getId() + ";" +
-                    accommodations[i].getName() + ";" +
-                    accommodations[i].getLocation() + ";" +
-                    accommodations[i].getPricePerNight() + ";" +
-                    accommodations[i].getNumberOfNights() + ";" +
-                    ((Hostel) accommodations[i]).getSharedBeds()
+                    accommodations.get(i).getId() + ";" +
+                    accommodations.get(i).getName() + ";" +
+                    accommodations.get(i).getLocation() + ";" +
+                    accommodations.get(i).getPricePerNight() + ";" +
+                    accommodations.get(i).getNumberOfNights() + ";" +
+                    ((Hostel) accommodations.get(i)).getSharedBeds()
                 );
             }
         }
         printWriter.close();
     }
 
-    public static int loadAccommodations(Accommodation[] accommodations, String filePath) throws IOException {
+    public static int loadAccommodations(List<Accommodation> accommodations, String filePath) throws IOException {
         int count = 0;
 
         BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath));
@@ -66,12 +67,12 @@ public class AccommodationFileManager {
 
                 if (fields.length == 6) { // PDF Style Format where the child class' last field is optional
                     if (fields[0].equals("HOTEL")) {
-                        accommodations[count] = new Hotel(fields[2], fields[3], Integer.parseInt(fields[4]), Integer.parseInt(fields[5]), 0);
-                        accommodations[count].setAccommodationID(fields[1]);
+                        accommodations.add(new Hotel(fields[2], fields[3], Integer.parseInt(fields[4]), Integer.parseInt(fields[5]), 0));
+                        accommodations.get(count).setAccommodationID(fields[1]);
                     }
                     else if (fields[0].equals("HOSTEL")) {
-                        accommodations[count] = new Hostel(fields[2], fields[3], Integer.parseInt(fields[4]), Integer.parseInt(fields[5]), 0);
-                        accommodations[count].setAccommodationID(fields[1]);
+                        accommodations.add(new Hostel(fields[2], fields[3], Integer.parseInt(fields[4]), Integer.parseInt(fields[5]), 0));
+                        accommodations.get(count).setAccommodationID(fields[1]);
                     }
                     else {
                         throw new InvalidAccommodationDataException("CSV line was neither a hotel or hostel");
@@ -80,12 +81,12 @@ public class AccommodationFileManager {
                 }
                 if (fields.length == 7) { // Full Loading with every field loaded
                     if (fields[0].equals("HOTEL")) {
-                        accommodations[count] = new Hotel(fields[2], fields[3], Integer.parseInt(fields[4]), Integer.parseInt(fields[5]), Integer.parseInt(fields[6]));
-                        accommodations[count].setAccommodationID(fields[1]);
+                        accommodations.add(new Hotel(fields[2], fields[3], Integer.parseInt(fields[4]), Integer.parseInt(fields[5]), Integer.parseInt(fields[6])));
+                        accommodations.get(count).setAccommodationID(fields[1]);
                     }
                     else if (fields[0].equals("HOSTEL")) {
-                        accommodations[count] = new Hostel(fields[2], fields[3], Integer.parseInt(fields[4]), Integer.parseInt(fields[5]), Integer.parseInt(fields[6]));
-                        accommodations[count].setAccommodationID(fields[1]);
+                        accommodations.add(new Hostel(fields[2], fields[3], Integer.parseInt(fields[4]), Integer.parseInt(fields[5]), Integer.parseInt(fields[6])));
+                        accommodations.get(count).setAccommodationID(fields[1]);
                     }
                     else {
                         throw new InvalidAccommodationDataException("CSV line was neither a hotel or hostel");

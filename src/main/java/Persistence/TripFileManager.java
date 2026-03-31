@@ -15,29 +15,30 @@ import Travel.Transportation;
 import Travel.Trip;
 
 import java.io.*;
+import java.util.List;
 
 public class TripFileManager {
 
-    public static void saveTrip(Trip[] trips,int tripCount, String filePath) throws IOException {
+    public static void saveTrip(List<Trip> trips, int tripCount, String filePath) throws IOException {
         FileWriter fileWriter = new FileWriter(filePath);
         PrintWriter printWriter = new PrintWriter(fileWriter);
 
         for (int i = 0; i < tripCount; i++) {
             printWriter.println(
-                trips[i].getId() + ";" +
-                trips[i].getClientOnTrip().getId() + ";" +
-                trips[i].getAccommodation().getId() + ";" +
-                trips[i].getTransportation().getId() + ";" +
-                trips[i].getDestination() + ";" +
-                trips[i].getDurationInDays() + ";" +
-                trips[i].getBasePrice()
+                trips.get(i).getId() + ";" +
+                trips.get(i).getClientOnTrip().getId() + ";" +
+                trips.get(i).getAccommodation().getId() + ";" +
+                trips.get(i).getTransportation().getId() + ";" +
+                trips.get(i).getDestination() + ";" +
+                trips.get(i).getDurationInDays() + ";" +
+                trips.get(i).getBasePrice()
             );
         }
 
         printWriter.close();
     }
 
-    public static int loadTrip(Trip[] trips, String filePath, Client[] clients, Accommodation[] accommodations, Transportation[] transportations) throws IOException {
+    public static int loadTrip(List<Trip> trips, String filePath, List<Client> clients, List<Accommodation> accommodations, List<Transportation> transportations) throws IOException {
         int count = 0;
 
         BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath));
@@ -57,36 +58,24 @@ public class TripFileManager {
 
                 // Find Client, Accommodation and Transportation Objects
                 int clientIndex = -1;
-                for (int i = 0; i < clients.length; i++) {
-                    if (clients[i] == null) { // Once it hits null, that means all available elements have been printed
-                        break;
-                    }
-
-                    if (clients[i].getId().equals(fields[1])) {
+                for (int i = 0; i < clients.size(); i++) {
+                    if (clients.get(i).getId().equals(fields[1])) {
                         clientIndex = i;
                         break;
                     }
                 }
 
                 int accommodationIndex = -1;
-                for (int i = 0; i < accommodations.length; i++) {
-                    if (accommodations[i] == null) { // Once it hits null, that means all available elements have been printed
-                        break;
-                    }
-
-                    if (accommodations[i].getId().equals(fields[2])) {
+                for (int i = 0; i < accommodations.size(); i++) {
+                    if (accommodations.get(i).getId().equals(fields[2])) {
                         accommodationIndex = i;
                         break;
                     }
                 }
 
                 int transportationIndex = -1;
-                for (int i = 0; i < transportations.length; i++) {
-                    if (transportations[i] == null) { // Once it hits null, that means all available elements have been printed
-                        break;
-                    }
-
-                    if (transportations[i].getId().equals(fields[3])) {
+                for (int i = 0; i < transportations.size(); i++) {
+                    if (transportations.get(i).getId().equals(fields[3])) {
                         transportationIndex = i;
                         break;
                     }
@@ -102,8 +91,8 @@ public class TripFileManager {
                     if (accommodationIndex == -1) {
                         throw new EntityNotFoundException("Accommodation does not exist.");
                     }
-                    trips[count] = new Trip(fields[4], Integer.parseInt(fields[5]), Double.parseDouble(fields[6]), clients[clientIndex], transportations[transportationIndex], accommodations[accommodationIndex]);
-                    trips[count].setTripID(fields[0]); // Since the parametrized constructor does not take an ID field
+                    trips.add(new Trip(fields[4], Integer.parseInt(fields[5]), Double.parseDouble(fields[6]), clients.get(clientIndex), transportations.get(transportationIndex), accommodations.get(accommodationIndex)));
+                    trips.get(count).setTripID(fields[0]); // Since the parametrized constructor does not take an ID field
                     count++;
                 }
                 catch (EntityNotFoundException entityNotFoundException) {

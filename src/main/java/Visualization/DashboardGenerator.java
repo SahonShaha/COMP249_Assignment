@@ -30,8 +30,8 @@ import java.io.PrintWriter;
 import java.io.IOException;
 
 public class DashboardGenerator {
-    private static int validClientCount = SmartTravelService.countValidObjects(SmartTravelService.getClients());
-    private static int validTripCount = SmartTravelService.countValidObjects(SmartTravelService.getTrips());
+    private static int validClientCount = SmartTravelService.getClients().size();
+    private static int validTripCount = SmartTravelService.getTrips().size();
 
 /**
 	 * Main entry point for dashboard generation.
@@ -52,9 +52,9 @@ public class DashboardGenerator {
         new File("output").mkdirs();
         
         // 1. Generate charts FIRST (your existing code)
-        TripChartGenerator.generateCostBarChart(SmartTravelService.getTrips(), validTripCount);
-        TripChartGenerator.generateDestinationPieChart(SmartTravelService.getTrips(), validTripCount);
-        TripChartGenerator.generateDurationLineChart(SmartTravelService.getTrips(), validTripCount);
+        TripChartGenerator.generateCostBarChart(SmartTravelService.getTrips().toArray(new Trip[0]), validTripCount);
+        TripChartGenerator.generateDestinationPieChart(SmartTravelService.getTrips().toArray(new Trip[0]), validTripCount);
+        TripChartGenerator.generateDurationLineChart(SmartTravelService.getTrips().toArray(new Trip[0]), validTripCount);
         
         // 2. Generate HTML dashboard
         generateHTMLDashboard(service);
@@ -114,7 +114,7 @@ public class DashboardGenerator {
         out.println("        <header>");
         out.println("            <h1>SmartTravel Dashboard</h1>");
         out.println("            <p>A2: File I/O + Exceptions | " + 
-                   SmartTravelService.countValidObjects(SmartTravelService.getClients()) + " Clients | " + validTripCount + " Trips</p>");
+                   SmartTravelService.getClients().size() + " Clients | " + validTripCount + " Trips</p>");
         out.println("        </header>");
     }
 
@@ -138,11 +138,11 @@ public class DashboardGenerator {
         out.println("                <tbody>");
         
         for (int i = 0; i < validClientCount; i++) {
-            Client client = SmartTravelService.getClients()[i];
+            Client client = SmartTravelService.getClients().get(i);
             double spent = 0;
             // Find trip the client is associated to and calculate total spent
             for (int j = 0; j < validTripCount; j++) {
-                if (SmartTravelService.getTrips()[j].getClientOnTrip().getId().equals(client.getId())) {
+                if (SmartTravelService.getTrips().get(j).getClientOnTrip().getId().equals(client.getId())) {
                     spent = SmartTravelService.calculateTripTotal(j);
                 }
             }
@@ -179,7 +179,7 @@ public class DashboardGenerator {
         out.println("                <tbody>");
         
         for (int i = 0; i < validTripCount; i++) {
-            Trip trip = SmartTravelService.getTrips()[i];
+            Trip trip = SmartTravelService.getTrips().get(i);
             out.println("                    <tr>");
             out.println("                        <td><strong>" + trip.getId() + "</strong></td>");
             out.println("                        <td>" + trip.getClientOnTrip().getId() + "</td>");
@@ -253,7 +253,7 @@ public class DashboardGenerator {
         // 2. Average Duration (days)
         double totalDays = 0.0, avgDuration =0.0;
         for (int i = 0; i < validTripCount; i++) {
-            totalDays += SmartTravelService.getTrips()[i].getDurationInDays();
+            totalDays += SmartTravelService.getTrips().get(i).getDurationInDays();
         }
         avgDuration = totalDays / validTripCount;
     	
@@ -329,7 +329,7 @@ public class DashboardGenerator {
         int highestVisits = -1;
 
         for (int i = 0; i < validTripCount; i++) {
-            String currentDestination = SmartTravelService.getTrips()[i].getDestination();
+            String currentDestination = SmartTravelService.getTrips().get(i).getDestination();
             int currentVisits = countDestinationVisits(service, currentDestination);
 
             if (currentVisits > highestVisits) {
@@ -349,7 +349,7 @@ public class DashboardGenerator {
     private static int countDestinationVisits(SmartTravelService service, String destination) {
         int count = 0;
         for (int i = 0; i < validTripCount; i++) {
-            if (SmartTravelService.getTrips()[i].getDestination().equals(destination)) {
+            if (SmartTravelService.getTrips().get(i).getDestination().equals(destination)) {
                 count++;
             }
         }
