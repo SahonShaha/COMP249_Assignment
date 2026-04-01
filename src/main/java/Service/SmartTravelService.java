@@ -44,17 +44,26 @@ public class SmartTravelService {
     }
 
     public static void loadAllData(String filename) throws IOException {
-        ClientFileManager.loadClients(clients, (filename + "clients.csv"));
+        /*ClientFileManager.loadClients(clients, (filename + "clients.csv"));
         AccommodationFileManager.loadAccommodations(accommodations, (filename + "accommodations.csv"));
         TransportationFileManager.loadTransportations(transportations, (filename + "transportations.csv"));
-        TripFileManager.loadTrip(trips, (filename + "trips.csv"), clients, accommodations, transportations);
+        TripFileManager.loadTrip(trips, (filename + "trips.csv"), clients, accommodations, transportations);*/
+        clients.addAll(GenericFileManager.load(filename + "clients.csv", Client.class));
+        accommodations.addAll(GenericFileManager.load(filename + "accommodations.csv", Accommodation.class));
+        transportations.addAll(GenericFileManager.load(filename + "transportations.csv", Transportation.class));
+        trips.addAll(GenericFileManager.load(filename + "trips.csv", Trip.class));
+
     }
 
     public static void saveAllData(String filename) throws IOException {
-        ClientFileManager.saveClients(clients, clients.size(), (filename + "clients.csv"));
+        /*ClientFileManager.saveClients(clients, clients.size(), (filename + "clients.csv"));
         AccommodationFileManager.saveAccommodations(accommodations, accommodations.size(), (filename + "accommodations.csv"));
         TransportationFileManager.saveTransportations(transportations, transportations.size(), (filename + "transportations.csv"));
-        TripFileManager.saveTrip(trips, trips.size(), (filename + "trips.csv"));
+        TripFileManager.saveTrip(trips, trips.size(), (filename + "trips.csv"));*/
+        GenericFileManager.save(clients, filename + "clients.csv");
+        GenericFileManager.save(accommodations, filename + "accommodations.csv");
+        GenericFileManager.save(transportations, filename + "transportations.csv");
+        GenericFileManager.save(trips, filename + "trips.csv");
     }
 
     public static double calculateTripTotal(int index) {
