@@ -68,6 +68,21 @@ public class Bus extends Transportation {
         + ";" + busCompany + ";" + stopsNum + ";" + baseFare;
     }
 
+    public static Bus fromCsvRow(String csvLine) throws InvalidTransportDataException {
+        String[] fields = csvLine.split(";");
+        if (fields.length == 7) {
+            Bus bus = new Bus(fields[2], fields[3], fields[4], "N/A", Integer.parseInt(fields[5]), Integer.parseInt(fields[6]));
+            bus.setTransportationID(fields[1]);
+            return bus;
+        } else if (fields.length == 8) {
+            Bus bus = new Bus(fields[2], fields[3], fields[4], fields[5], Integer.parseInt(fields[6]), Integer.parseInt(fields[7]));
+            bus.setTransportationID(fields[1]);
+            return bus;
+        } else {
+            throw new InvalidTransportDataException("Invalid Line Format");
+        }
+    }
+
     public double calculateCost() {
         // baseFare + a charge of 10cents per stop
         return baseFare + (stopsNum * 0.10);

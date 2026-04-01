@@ -62,7 +62,6 @@ public class TransportationFileManager {
         printWriter.close();
     }
 
-    // TODO LOADS SAME OBJECTS MULTIPLE TIMES
     public static int loadTransportations(List<Transportation> transportations, String filePath) throws IOException {
         int count = 0;
 
@@ -72,9 +71,9 @@ public class TransportationFileManager {
         while ((currentLine = bufferedReader.readLine()) != null) { // .readLine iterates to the next line after it is called. So we must save that value in a variable.
             // Split the line into four parts and add it to an array
             // We create a new object with its fields being something from the array
-
+            count++;
             try {
-                String[] fields = currentLine.split(";"); // Splits a line at every ';'
+                /*String[] fields = currentLine.split(";"); // Splits a line at every ';'
 
                 if (fields.length != 7 && fields.length != 8) { // If the split array has more than 7 elements
                     ErrorLogger.log(new Exception("Unable to read line " + (count + 1)));
@@ -113,7 +112,8 @@ public class TransportationFileManager {
                         transportations.get(count).setTransportationID(fields[1]);
                     }
                     count++;
-                }
+                }*/
+                transportations.add(Transportation.fromCsvRow(currentLine));
             }
             catch (InvalidTransportDataException invalidAccommodationDataException) {
                 System.out.println(invalidAccommodationDataException.getMessage());

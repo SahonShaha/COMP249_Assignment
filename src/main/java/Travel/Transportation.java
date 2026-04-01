@@ -6,6 +6,7 @@
 
 package Travel;
 
+import Exceptions.InvalidTransportDataException;
 import Interfaces.CsvPersistable;
 import Interfaces.Identifiable;
 
@@ -59,6 +60,21 @@ public abstract class Transportation implements Identifiable, CsvPersistable {
         else {
             return false;
         }
+    }
+
+    public static Transportation fromCsvRow(String csvLine) throws InvalidTransportDataException {
+        String[] fields = csvLine.split(";");
+
+        if (fields.length != 7 && fields.length != 8) {
+            throw new InvalidTransportDataException("Invalid Line Format");
+        }
+
+        return switch (fields[0]) {
+            case "BUS"    -> Bus.fromCsvRow(csvLine);
+            case "TRAIN"  -> Train.fromCsvRow(csvLine);
+            case "FLIGHT" -> Flight.fromCsvRow(csvLine);
+            default -> throw new InvalidTransportDataException("CSV line was neither a bus, train or flight");
+        };
     }
 
     public abstract double calculateCost();

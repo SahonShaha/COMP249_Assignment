@@ -77,7 +77,19 @@ public abstract class Accommodation implements Identifiable, CsvPersistable {
         }
     }
 
+    public static Accommodation fromCsvRow(String csvLine) throws InvalidAccommodationDataException {
+        String[] fields = csvLine.split(";");
 
+        if (fields.length != 6 && fields.length != 7) { // Verification
+            throw new InvalidAccommodationDataException("Invalid Line Format");
+        }
+
+        return switch (fields[0]) { // Checks whether its hotel or hostel and calls that method
+            case "HOTEL"  -> Hotel.fromCsvRow(csvLine);
+            case "HOSTEL" -> Hostel.fromCsvRow(csvLine);
+            default -> throw new InvalidAccommodationDataException("CSV line was neither a hotel or hostel");
+        };
+    }
 
     public abstract double calculateCost();
 

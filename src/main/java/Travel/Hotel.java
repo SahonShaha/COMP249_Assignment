@@ -59,6 +59,22 @@ public class Hotel extends Accommodation {
                 ";" + super.getNumberOfNights() + ";" + stars;
     }
 
+    public static Hotel fromCsvRow(String csvLine) throws InvalidAccommodationDataException {
+        String[] fields = csvLine.split(";");
+
+        if (fields.length == 6) {
+            Hotel hotel = new Hotel(fields[2], fields[3], Integer.parseInt(fields[4]), Integer.parseInt(fields[5]), 0);
+            hotel.setAccommodationID(fields[1]);
+            return hotel;
+        } else if (fields.length == 7) {
+            Hotel hotel = new Hotel(fields[2], fields[3], Integer.parseInt(fields[4]), Integer.parseInt(fields[5]), Integer.parseInt(fields[6]));
+            hotel.setAccommodationID(fields[1]);
+            return hotel;
+        } else {
+            throw new InvalidAccommodationDataException("Invalid Line Format");
+        }
+    }
+
     public double calculateCost() {
         // Service Fee of 5$ per night
         return ((this.getPricePerNight() * this.getNumberOfNights()) + (this.getNumberOfNights() * 5));

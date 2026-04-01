@@ -32,8 +32,9 @@ public class ClientFileManager {
         while ((currentLine = bufferedReader.readLine()) != null) { // .readLine iterates to the next line after it is called. So we must save that value in a variable.
             // Split the line into four parts and add it to an array
             // We create a new object with its fields being something from the array
+            count++;
 
-            try {
+            /*try {
                 String[] fields = currentLine.split(";"); // Splits a line at every ';'
 
                 if (fields.length != 4) { // If the split array has more than 5 elements
@@ -45,6 +46,11 @@ public class ClientFileManager {
                 clients.get(count).setClientID(fields[0]); // Since the parametrized constructor does not take an ID field
                 count++;
             }
+            catch (InvalidClientDataException invalidClientDataException) {
+                System.out.println(invalidClientDataException.getMessage());
+                ErrorLogger.log(invalidClientDataException);
+            }*/
+            try {clients.add(Client.fromCsvRow(currentLine));}
             catch (InvalidClientDataException invalidClientDataException) {
                 System.out.println(invalidClientDataException.getMessage());
                 ErrorLogger.log(invalidClientDataException);

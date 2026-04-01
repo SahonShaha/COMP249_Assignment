@@ -10,6 +10,7 @@ import Client.Client;
 import Exceptions.EntityNotFoundException;
 import Exceptions.InvalidClientDataException;
 import Exceptions.InvalidTripDataException;
+import Service.SmartTravelService;
 import Travel.Accommodation;
 import Travel.Transportation;
 import Travel.Trip;
@@ -48,9 +49,9 @@ public class TripFileManager {
         while ((currentLine = bufferedReader.readLine()) != null) { // .readLine iterates to the next line after it is called. So we must save that value in a variable.
             // Split the line into four parts and add it to an array
             // We create a new object with its fields being something from the array
-
+            count++;
             try {
-                String[] fields = currentLine.split(";"); // Splits a line at every ';'
+                /*String[] fields = currentLine.split(";"); // Splits a line at every ';'
 
                 if (fields.length != 7) { // If the split array has more than 5 elements
                     ErrorLogger.log(new Exception("Unable to read line " + (count + 1)));
@@ -65,6 +66,7 @@ public class TripFileManager {
                         break;
                     }
                 }
+                clientIndex = SmartTravelService.findById(clients, fields[1]);
 
                 int accommodationIndex = -1;
                 for (int i = 0; i < accommodations.size(); i++) {
@@ -73,6 +75,7 @@ public class TripFileManager {
                         break;
                     }
                 }
+                accommodationIndex = SmartTravelService.findById(accommodations, fields[2]);
 
                 int transportationIndex = -1;
                 for (int i = 0; i < transportations.size(); i++) {
@@ -81,6 +84,7 @@ public class TripFileManager {
                         break;
                     }
                 }
+                transportationIndex = SmartTravelService.findById(transportations, fields[3]);
 
                 try {
                     if (clientIndex == -1) {
@@ -99,11 +103,15 @@ public class TripFileManager {
                 catch (EntityNotFoundException entityNotFoundException) {
                     System.out.println(entityNotFoundException.getMessage());
                     ErrorLogger.log(entityNotFoundException);
-                }
+                }*/
+                trips.add(Trip.fromCsvRow(currentLine, clients, accommodations, transportations));
             }
             catch (InvalidTripDataException invalidTripDataException) {
                 System.out.println(invalidTripDataException.getMessage());
                 ErrorLogger.log(invalidTripDataException);
+            }
+            catch (EntityNotFoundException entityNotFoundException) {
+                System.out.println(entityNotFoundException.getMessage());
             }
         }
 

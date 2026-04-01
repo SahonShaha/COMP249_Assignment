@@ -83,10 +83,7 @@ public class Main {
                             SmartTravelService.showAll(clients);
                             System.out.println("==============================TRANSPORTATIONS==============================");
                             SmartTravelService.showAll(transportations);
-                            SmartTravelService.showAll(transportations);
-                            SmartTravelService.showAll(transportations);
                             System.out.println("==============================ACCOMMODATIONS==============================");
-                            SmartTravelService.showAll(accommodations);
                             SmartTravelService.showAll(accommodations);
                             System.out.println("==============================TRIPS==============================");
                             SmartTravelService.showAll(trips);

@@ -6,6 +6,8 @@
 
 package Travel;
 
+import Exceptions.InvalidTransportDataException;
+
 public class Train extends Transportation{
     private String trainType;
     private String seatClass;
@@ -58,6 +60,21 @@ public class Train extends Transportation{
     public String toCsvRow() {
         return "TRAIN;" +  super.getId() + ";" + super.getCompanyName() + ";" + super.getDepartureCity() + ";" + super.getArrivalCity()
                 + trainType + ";" + seatClass + ";" + fare;
+    }
+
+    public static Train fromCsvRow(String csvLine) throws InvalidTransportDataException {
+        String[] fields = csvLine.split(";");
+        if (fields.length == 7) {
+            Train train = new Train(fields[2], fields[3], fields[4], fields[5], "N/A", Integer.parseInt(fields[6]));
+            train.setTransportationID(fields[1]);
+            return train;
+        } else if (fields.length == 8) {
+            Train train = new Train(fields[2], fields[3], fields[4], fields[5], fields[6], Integer.parseInt(fields[7]));
+            train.setTransportationID(fields[1]);
+            return train;
+        } else {
+            throw new InvalidTransportDataException("Invalid Line Format");
+        }
     }
 
     public double calculateCost() {

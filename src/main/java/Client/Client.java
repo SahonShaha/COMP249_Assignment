@@ -11,6 +11,8 @@ import Interfaces.CsvPersistable;
 import Interfaces.Identifiable;
 import Persistence.ErrorLogger;
 
+import java.io.IOException;
+
 public class Client implements Identifiable, CsvPersistable {
     private static int count = 1001; // Represents the amount of objects created. Will be used to create the ID
     private String clientID;
@@ -77,6 +79,18 @@ public class Client implements Identifiable, CsvPersistable {
 
     public String toCsvRow() {
         return clientID + ";" + firstName + ";" + lastName + ";" + email;
+    }
+
+    public static Client fromCsvRow(String csvLine) throws InvalidClientDataException {
+        String[] fields = csvLine.split(";");
+
+        if (fields.length != 4) {
+            throw new InvalidClientDataException("Invalid Line Format");
+        }
+
+        Client newClient = new Client(fields[1], fields[2], fields[3]);
+        newClient.setClientID(fields[0]);
+        return newClient;
     }
 
     public String getId() {

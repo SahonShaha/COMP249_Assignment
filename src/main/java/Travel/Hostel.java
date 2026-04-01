@@ -58,6 +58,22 @@ public class Hostel extends Accommodation {
                 ";" + super.getNumberOfNights() + ";" + sharedBeds;
     }
 
+    public static Hostel fromCsvRow(String csvLine) throws InvalidAccommodationDataException {
+        String[] fields = csvLine.split(";");
+
+        if (fields.length == 6) {
+            Hostel hostel = new Hostel(fields[2], fields[3], Integer.parseInt(fields[4]), Integer.parseInt(fields[5]), 0);
+            hostel.setAccommodationID(fields[1]);
+            return hostel;
+        } else if (fields.length == 7) {
+            Hostel hostel = new Hostel(fields[2], fields[3], Integer.parseInt(fields[4]), Integer.parseInt(fields[5]), Integer.parseInt(fields[6]));
+            hostel.setAccommodationID(fields[1]);
+            return hostel;
+        } else {
+            throw new InvalidAccommodationDataException("Invalid Line Format");
+        }
+    }
+
     public double calculateCost() {
         // Discount of 10%
         return (this.getPricePerNight() * this.getNumberOfNights()) - (this.getPricePerNight() * 0.1);

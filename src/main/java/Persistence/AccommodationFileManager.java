@@ -49,7 +49,6 @@ public class AccommodationFileManager {
         printWriter.close();
     }
 
-    // TODO LOADS SAME OBJECTS TWICE
     public static int loadAccommodations(List<Accommodation> accommodations, String filePath) throws IOException {
         int count = 0;
 
@@ -59,9 +58,9 @@ public class AccommodationFileManager {
         while ((currentLine = bufferedReader.readLine()) != null) { // .readLine iterates to the next line after it is called. So we must save that value in a variable.
             // Split the line into four parts and add it to an array
             // We create a new object with its fields being something from the array
-
+            count++;
             try {
-                String[] fields = currentLine.split(";"); // Splits a line at every ';'
+                /*String[] fields = currentLine.split(";"); // Splits a line at every ';'
 
                 if (fields.length != 7 && fields.length != 6) { // If the split array has more than 7 elements
                     ErrorLogger.log(new Exception("Unable to read line " + (count + 1)));
@@ -95,7 +94,8 @@ public class AccommodationFileManager {
                         throw new InvalidAccommodationDataException("CSV line was neither a hotel or hostel");
                     }
                     count++;
-                }
+                }*/
+                accommodations.add(Accommodation.fromCsvRow(currentLine));
             }
             catch (InvalidAccommodationDataException invalidAccommodationDataException) {
                 System.out.println(invalidAccommodationDataException.getMessage());

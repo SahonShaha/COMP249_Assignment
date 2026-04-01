@@ -66,6 +66,21 @@ public class Flight extends Transportation {
                 + airlineName + ";" + luggageAllowance + ";" + ticketPrice;
     }
 
+    public static Flight fromCsvRow(String csvLine) throws InvalidTransportDataException {
+        String[] fields = csvLine.split(";");
+        if (fields.length == 7) {
+            Flight flight = new Flight(fields[2], fields[3], fields[4], "N/A", Integer.parseInt(fields[5]), Integer.parseInt(fields[6]));
+            flight.setTransportationID(fields[1]);
+            return flight;
+        } else if (fields.length == 8) {
+            Flight flight = new Flight(fields[2], fields[3], fields[4], fields[5], Integer.parseInt(fields[6]), Integer.parseInt(fields[7]));
+            flight.setTransportationID(fields[1]);
+            return flight;
+        } else {
+            throw new InvalidTransportDataException("Invalid Line Format");
+        }
+    }
+
     public double calculateCost() {
         int luggageFee = 0;
         if (luggageAllowance > 50) {

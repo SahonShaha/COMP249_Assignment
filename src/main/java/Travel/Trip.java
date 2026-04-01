@@ -7,13 +7,13 @@
 package Travel;
 
 import Client.Client;
-import Exceptions.InvalidAccommodationDataException;
-import Exceptions.InvalidClientDataException;
-import Exceptions.InvalidTransportDataException;
-import Exceptions.InvalidTripDataException;
+import Exceptions.*;
 import Interfaces.Billable;
 import Interfaces.CsvPersistable;
 import Interfaces.Identifiable;
+import Service.SmartTravelService;
+
+import java.util.List;
 
 public class Trip implements Identifiable, Billable, CsvPersistable {
     private static int count = 2001; // Represents the amount of objects created. Will be used to create the ID
@@ -169,6 +169,34 @@ public class Trip implements Identifiable, Billable, CsvPersistable {
 
     public String toCsvRow() {
         return tripID + ";" + clientOnTrip.getId() + ";" + accommodation.getId() + ";" + transportation.getId() + ";" + destination + ";" + durationInDays + ";" + basePrice + ";";
+    }
+
+    public static Trip fromCsvRow(String csvLine, List<Client> clients, List<Accommodation> accommodations, List<Transportation> transportations) throws InvalidTripDataException, EntityNotFoundException {
+        String[] fields = csvLine.split(";");
+
+        if (fields.length != 7) {
+            throw new InvalidTripDataException("Invalid Line Format");
+        }
+
+        int clientIndex = SmartTravelService.findById(clients, fields[1]);
+        int accommodationIndex = SmartTravelService.findById(accommodations, fields[2]);
+        int transportationIndex = SmartTravelService.findById(transportations, fields[3]);
+
+        if (clientIndex == -1) {
+            throw new EntityNotFoundException("Client does not exist.");
+        }
+        if (accommodationIndex == -1) {
+            throw new EntityNotFoundException("Accommodation does not exist.");
+        }
+        if (transportationIndex == -1) {
+            throw new EntityNotFoundException("Transportation does not exist.");
+        }
+
+        Trip newTrip = new Trip(fields[4], Integer.parseInt(fields[5]), Double.parseDouble(fields[6]),
+                clients.get(clientIndex), transportations.get(transportationIndex), accommodations.get(accommodationIndex));
+        newTrip.setTripID(fields[0]);
+
+        return newTrip;
     }
 
     public String getId() {
