@@ -10,7 +10,7 @@ import Exceptions.InvalidAccommodationDataException;
 import Interfaces.CsvPersistable;
 import Interfaces.Identifiable;
 
-public abstract class Accommodation implements Identifiable, CsvPersistable {
+public abstract class Accommodation implements Identifiable, CsvPersistable, Comparable<Accommodation> {
     private static int count = 4001; // Represents the amount of objects created. Will be used to create the ID
     private String accommodationID;
     private String name;
@@ -92,6 +92,11 @@ public abstract class Accommodation implements Identifiable, CsvPersistable {
     }
 
     public abstract double calculateCost();
+
+    public int compareTo(Accommodation other) {
+        // Descending order, so we compare other to this (reversed)
+        return Integer.compare(other.getPricePerNight(), this.getPricePerNight());
+    }
 
     public String getId() {
         return accommodationID;

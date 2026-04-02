@@ -10,7 +10,7 @@ import Exceptions.InvalidTransportDataException;
 import Interfaces.CsvPersistable;
 import Interfaces.Identifiable;
 
-public abstract class Transportation implements Identifiable, CsvPersistable {
+public abstract class Transportation implements Identifiable, CsvPersistable, Comparable<Transportation> {
     private static int count = 3001; // Represents the amount of objects created. Will be used to create the ID
     private String transportationID;
     private String companyName;
@@ -76,6 +76,13 @@ public abstract class Transportation implements Identifiable, CsvPersistable {
             default -> throw new InvalidTransportDataException("CSV line was neither a bus, train or flight");
         };
     }
+
+    public int compareTo(Transportation other) {
+        return Integer.compare(other.getBaseFare(), this.getBaseFare());
+    }
+
+    // Helper Abstract Method to help compareTo to work
+    public abstract int getBaseFare();
 
     public abstract double calculateCost();
 

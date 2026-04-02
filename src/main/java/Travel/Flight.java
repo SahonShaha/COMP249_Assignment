@@ -11,7 +11,7 @@ import Exceptions.InvalidTransportDataException;
 public class Flight extends Transportation {
     private String airlineName;
     private int luggageAllowance;
-    private int ticketPrice;
+    private int baseFare;
 
     // Default Constructor
     public Flight(){}
@@ -25,7 +25,7 @@ public class Flight extends Transportation {
         }
         this.airlineName = airlineName;
         this.luggageAllowance = luggageAllowance;
-        this.ticketPrice = ticketPrice;
+        this.baseFare = ticketPrice;
     }
 
     // Copy Constructor
@@ -33,7 +33,7 @@ public class Flight extends Transportation {
         super(flight);
         this.airlineName = flight.getAirlineName();
         this.luggageAllowance = flight.getLuggageAllowance();
-        this.ticketPrice = flight.getTicketPrice();
+        this.baseFare = flight.getBaseFare();
     }
 
     public String toString() {
@@ -63,7 +63,7 @@ public class Flight extends Transportation {
 
     public String toCsvRow() {
         return "FLIGHT;" + super.getId() + ";" + super.getCompanyName() + ";" + super.getDepartureCity() + ";" + super.getArrivalCity()
-                + airlineName + ";" + luggageAllowance + ";" + ticketPrice;
+                + airlineName + ";" + luggageAllowance + ";" + baseFare;
     }
 
     public static Flight fromCsvRow(String csvLine) throws InvalidTransportDataException {
@@ -90,7 +90,7 @@ public class Flight extends Transportation {
             luggageFee = 25;
         }
 
-        return ticketPrice + luggageFee;
+        return baseFare + luggageFee;
     }
 
     public String getAirlineName() {
@@ -112,11 +112,11 @@ public class Flight extends Transportation {
         this.luggageAllowance = luggageAllowance;
     }
 
-    public int getTicketPrice() {
-        return ticketPrice;
+    public int getBaseFare() {
+        return baseFare;
     }
 
     public void setTicketPrice(int ticketPrice) {
-        this.ticketPrice = ticketPrice;
+        this.baseFare = ticketPrice;
     }
 }

@@ -11,7 +11,7 @@ import Exceptions.InvalidTransportDataException;
 public class Train extends Transportation{
     private String trainType;
     private String seatClass;
-    private int fare;
+    private int baseFare;
 
     // Default Constructor
     public Train() {super();}
@@ -21,7 +21,7 @@ public class Train extends Transportation{
         super(companyName, departureCity, arrivalCity);
         this.trainType = trainType;
         this.seatClass = seatClass;
-        this.fare = fare;
+        this.baseFare = fare;
     }
 
     // Copy Constructor
@@ -29,7 +29,7 @@ public class Train extends Transportation{
         super(train);
         this.trainType = train.getTrainType();
         this.seatClass = train.getSeatClass();
-        this.fare = train.getFare();
+        this.baseFare = train.getBaseFare();
     }
 
     public String toString() {
@@ -59,7 +59,7 @@ public class Train extends Transportation{
 
     public String toCsvRow() {
         return "TRAIN;" +  super.getId() + ";" + super.getCompanyName() + ";" + super.getDepartureCity() + ";" + super.getArrivalCity()
-                + trainType + ";" + seatClass + ";" + fare;
+                + trainType + ";" + seatClass + ";" + baseFare;
     }
 
     public static Train fromCsvRow(String csvLine) throws InvalidTransportDataException {
@@ -90,7 +90,7 @@ public class Train extends Transportation{
             seatPrice += 0;
         }
 
-        return seatPrice + fare;
+        return seatPrice + baseFare;
     }
 
     public String getTrainType() {
@@ -109,11 +109,11 @@ public class Train extends Transportation{
         this.seatClass = seatClass;
     }
 
-    public int getFare() {
-        return fare;
+    public int getBaseFare() {
+        return baseFare;
     }
 
     public void setFare(int fare) {
-        this.fare = fare;
+        this.baseFare = fare;
     }
 }

@@ -26,6 +26,7 @@ public class SmartTravelService {
     private static List<Transportation> transportations = new ArrayList<>();
     //private static Accommodation[] accommodations = new Accommodation[50];
     private static List<Accommodation> accommodations = new ArrayList<>();
+    private static RecentList<Object> recentList = new RecentList<>();
 
     public static List<Client> getClients() {
         return clients;
@@ -43,6 +44,8 @@ public class SmartTravelService {
         return accommodations;
     }
 
+    public static RecentList<Object> getRecentList() {return recentList;}
+
     public static void loadAllData(String filename) throws IOException {
         /*ClientFileManager.loadClients(clients, (filename + "clients.csv"));
         AccommodationFileManager.loadAccommodations(accommodations, (filename + "accommodations.csv"));
@@ -52,6 +55,7 @@ public class SmartTravelService {
         accommodations.addAll(GenericFileManager.load(filename + "accommodations.csv", Accommodation.class));
         transportations.addAll(GenericFileManager.load(filename + "transportations.csv", Transportation.class));
         trips.addAll(GenericFileManager.load(filename + "trips.csv", Trip.class));
+        System.out.println("Files successfully loaded!");
 
     }
 
@@ -64,6 +68,7 @@ public class SmartTravelService {
         GenericFileManager.save(accommodations, filename + "accommodations.csv");
         GenericFileManager.save(transportations, filename + "transportations.csv");
         GenericFileManager.save(trips, filename + "trips.csv");
+        System.out.println("Files successfully saved!");
     }
 
     public static double calculateTripTotal(int index) {
@@ -103,6 +108,7 @@ public class SmartTravelService {
 
     public static void showAll(List<?> list) {
         for (Object object : list) {
+            recentList.addRecent(object);
             System.out.println(object);
         }
     }
@@ -110,6 +116,7 @@ public class SmartTravelService {
     public static void showAll(List<?> list, Class<?> type) {
         for (Object object : list) {
             if (type.isInstance(object)) {
+                recentList.addRecent(object);
                 System.out.println(object);
             }
         }

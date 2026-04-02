@@ -10,10 +10,13 @@ import Exceptions.InvalidClientDataException;
 import Interfaces.CsvPersistable;
 import Interfaces.Identifiable;
 import Persistence.ErrorLogger;
+import Service.SmartTravelService;
+import Travel.Trip;
 
 import java.io.IOException;
+import java.util.List;
 
-public class Client implements Identifiable, CsvPersistable {
+public class Client implements Identifiable, CsvPersistable, Comparable<Client> {
     private static int count = 1001; // Represents the amount of objects created. Will be used to create the ID
     private String clientID;
     private String firstName;
@@ -91,6 +94,24 @@ public class Client implements Identifiable, CsvPersistable {
         Client newClient = new Client(fields[1], fields[2], fields[3]);
         newClient.setClientID(fields[0]);
         return newClient;
+    }
+
+    public int compareTo(Client other) {
+        return Double.compare(other.getTotalSpent(SmartTravelService.getTrips()), this.getTotalSpent(SmartTravelService.getTrips())
+        );
+    }
+
+    // Helper Method for compareTo method
+    public double getTotalSpent(List<Trip> trips) {
+        double total = 0;
+
+        for (Trip trip : trips) {
+            if (trip.getClientOnTrip().getId().equals(this.getId())) {
+                total += trip.getTotalCost();
+            }
+        }
+
+        return total;
     }
 
     public String getId() {

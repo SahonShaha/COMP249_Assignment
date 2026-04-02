@@ -15,7 +15,7 @@ import Service.SmartTravelService;
 
 import java.util.List;
 
-public class Trip implements Identifiable, Billable, CsvPersistable {
+public class Trip implements Identifiable, Billable, CsvPersistable, Comparable<Trip> {
     private static int count = 2001; // Represents the amount of objects created. Will be used to create the ID
     private String tripID;
     private String destination;
@@ -197,6 +197,10 @@ public class Trip implements Identifiable, Billable, CsvPersistable {
         newTrip.setTripID(fields[0]);
 
         return newTrip;
+    }
+
+    public int compareTo(Trip other) {
+        return Double.compare(other.getTotalCost(), this.getTotalCost());
     }
 
     public String getId() {
