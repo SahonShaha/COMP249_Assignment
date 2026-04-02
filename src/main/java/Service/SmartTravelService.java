@@ -81,8 +81,8 @@ public class SmartTravelService {
 
     public static int countValidObjects(Object[] objects) {
         int count = 0;
-        for (int i = 0; i < objects.length; i++) {
-            if (objects[i] == null) {
+        for (Object object : objects) {
+            if (object == null) {
                 break;
             }
             count++;
@@ -163,11 +163,6 @@ public class SmartTravelService {
     }
 
     public static boolean clientExists(List<Client> clients, String id) {
-        if (findById(clients, id) == -1) {
-            return false;
-        }
-        else {
-            return true;
-        }
+        return findById(clients, id) != -1;
     }
 }

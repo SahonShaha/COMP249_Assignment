@@ -9,6 +9,7 @@ package Driver;
 import Exceptions.*;
 import Persistence.*;
 import Service.RecentList;
+import Service.Repository;
 import Service.SmartTravelService;
 import Travel.*;
 import Client.*;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
+import java.util.function.Predicate;
 
 public class Main {
     public static void main(String[] args) {
@@ -27,13 +29,17 @@ public class Main {
         SmartTravelService sts = new SmartTravelService();
         boolean isMenuRunning = true;
 
-        // Assigning storage for the arrays
         List<Client> clients = SmartTravelService.getClients();
         List<Trip> trips = SmartTravelService.getTrips();
         List<Transportation> transportations = SmartTravelService.getTransportations();
         List<Accommodation> accommodations = SmartTravelService.getAccommodations();
 
-        RecentList<Object> recentList = new RecentList<>(); // TODO ADD TO RECENT LIST FOR EVERY "SHOW" INTERACTION
+        // Repository
+        Repository<Client> clientRepo = new Repository<>();
+        Repository<Trip> tripRepo = new Repository<>();
+        Repository<Transportation> transportationRepo = new Repository<>();
+        Repository<Accommodation> accommodationRepo = new Repository<>();
+        RecentList<Trip> recentTrips = new RecentList<>();
 
         // Whenever the application opens, it clears the 'errors.txt' file so that errors from a previous run doesn't carry over
         ErrorLogger.clear();
@@ -50,7 +56,7 @@ public class Main {
                             4. Accommodation Management
                             5. Additional Operations
                             6. Generate Diagrams
-                            7. List All Data
+                            7. Advanced Analytics
                             8. Save All Data
                             9. Load All Data
                             10. Run Predefined Scenario
@@ -64,10 +70,10 @@ public class Main {
                             System.out.println("Closing Application...Goodbye!");
                             isMenuRunning = false;
                         }
-                        case 1 -> clientManagement(scanner, clients);
-                        case 2 -> tripManagement(scanner, trips, clients, transportations, accommodations);
-                        case 3 -> transportationManagement(scanner, transportations);
-                        case 4 -> accommodationManagement(scanner, accommodations);
+                        case 1 -> clientManagement(scanner, clients, clientRepo);
+                        case 2 -> tripManagement(scanner, trips, clients, transportations, accommodations, tripRepo);
+                        case 3 -> transportationManagement(scanner, transportations, transportationRepo);
+                        case 4 -> accommodationManagement(scanner, accommodations, accommodationRepo);
                         case 5 -> additionalOperations(scanner, trips, transportations, accommodations);
                         case 6 -> {
                             try {
@@ -79,14 +85,15 @@ public class Main {
                             }
                         }
                         case 7-> {
-                            System.out.println("==============================CLIENTS==============================");
+                            /*System.out.println("==============================CLIENTS==============================");
                             SmartTravelService.showAll(clients);
                             System.out.println("==============================TRANSPORTATIONS==============================");
                             SmartTravelService.showAll(transportations);
                             System.out.println("==============================ACCOMMODATIONS==============================");
                             SmartTravelService.showAll(accommodations);
                             System.out.println("==============================TRIPS==============================");
-                            SmartTravelService.showAll(trips);
+                            SmartTravelService.showAll(trips);*/
+                            advancedAnalytics(scanner, tripRepo, clientRepo, recentTrips, transportationRepo, accommodationRepo);
                         }
                         case 8 -> {
                             try {
@@ -133,7 +140,7 @@ public class Main {
     }
 
     // Handles the Client Menu
-    public static void clientManagement(Scanner scanner, List<Client> clients) {
+    public static void clientManagement(Scanner scanner, List<Client> clients, Repository<Client> clientRepo) {
         try {
             System.out.println("""
                     1. Add a client
@@ -165,6 +172,7 @@ public class Main {
                         Client newClient = new Client(firstName, lastName, email);
                         //SmartTravelService.add(clients, newClient);
                         clients.add(newClient);
+                        clientRepo.add(newClient);
                     } catch (InvalidClientDataException invalidClientDataException) {
                         //System.out.println("Error: " + invalidClientDataException);
                         System.out.println(invalidClientDataException.getMessage());
@@ -190,13 +198,7 @@ public class Main {
 
                         System.out.println("Choose the ID of a client you want to edit: ");
                         String clientID = scanner.next();
-                        int clientEditIndex = -1; // If this stays -1, that means a client of that ID doesn't exist
-
-                        for (int i = 0; i < clients.size(); i++) {
-                            if (clients.get(i).getId().equals(clientID)) {
-                                clientEditIndex = i;
-                            }
-                        }
+                        int clientEditIndex = SmartTravelService.findById(clients, clientID);
 
                         // Validating the user choice
                         try {
@@ -252,7 +254,7 @@ public class Main {
     }
 
     // Handles the Trip Menu
-    public static void tripManagement(Scanner scanner, List<Trip> trips, List<Client> clients, List<Transportation> transportations, List<Accommodation> accommodations) {
+    public static void tripManagement(Scanner scanner, List<Trip> trips, List<Client> clients, List<Transportation> transportations, List<Accommodation> accommodations, Repository<Trip> tripRepo) {
         System.out.println("""
                 1. Create a trip
                 2. Edit trip information
@@ -284,9 +286,9 @@ public class Main {
                 SmartTravelService.showAll(accommodations);
                 String accommodationId = scanner.next();
 
-                int clientIndex = -1;
-                int transportIndex = -1;
-                int accommodationIndex = -1;
+                /*int clientIndex;
+                int transportIndex;
+                int accommodationIndex;*/
 
                 // LOCATING INDEX OF SELECTED CLIENT, TRANSPORTATION AND ACCOMMODATION
                 /*for (int i = 0; i < clients.length; i++) {
@@ -298,7 +300,7 @@ public class Main {
                         break;
                     }
                 }*/
-                clientIndex = SmartTravelService.findById(clients, clientId);
+                int clientIndex = SmartTravelService.findById(clients, clientId);
 
                 /*for (int i = 0; i < transportations.length; i++) {
                     if (transportations[i] == null) {
@@ -309,7 +311,7 @@ public class Main {
                         break;
                     }
                 }*/
-                transportIndex = SmartTravelService.findById(transportations, transportationId);
+                int transportIndex = SmartTravelService.findById(transportations, transportationId);
 
                 /*for (int i = 0; i < accommodations.length; i++) {
                     if (accommodations[i] == null) {
@@ -320,7 +322,7 @@ public class Main {
                         break;
                     }
                 }*/
-                accommodationIndex = SmartTravelService.findById(accommodations, accommodationId);
+                int accommodationIndex = SmartTravelService.findById(accommodations, accommodationId);
 
                 try {
                     // Ensuring the indices have been updated
@@ -337,6 +339,7 @@ public class Main {
                     Trip trip = new Trip(destination, duration, basePrice, clients.get(clientIndex), transportations.get(transportIndex), accommodations.get(accommodationIndex));
                     //SmartTravelService.add(trips, trip);
                     trips.add(trip);
+                    tripRepo.add(trip);
                 }
                 catch (EntityNotFoundException | InvalidTripDataException entityNotFoundException) {
                     System.out.println(entityNotFoundException.getMessage());
@@ -396,14 +399,14 @@ public class Main {
                 SmartTravelService.showAll(clients);
                 System.out.println("Enter the ID of the client you want to see the trips of: ");
                 String clientID = scanner.next();
-                int clientIndex = -1;
+                // int clientIndex = -1;
 
                 /*for (int i = 0; i < clients.size(); i++) {
                     if (clients[i] != null && clients[i].getId().equals(clientID)) {
                         clientIndex = i;
                     }
                 }*/
-                clientIndex = SmartTravelService.findById(clients, clientID);
+                int clientIndex = SmartTravelService.findById(clients, clientID);
 
                 try {
                     if (clientIndex == -1) {
@@ -433,7 +436,7 @@ public class Main {
     }
 
     // Handles the Transportation Menu
-    public static void transportationManagement(Scanner scanner, List<Transportation> transportations) {
+    public static void transportationManagement(Scanner scanner, List<Transportation> transportations, Repository<Transportation> transportRepo) {
         System.out.println("""
                 1. Add a transportation option
                 2. Remove a transportation option
@@ -471,6 +474,7 @@ public class Main {
                             Bus newBus = new Bus(companyName, departureCity, arrivalCity, busCompany, stops, baseFare);
                             //SmartTravelService.add(transportations, newBus);
                             transportations.add(newBus);
+                            transportRepo.add(newBus);
                         }
                         catch (InvalidTransportDataException invalidTransportDataException) {
                             System.out.println(invalidTransportDataException.getMessage());
@@ -495,6 +499,7 @@ public class Main {
                             Flight newFlight = new Flight(companyName, departureCity, arrivalCity, airlineName, weight, ticketPrice);
                             //SmartTravelService.add(transportations, newFlight);
                             transportations.add(newFlight);
+                            transportRepo.add(newFlight);
                         }
                         catch (InvalidTransportDataException invalidTransportDataException) {
                             System.out.println(invalidTransportDataException.getMessage());
@@ -518,6 +523,7 @@ public class Main {
                          Train newTrain = new Train(companyName, departureCity, arrivalCity, trainType, seatClass, fare);
                          //SmartTravelService.add(transportations, newTrain);
                          transportations.add(newTrain);
+                         transportRepo.add(newTrain);
                      }
                     default -> System.out.println("Invalid Input");
                 }
@@ -578,7 +584,7 @@ public class Main {
     }
 
     // Handles the Accommodation Menu
-    public static void accommodationManagement(Scanner scanner, List<Accommodation> accommodations) {
+    public static void accommodationManagement(Scanner scanner, List<Accommodation> accommodations, Repository<Accommodation> accommodationRepo) {
         System.out.println("""
                 1. Add an accommodation
                 2. Remove an accommodation
@@ -613,6 +619,7 @@ public class Main {
                             Hostel newHostel = new Hostel(name, location, pricePerNight, numberOfNights, beds);
                             //SmartTravelService.add(accommodations, newHostel);
                             accommodations.add(newHostel);
+                            accommodationRepo.add(newHostel);
                         }
                         catch (InvalidAccommodationDataException invalidAccommodationDataException) {
                             System.out.println(invalidAccommodationDataException.getMessage());
@@ -632,6 +639,7 @@ public class Main {
                             Hotel newHotel = new Hotel(name, location, pricePerNight, numberOfNights, stars);
                             //SmartTravelService.add(accommodations, newHotel);
                             accommodations.add(newHotel);
+                            accommodationRepo.add(newHotel);
                         }
                         catch (InvalidAccommodationDataException invalidAccommodationDataException) {
                             System.out.println(invalidAccommodationDataException.getMessage());
@@ -719,8 +727,8 @@ public class Main {
                 SmartTravelService.showAll(trips);
                 System.out.println("Enter the ID of the trip you want to see the total cost of: ");
                 String tripID = scanner.next();
-                int tripIndex = -1;
-                tripIndex = SmartTravelService.findById(trips, tripID);
+                // int tripIndex = -1;
+                int tripIndex = SmartTravelService.findById(trips, tripID);
                 /*for (int i = 0; i < trips.size(); i++) {
                     if (trips[i].getId().equals(tripID)) {
                         tripIndex = i;
@@ -750,25 +758,19 @@ public class Main {
                     }
                 }
             }
-            case 3 -> {
-                /*Transportation[] newTransportations = transportationsDeepCopy(transportations);
+            case 3 -> /*Transportation[] newTransportations = transportationsDeepCopy(transportations);
 
                 // Printing Deep Copied Array
                 for (int i = 0; i < newTransportations.length; i++) {
                     System.out.println(newTransportations[i]);
                 }
-                */
-                SmartTravelService.showAll(transportationsDeepCopy(transportations));
-            }
-             case 4 -> {
-                 /*Accommodation[] newAccommodations = accommodationsDeepCopy(accommodations);
+                */ SmartTravelService.showAll(transportationsDeepCopy(transportations));
+            case 4 -> /*Accommodation[] newAccommodations = accommodationsDeepCopy(accommodations);
 
                  // Printing Deep Copied Array
                  for (int i = 0; i < newAccommodations.length; i++) {
                      System.out.println(newAccommodations[i]);
-                 }*/
-                 SmartTravelService.showAll(accommodationsDeepCopy(accommodations));
-             }
+                 }*/ SmartTravelService.showAll(accommodationsDeepCopy(accommodations));
             default -> System.out.println("Invalid Input");
         }
     }
@@ -945,13 +947,7 @@ public class Main {
     // Handles the Trip Editing Submenu
     public static void editTrip(Scanner scanner, List<Trip> trips, String id, List<Client> clients, List<Transportation> transportations, List<Accommodation> accommodations) throws EntityNotFoundException{
         // Find Index of selected trip
-        int tripIndex = -1;
-        for (int i = 0; i < trips.size(); i++) {
-            if (trips.get(i).getId().equals(id)) {
-                tripIndex = i;
-                break;
-            }
-        }
+        int tripIndex = SmartTravelService.findById(trips, id);
 
         if (tripIndex == -1) {
             throw new EntityNotFoundException("Trip does not exist.");
@@ -1047,14 +1043,7 @@ public class Main {
                         SmartTravelService.showAll(accommodations);
                         System.out.println("Enter the ID of the new accommodation: ");
                         String newAccommodationId = scanner.next();
-                        int accommodationIndex = -1;
-
-                        for (int i = 0; i < accommodations.size(); i++) {
-                            if (accommodations.get(accommodationIndex).getId().equals(newAccommodationId)) {
-                                accommodationIndex = i;
-                                break;
-                            }
-                        }
+                        int accommodationIndex = SmartTravelService.findById(accommodations, newAccommodationId);
 
                         if (accommodationIndex == -1) {
                             throw new EntityNotFoundException("Accommodation not found");
@@ -1073,7 +1062,6 @@ public class Main {
             System.out.println("No Trip with that ID exist.");
         }
     }
-
 
     // DEEP COPY METHODS
     public static List<Transportation> transportationsDeepCopy(List<Transportation> original) {
@@ -1135,7 +1123,6 @@ public class Main {
         return newAccommodations;
     }
 
-
     // Cycles through all trips and compares them till it finds the most expensive trip
     public static Trip mostExpensiveTrip(List<Trip> trips) throws EntityNotFoundException {
         if (trips.isEmpty()) {
@@ -1163,10 +1150,10 @@ public class Main {
     public static void testingScenario(List<Client> clients, List<Transportation> transportations, List<Accommodation> accommodations, List<Trip> trips) {
         // We initially set everything as null so that trip can have access to these variables even if an exception gets caught
         Client client1 = null, client2 = null, client3 = null, client4 = null;
-        Bus bus1 = null, bus2 = null;
-        Train train1 = null, train2 = null;
+        Bus bus1, bus2 = null;
+        Train train1, train2 = null;
         Flight flight1 = null, flight2 = null;
-        Hotel hotel1 = null, hotel2 = null;
+        Hotel hotel1 = null, hotel2;
         Hostel hostel1 = null, hostel2 = null;
         try {
             client1 = new Client("Sahon", "Shaha", "shahsahon@gmail.com");
@@ -1420,5 +1407,88 @@ public class Main {
         SmartTravelService.showAll(transportations);
         System.out.println("COPIED ARRAY");
         SmartTravelService.showAll(deepCopied);
+    }
+
+    public static void advancedAnalytics(Scanner scanner, Repository<Trip> tripRepo,
+                                         Repository<Client> clientRepo,
+                                         RecentList<Trip> recentTrips,
+                                         Repository<Transportation> transportationRepo,
+                                         Repository<Accommodation> accommodationRepo) {
+
+        System.out.println("""
+            1 Trips by Destination
+            2 Trips by Cost Range
+            3 Top Clients by Spending
+            4 Recent Trips
+            5 Smart Sort Collections
+            6 Back to main menu
+            """);
+        int choice = scanner.nextInt();
+
+        switch (choice) {
+            case 1 -> { // Trips by Destination
+                System.out.println("Enter the destination to filter by: ");
+                String destination = scanner.next();
+
+                // Predicate checks if the destination string matches
+                Predicate<Trip> byDestination = trip -> trip.getDestination().equalsIgnoreCase(destination);
+                List<Trip> filtered = tripRepo.filter(byDestination);
+
+                if (filtered.isEmpty()) {
+                    System.out.println("No trips found for " + destination);
+                } else {
+                    SmartTravelService.showAll(filtered);
+                }
+            }
+
+            case 2 -> { // Trips by Cost Range
+                System.out.println("Enter minimum cost: ");
+                double min = scanner.nextDouble();
+                System.out.println("Enter maximum cost: ");
+                double max = scanner.nextDouble();
+
+                Predicate<Trip> inRange = trip -> trip.getTotalCost() >= min && trip.getTotalCost() <= max;
+                List<Trip> filtered = tripRepo.filter(inRange);
+
+                if (filtered.isEmpty()) {
+                    System.out.println("No trips found between that cost range.");
+                } else {
+                    SmartTravelService.showAll(filtered);
+                }
+            }
+
+            case 3 -> { // Top Clients by Spending
+                List<Client> sorted = clientRepo.getSorted();
+
+                System.out.println("Clients ranked by total spending:");
+                SmartTravelService.showAll(sorted);
+            }
+
+            case 4 -> { // Recent Trips
+                System.out.println("How many recent trips do you want to see? ");
+                int max = scanner.nextInt();
+
+                System.out.println("Recently viewed trips:");
+                recentTrips.printRecent(max);
+            }
+
+            case 5 -> { // Smart Sort Collections
+                System.out.println("=== Trips (by total cost descending) ===");
+                SmartTravelService.showAll(tripRepo.getSorted());
+
+                System.out.println("=== Clients (by total spent descending) ===");
+                SmartTravelService.showAll(clientRepo.getSorted());
+
+                System.out.println("=== Transportations (by base price descending) ===");
+                SmartTravelService.showAll(transportationRepo.getSorted());
+
+                System.out.println("=== Accommodations (by price per night descending) ===");
+                SmartTravelService.showAll(accommodationRepo.getSorted());
+            }
+
+            case 6 -> System.out.println("Returning to main menu");
+            default -> System.out.println("Invalid Input.");
+        }
+
     }
 }
