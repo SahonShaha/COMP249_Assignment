@@ -85,17 +85,7 @@ public class Main {
                                 System.out.println("Error: " + e);
                             }
                         }
-                        case 7-> {
-                            /*System.out.println("==============================CLIENTS==============================");
-                            SmartTravelService.showAll(clients);
-                            System.out.println("==============================TRANSPORTATIONS==============================");
-                            SmartTravelService.showAll(transportations);
-                            System.out.println("==============================ACCOMMODATIONS==============================");
-                            SmartTravelService.showAll(accommodations);
-                            System.out.println("==============================TRIPS==============================");
-                            SmartTravelService.showAll(trips);*/
-                            advancedAnalytics(scanner, tripRepo, clientRepo, recentList, transportationRepo, accommodationRepo);
-                        }
+                        case 7-> advancedAnalytics(scanner, tripRepo, clientRepo, recentList, transportationRepo, accommodationRepo);
                         case 8 -> {
                             try {
                                 SmartTravelService.saveAllData("data/");

@@ -49,7 +49,7 @@ public class DashboardGenerator {
 
     public static void generateDashboard(SmartTravelService service) throws IOException {
         // Ensure output dir exists
-        new File("output").mkdirs();
+        new File("output/").mkdirs();
         
         // 1. Generate charts FIRST (your existing code)
         TripChartGenerator.generateCostBarChart(SmartTravelService.getTrips().toArray(new Trip[0]), validTripCount);
