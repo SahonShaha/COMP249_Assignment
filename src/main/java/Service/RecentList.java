@@ -38,4 +38,12 @@ public class RecentList <T> {
     public boolean isEmpty() {
         return list.isEmpty();
     }
+
+    public LinkedList<T> getList() {
+        return list;
+    }
+
+    public int getMAX_SIZE() {
+        return MAX_SIZE;
+    }
 }

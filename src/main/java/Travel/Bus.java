@@ -39,7 +39,8 @@ public class Bus extends Transportation {
     }
 
     public String toString() {
-        return super.toString() + "Bus Company: " + this.busCompany + "\nNumber of Stops: " + this.stopsNum + "\n";
+        return super.toString() + "Bus Company: " + this.busCompany + "\nNumber of Stops: " + this.stopsNum +
+                "\nBase Price: " + getBaseFare() + "\n";
     }
 
     public boolean equals(Bus bus) {

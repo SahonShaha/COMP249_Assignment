@@ -143,7 +143,7 @@ public class Trip implements Identifiable, Billable, CsvPersistable, Comparable<
 
     public String toString() {
         return "Trip ID: " + this.tripID + "\nDestination: " + this.destination + "\nTrip Duration: " + durationInDays + " Days"
-                + "\nBase Price: " + this.basePrice + "$"
+                + "\nBase Price: " + this.basePrice + "$" + "\nTotal Price: " + getTotalCost()
                 + "\nClient on Trip: " + this.clientOnTrip.getFirstName() + " " + this.clientOnTrip.getLastName() + "\n";
     }
 

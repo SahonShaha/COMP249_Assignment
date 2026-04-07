@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class Repository<T extends Identifiable & Comparable<? super T>> {
-    private List<T> items;
+    private List<T> items = new ArrayList<>();
 
     public void add(T item) {
         items.add(item);

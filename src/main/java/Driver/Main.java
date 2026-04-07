@@ -35,11 +35,12 @@ public class Main {
         List<Accommodation> accommodations = SmartTravelService.getAccommodations();
 
         // Repository
-        Repository<Client> clientRepo = new Repository<>();
-        Repository<Trip> tripRepo = new Repository<>();
-        Repository<Transportation> transportationRepo = new Repository<>();
-        Repository<Accommodation> accommodationRepo = new Repository<>();
-        RecentList<Trip> recentTrips = new RecentList<>();
+        Repository<Client> clientRepo = SmartTravelService.getClientRepo();
+        Repository<Trip> tripRepo = SmartTravelService.getTripRepo();
+        Repository<Transportation> transportationRepo = SmartTravelService.getTransportRepo();
+        Repository<Accommodation> accommodationRepo = SmartTravelService.getAccommodationRepo();
+
+        RecentList<Object> recentList = SmartTravelService.getRecentList();
 
         // Whenever the application opens, it clears the 'errors.txt' file so that errors from a previous run doesn't carry over
         ErrorLogger.clear();
@@ -93,18 +94,18 @@ public class Main {
                             SmartTravelService.showAll(accommodations);
                             System.out.println("==============================TRIPS==============================");
                             SmartTravelService.showAll(trips);*/
-                            advancedAnalytics(scanner, tripRepo, clientRepo, recentTrips, transportationRepo, accommodationRepo);
+                            advancedAnalytics(scanner, tripRepo, clientRepo, recentList, transportationRepo, accommodationRepo);
                         }
                         case 8 -> {
                             try {
-                                SmartTravelService.saveAllData("output/data/");
+                                SmartTravelService.saveAllData("data/");
                             } catch (IOException ioException) {
                                 System.out.println(ioException.getMessage());
                             }
                         }
                         case 9 -> {
                             try {
-                                SmartTravelService.loadAllData("output/data/");
+                                SmartTravelService.loadAllData("data/");
                             } catch (IOException ioException) {
                                 System.out.println(ioException.getMessage());
                             }
@@ -1411,7 +1412,7 @@ public class Main {
 
     public static void advancedAnalytics(Scanner scanner, Repository<Trip> tripRepo,
                                          Repository<Client> clientRepo,
-                                         RecentList<Trip> recentTrips,
+                                         RecentList<Object> recentList,
                                          Repository<Transportation> transportationRepo,
                                          Repository<Accommodation> accommodationRepo) {
 
@@ -1467,9 +1468,19 @@ public class Main {
             case 4 -> { // Recent Trips
                 System.out.println("How many recent trips do you want to see? ");
                 int max = scanner.nextInt();
+                int count = 0;
 
                 System.out.println("Recently viewed trips:");
-                recentTrips.printRecent(max);
+                for (int i = 0; i < recentList.size(); i++) {
+                    if (recentList.isEmpty()) {
+                        System.out.println("List is currently empty.");
+                    }
+
+                    if (recentList.getList().get(i) instanceof Trip && count < max) {
+                        System.out.println(recentList.getList().get(i));
+                        count++;
+                    }
+                }
             }
 
             case 5 -> { // Smart Sort Collections

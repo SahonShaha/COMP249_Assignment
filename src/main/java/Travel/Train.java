@@ -33,7 +33,8 @@ public class Train extends Transportation{
     }
 
     public String toString() {
-        return super.toString() + "Train Type: " + this.trainType + "\nSeat Class: " + this.seatClass + "\n";
+        return super.toString() + "Train Type: " + this.trainType + "\nSeat Class: " + this.seatClass +
+                "\nBase Price: " + getBaseFare() + "\n";
     }
 
     public boolean equals(Train train) {
@@ -58,7 +59,7 @@ public class Train extends Transportation{
     }
 
     public String toCsvRow() {
-        return "TRAIN;" +  super.getId() + ";" + super.getCompanyName() + ";" + super.getDepartureCity() + ";" + super.getArrivalCity()
+        return "TRAIN;" +  super.getId() + ";" + super.getCompanyName() + ";" + super.getDepartureCity() + ";" + super.getArrivalCity() + ";"
                 + trainType + ";" + seatClass + ";" + baseFare;
     }
 

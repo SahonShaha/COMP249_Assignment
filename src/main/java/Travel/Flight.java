@@ -37,7 +37,8 @@ public class Flight extends Transportation {
     }
 
     public String toString() {
-        return super.toString() + "Airline Company: " + this.airlineName + "\nLuggage Allowance (in kg): " + this.luggageAllowance  + "\n";
+        return super.toString() + "Airline Company: " + this.airlineName + "\nLuggage Allowance (in kg): " + this.luggageAllowance  +
+                "\nBase Price: " + getBaseFare() +"\n";
     }
 
     public boolean equals(Flight flight) {
@@ -62,7 +63,7 @@ public class Flight extends Transportation {
     }
 
     public String toCsvRow() {
-        return "FLIGHT;" + super.getId() + ";" + super.getCompanyName() + ";" + super.getDepartureCity() + ";" + super.getArrivalCity()
+        return "FLIGHT;" + super.getId() + ";" + super.getCompanyName() + ";" + super.getDepartureCity() + ";" + super.getArrivalCity() + ";"
                 + airlineName + ";" + luggageAllowance + ";" + baseFare;
     }
 
