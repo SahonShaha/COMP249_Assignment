@@ -1,5 +1,5 @@
 // ---------------------------------------------------------
-// Assignment: 2
+// Assignment: 3
 // Question: 1
 // Written by: Sahon Shaha 40339419
 // ---------------------------------------------------------
@@ -33,23 +33,6 @@ public class ClientFileManager {
             // Split the line into four parts and add it to an array
             // We create a new object with its fields being something from the array
             count++;
-
-            /*try {
-                String[] fields = currentLine.split(";"); // Splits a line at every ';'
-
-                if (fields.length != 4) { // If the split array has more than 5 elements
-                    ErrorLogger.log(new Exception("Unable to read line " + (count + 1)));
-                    continue; // We go to the next line
-                }
-
-                clients.add(new Client(fields[1], fields[2], fields[3]));
-                clients.get(count).setClientID(fields[0]); // Since the parametrized constructor does not take an ID field
-                count++;
-            }
-            catch (InvalidClientDataException invalidClientDataException) {
-                System.out.println(invalidClientDataException.getMessage());
-                ErrorLogger.log(invalidClientDataException);
-            }*/
             try {clients.add(Client.fromCsvRow(currentLine));}
             catch (InvalidClientDataException invalidClientDataException) {
                 System.out.println(invalidClientDataException.getMessage());

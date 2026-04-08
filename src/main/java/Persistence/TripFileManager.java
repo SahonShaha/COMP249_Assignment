@@ -1,5 +1,5 @@
 // ---------------------------------------------------------
-// Assignment: 2
+// Assignment: 3
 // Question: 1
 // Written by: Sahon Shaha 40339419
 // ---------------------------------------------------------
@@ -26,13 +26,6 @@ public class TripFileManager {
 
         for (int i = 0; i < tripCount; i++) {
             printWriter.println(
-                /*trips.get(i).getId() + ";" +
-                trips.get(i).getClientOnTrip().getId() + ";" +
-                trips.get(i).getAccommodation().getId() + ";" +
-                trips.get(i).getTransportation().getId() + ";" +
-                trips.get(i).getDestination() + ";" +
-                trips.get(i).getDurationInDays() + ";" +
-                trips.get(i).getBasePrice()*/
                     trips.get(i).toCsvRow()
             );
         }
@@ -51,59 +44,6 @@ public class TripFileManager {
             // We create a new object with its fields being something from the array
             count++;
             try {
-                /*String[] fields = currentLine.split(";"); // Splits a line at every ';'
-
-                if (fields.length != 7) { // If the split array has more than 5 elements
-                    ErrorLogger.log(new Exception("Unable to read line " + (count + 1)));
-                    continue; // We go to the next line
-                }
-
-                // Find Client, Accommodation and Transportation Objects
-                int clientIndex = -1;
-                for (int i = 0; i < clients.size(); i++) {
-                    if (clients.get(i).getId().equals(fields[1])) {
-                        clientIndex = i;
-                        break;
-                    }
-                }
-                clientIndex = SmartTravelService.findById(clients, fields[1]);
-
-                int accommodationIndex = -1;
-                for (int i = 0; i < accommodations.size(); i++) {
-                    if (accommodations.get(i).getId().equals(fields[2])) {
-                        accommodationIndex = i;
-                        break;
-                    }
-                }
-                accommodationIndex = SmartTravelService.findById(accommodations, fields[2]);
-
-                int transportationIndex = -1;
-                for (int i = 0; i < transportations.size(); i++) {
-                    if (transportations.get(i).getId().equals(fields[3])) {
-                        transportationIndex = i;
-                        break;
-                    }
-                }
-                transportationIndex = SmartTravelService.findById(transportations, fields[3]);
-
-                try {
-                    if (clientIndex == -1) {
-                        throw new EntityNotFoundException("Client does not exist.");
-                    }
-                    if (transportationIndex == -1) {
-                        throw new EntityNotFoundException("Transportation does not exist.");
-                    }
-                    if (accommodationIndex == -1) {
-                        throw new EntityNotFoundException("Accommodation does not exist.");
-                    }
-                    trips.add(new Trip(fields[4], Integer.parseInt(fields[5]), Double.parseDouble(fields[6]), clients.get(clientIndex), transportations.get(transportationIndex), accommodations.get(accommodationIndex)));
-                    trips.get(count).setTripID(fields[0]); // Since the parametrized constructor does not take an ID field
-                    count++;
-                }
-                catch (EntityNotFoundException entityNotFoundException) {
-                    System.out.println(entityNotFoundException.getMessage());
-                    ErrorLogger.log(entityNotFoundException);
-                }*/
                 trips.add(Trip.fromCsvRow(currentLine, clients, accommodations, transportations));
             }
             catch (InvalidTripDataException invalidTripDataException) {

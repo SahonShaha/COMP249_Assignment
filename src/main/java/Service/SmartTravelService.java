@@ -1,5 +1,5 @@
 // ---------------------------------------------------------
-// Assignment: 2
+// Assignment: 3
 // Question: 1
 // Written by: Sahon Shaha 40339419
 // ---------------------------------------------------------
@@ -114,21 +114,6 @@ public class SmartTravelService {
         return count;
     }
 
-    /*public static void showAll(Object[] objects, Object object) {
-        // Prints all non-null objects
-        for (int i = 0; i < objects.length; i++) {
-            if (objects[i] == null) { // Once we reach the first null in the array, it means that the rest will be null too
-                break;
-            }
-            else {
-                if (objects[i].getClass() == object.getClass()) {
-                    //System.out.println("\nEntry " + (i+1));
-                    System.out.println(objects[i]);
-                }
-            }
-        }
-    }*/
-
     public static void showAll(List<?> list) {
         for (Object object : list) {
             recentList.addRecent(object);
@@ -158,22 +143,6 @@ public class SmartTravelService {
             }
         }
     }
-
-    /*public static int findClientById(String id) {
-        int clientIndex = -1;
-
-        for (int i = 0; i < clients.length; i++) {
-            if (clients[i] == null) {
-                break;
-            }
-            if (clients[i].getId().equals(id)) {
-                clientIndex = i;
-                break;
-            }
-        }
-
-        return clientIndex;
-    }*/
 
     // The first parameter only takes in classes that are part of Identifiable (or the four main classes)
     public static int findById(List<? extends Identifiable> list, String id) {
